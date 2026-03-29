@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="John Doe">
+    
+    
+    
+    
+    
+    
+    <title>msjs | Hexo</title>
+    <link href="http://example.com" rel="prefetch" />
+
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/aos.css">
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery.min.js"></script>
+
+    
+<script src="/js/bootstrap.min.js"></script>
+
+    
+<script src="/js/aos.js"></script>
+
+    
+<script src="/js/highslide/highslide-full.min.js"></script>
+
+    
+<link rel="stylesheet" href="/js/highslide/highslide.css">
+
+    <style type="text/css">
+        @media (max-width: 768px) {
+            body {
+                background-color: #f0f0f0;
+                background: url('/imgs/xsbg.gif');
+                background-attachment: fixed;
+            }
+        }
+    </style>
+    
+    <!--<script type="text/javascript">
+      if (document.images) {
+        var avatar = new Image();
+        avatar.src = '/imgs/avatar.jpg'
+        var previews = 'preview1.jpg,preview2.jpg,preview3.jpg,preview4.jpg'.split(',')
+        var previewsPreLoad = []
+        for(var i = 0; i < length; i++) {
+          previewsPreLoad.push(new Image())
+          previewsPreLoad[previewsPreLoad.length - 1].src = '/imgs/preview' + previews[i]
+        }
+      }
+    </script>-->
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <!-- 背景轮播图功能 -->
+    <section class="hidden-xs">
+    <ul class="cb-slideshow">
+        <li><span>天若</span></li>
+        <li><span>有情</span></li>
+        <li><span>天亦老</span></li>
+        <li><span>我为</span></li>
+        <li><span>长者</span></li>
+        <li><span>续一秒</span></li>
+    </ul>
+</section>
+    <!-- 欧尼酱功能, 谁用谁知道 -->
+    
+    <header class="navbar navbar-inverse" id="gal-header">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target=".bs-navbar-collapse"
+                    aria-expanded="false">
+                <span class="fa fa-lg fa-reorder"></span>
+            </button>
+            <a href="http://example.com">
+                
+                <style>
+                    #gal-header .navbar-brand {
+                        height: 54px;
+                        line-height: 24px;
+                        font-size: 28px;
+                        opacity: 1;
+                        background-color: rgba(0,0,0,0);
+                        text-shadow: 0 0 5px #fff,0 0 10px #fff,0 0 15px #fff,0 0 20px #228DFF,0 0 35px #228DFF,0 0 40px #228DFF,0 0 50px #228DFF,0 0 75px #228DFF;
+                    }
+                </style>
+                <!-- 这里使用文字(navbar_text or config.title) -->
+                <div class="navbar-brand">Hexo</div>
+                
+            </a>
+        </div>
+        <div class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav" id="menu-gal">
+                
+                
+                <li class="">
+                    <a href="/">
+                        <i class="fa fa-home"></i>首页
+                    </a>
+                </li>
+                
+                
+                
+                <li class="">
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>归档
+                    </a>
+                </li>
+                
+                
+                
+                
+                <li class="">
+                    <a href="/categories">
+                        <i class="fa fa-list"></i>分类
+                    </a>
+                </li>
+                
+                
+                
+                
+                
+                <li class="">
+                    <a href="/tags">
+                        <i class="fa fa-tags"></i>标签
+                    </a>
+                </li>
+                
+                
+                
+                
+                <li class="">
+                    <a href="/about">
+                        <i class="fa fa-user"></i>关于我
+                    </a>
+                </li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</header>
+    <div id="gal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 gal-right" id="mainstay">
+                    
+<article class="article well article-body" id="article">
+    <div class="breadcrumb">
+        <i class="fa fa-home"></i>
+        <a href="http://example.com">Hexo</a>
+        >
+        <span>msjs</span>
+    </div>
+    <!-- 大型设备详细文章 -->
+    <div class="hidden-xs">
+        <div class="title-article">
+            <h1>
+                <a href="/2026/03/26/msjs/">msjs</a>
+            </h1>
+        </div>
+        <div class="tag-article">
+            
+            <span class="label label-gal">
+                <i class="fa fa-calendar"></i> 2026-03-26
+            </span>
+            
+        </div>
+    </div>
+    <!-- 小型设备详细文章 -->
+    <div class="visible-xs">
+        <center>
+            <div class="title-article">
+                <h4>
+                    <a href="/2026/03/26/msjs/">msjs</a>
+                </h4>
+            </div>
+            <p>
+                <i class="fa fa-calendar"></i> 2026-03-26
+            </p>
+            <p>
+                
+                
+            </p>
+        </center>
+    </div>
+    <div class="content-article">
+        <p>1.在使用async&#x2F;await时，如何进行异常捕获？</p>
+<p>2.如何处理两个异步请求，其中请求A依赖于请求B的完成</p>
+<p>3.是否使用过async&#x2F;await?他们有返回值吗？</p>
+<p>4.Promise对象是否具有直接的返回值？</p>
+<p>5.在Jscript对象中，数字键是如何被处理和存储的？</p>
+<p>6.分析一段关于promise的代码，判断其最终的输出顺序和结果</p>
+<p>7.针对promise、宏任务和微任务，分析一段给定代码的执行顺序和输出结果？</p>
+<p>8.关于var、闭包和函数式编程，分析一段给定代码的输出结果？</p>
+<p>9.说说js原型链的工作机制和作用？</p>
+<p>10.js中object和map有哪些主要区别？在什么场景下会优先选择使用map?</p>
+<p>11.js中数组常用的方法有哪些？并阐述他们各自的作用？</p>
+<p>12.比较以下两个JavaScript列表的异同点: let list1&#x3D;[1,2,3,4]和let list2&#x3D;[]; list2.push(1); list2.push(2);?</p>
+<p>13.前端模块化有哪些方式，CommonJS和ESModule的主要区别是什么?</p>
+<p>14.#Promise有哪三种状态?当Promise成功和失败时，分别会调用哪些函数？</p>
+<p>15.JavaScript 中的作用域和作用域链是怎样<br>的?</p>
+<p>这是一套非常经典的JavaScript面试题，涵盖了异步编程、数据结构、原型链、模块化等多个核心知识点。以下是针对这些问题的详细解答，供你参考：</p>
+<hr>
+<h3 id="1-在使用async-await时，如何进行异常捕获？"><a href="#1-在使用async-await时，如何进行异常捕获？" class="headerlink" title="1. 在使用async&#x2F;await时，如何进行异常捕获？"></a>1. 在使用async&#x2F;await时，如何进行异常捕获？</h3><p>使用 <code>try/catch</code> 块进行捕获。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">fetchData</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;/api/data&#x27;</span>);</span><br><span class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> res.<span class="title function_">json</span>();</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;请求失败:&#x27;</span>, error);</span><br><span class="line">    <span class="comment">// 可返回默认值或抛出错误</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果不想用 <code>try/catch</code>，也可以 <code>.catch</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> data = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;/api/data&#x27;</span>).<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(err));</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-如何处理两个异步请求，其中请求A依赖于请求B的完成"><a href="#2-如何处理两个异步请求，其中请求A依赖于请求B的完成" class="headerlink" title="2. 如何处理两个异步请求，其中请求A依赖于请求B的完成"></a>2. 如何处理两个异步请求，其中请求A依赖于请求B的完成</h3><p>使用 <code>await</code> 按顺序执行：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> resultB = <span class="keyword">await</span> <span class="title function_">requestB</span>();</span><br><span class="line"><span class="keyword">const</span> resultA = <span class="keyword">await</span> <span class="title function_">requestA</span>(resultB);</span><br></pre></td></tr></table></figure>
+
+<p>或者使用 <code>.then</code> 链式调用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">requestB</span>()</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">resultB</span> =&gt;</span> <span class="title function_">requestA</span>(resultB))</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">resultA</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(resultA));</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-是否使用过async-await-他们有返回值吗？"><a href="#3-是否使用过async-await-他们有返回值吗？" class="headerlink" title="3. 是否使用过async&#x2F;await? 他们有返回值吗？"></a>3. 是否使用过async&#x2F;await? 他们有返回值吗？</h3><p><strong>使用过</strong>。<br><code>async</code> 函数总是返回一个 <strong>Promise</strong>。<br>如果函数内部返回一个非Promise值，它会被 <code>Promise.resolve()</code> 包装；如果抛出错误，返回一个 rejected 的 Promise。</p>
+<hr>
+<h3 id="4-Promise对象是否具有直接的返回值？"><a href="#4-Promise对象是否具有直接的返回值？" class="headerlink" title="4. Promise对象是否具有直接的返回值？"></a>4. Promise对象是否具有直接的返回值？</h3><p><strong>没有直接的返回值</strong>。<br>Promise 本身是一个对象，代表一个异步操作的最终完成（或失败）及其结果值。要获取其“返回值”，需要通过 <code>.then()</code> 或 <code>await</code> 获取。</p>
+<hr>
+<h3 id="5-在JavaScript对象中，数字键是如何被处理和存储的？"><a href="#5-在JavaScript对象中，数字键是如何被处理和存储的？" class="headerlink" title="5. 在JavaScript对象中，数字键是如何被处理和存储的？"></a>5. 在JavaScript对象中，数字键是如何被处理和存储的？</h3><ul>
+<li>JavaScript 对象的键（属性名）会被转换为 <strong>字符串</strong>（Symbol 除外）。</li>
+<li>数字键虽然写法上是数字，但实际存储时转为字符串，如 <code>obj[1]</code> 和 <code>obj[&#39;1&#39;]</code> 指向同一属性。</li>
+<li>但在遍历时，数字键会按升序排列，字符串键按添加顺序排列（ES6 之后）。</li>
+</ul>
+<hr>
+<h3 id="6-分析一段关于promise的代码，判断其最终的输出顺序和结果"><a href="#6-分析一段关于promise的代码，判断其最终的输出顺序和结果" class="headerlink" title="6. 分析一段关于promise的代码，判断其最终的输出顺序和结果"></a>6. 分析一段关于promise的代码，判断其最终的输出顺序和结果</h3><p><em>（你未提供具体代码，我给出一个常见示例）</em></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">1</span>);</span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">resolve</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">2</span>));</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">3</span>);</span><br><span class="line"><span class="comment">// 输出: 1, 3, 2</span></span><br></pre></td></tr></table></figure>
+
+<p>Promise 的 <code>.then</code> 回调属于微任务，会在当前同步代码执行完后执行。</p>
+<hr>
+<h3 id="7-针对promise、宏任务和微任务，分析一段给定代码的执行顺序和输出结果"><a href="#7-针对promise、宏任务和微任务，分析一段给定代码的执行顺序和输出结果" class="headerlink" title="7. 针对promise、宏任务和微任务，分析一段给定代码的执行顺序和输出结果"></a>7. 针对promise、宏任务和微任务，分析一段给定代码的执行顺序和输出结果</h3><p><em>（你未提供代码，我给出一个典型示例）</em></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;1&#x27;</span>);</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;2&#x27;</span>), <span class="number">0</span>);</span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">resolve</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;3&#x27;</span>));</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;4&#x27;</span>);</span><br><span class="line"><span class="comment">// 输出: 1, 4, 3, 2</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>顺序</strong>：同步代码 → 微任务（Promise.then） → 宏任务（setTimeout）。</p>
+<hr>
+<h3 id="8-关于var、闭包和函数式编程，分析一段给定代码的输出结果"><a href="#8-关于var、闭包和函数式编程，分析一段给定代码的输出结果" class="headerlink" title="8. 关于var、闭包和函数式编程，分析一段给定代码的输出结果"></a>8. 关于var、闭包和函数式编程，分析一段给定代码的输出结果</h3><p><em>（未提供代码，常见示例）</em></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(i), <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 输出: 3, 3, 3</span></span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>var</code> 函数作用域，循环结束后 <code>i</code> 为 3，闭包引用同一个 <code>i</code>。<br>若用 <code>let</code> 则输出 0, 1, 2。</p>
+<hr>
+<h3 id="9-说说js原型链的工作机制和作用？"><a href="#9-说说js原型链的工作机制和作用？" class="headerlink" title="9. 说说js原型链的工作机制和作用？"></a>9. 说说js原型链的工作机制和作用？</h3><ul>
+<li><strong>机制</strong>：每个对象都有一个内部 <code>[[Prototype]]</code> 指针（通过 <code>__proto__</code> 或 <code>Object.getPrototypeOf</code> 访问），指向其原型对象。当访问对象属性时，若自身不存在，则沿原型链向上查找，直到 <code>null</code>。</li>
+<li><strong>作用</strong>：实现<strong>继承</strong>和<strong>属性共享</strong>。所有实例共享原型上的方法，节省内存。</li>
+</ul>
+<hr>
+<h3 id="10-js中object和map有哪些主要区别？在什么场景下会优先选择使用map"><a href="#10-js中object和map有哪些主要区别？在什么场景下会优先选择使用map" class="headerlink" title="10. js中object和map有哪些主要区别？在什么场景下会优先选择使用map?"></a>10. js中object和map有哪些主要区别？在什么场景下会优先选择使用map?</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Object</th>
+<th>Map</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>键类型</td>
+<td>字符串或 Symbol</td>
+<td>任意类型（对象、函数等）</td>
+</tr>
+<tr>
+<td>顺序</td>
+<td>数字键按升序，字符串按插入顺序</td>
+<td>严格按插入顺序</td>
+</tr>
+<tr>
+<td>大小</td>
+<td>手动计算 <code>Object.keys()</code></td>
+<td><code>size</code> 属性直接获取</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>适合少量键值对</td>
+<td>频繁增删时性能更好</td>
+</tr>
+<tr>
+<td>迭代</td>
+<td>需 <code>Object.entries</code></td>
+<td>直接 <code>for...of</code> 或 <code>forEach</code></td>
+</tr>
+</tbody></table>
+<p><strong>优先使用 Map 的场景</strong>：</p>
+<ul>
+<li>键为对象或非字符串类型</li>
+<li>需要频繁增删键值对</li>
+<li>需要保持插入顺序</li>
+<li>需要快速获取长度</li>
+</ul>
+<hr>
+<h3 id="11-js中数组常用的方法有哪些？并阐述他们各自的作用？"><a href="#11-js中数组常用的方法有哪些？并阐述他们各自的作用？" class="headerlink" title="11. js中数组常用的方法有哪些？并阐述他们各自的作用？"></a>11. js中数组常用的方法有哪些？并阐述他们各自的作用？</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>push</code> &#x2F; <code>pop</code></td>
+<td>末尾添加 &#x2F; 删除</td>
+</tr>
+<tr>
+<td><code>unshift</code> &#x2F; <code>shift</code></td>
+<td>开头添加 &#x2F; 删除</td>
+</tr>
+<tr>
+<td><code>map</code></td>
+<td>映射，返回新数组</td>
+</tr>
+<tr>
+<td><code>filter</code></td>
+<td>过滤，返回新数组</td>
+</tr>
+<tr>
+<td><code>reduce</code></td>
+<td>累积计算</td>
+</tr>
+<tr>
+<td><code>forEach</code></td>
+<td>遍历</td>
+</tr>
+<tr>
+<td><code>find</code> &#x2F; <code>findIndex</code></td>
+<td>查找元素 &#x2F; 索引</td>
+</tr>
+<tr>
+<td><code>some</code> &#x2F; <code>every</code></td>
+<td>判断是否至少一个 &#x2F; 全部满足</td>
+</tr>
+<tr>
+<td><code>includes</code></td>
+<td>是否包含某值</td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>排序（原地）</td>
+</tr>
+<tr>
+<td><code>slice</code> &#x2F; <code>splice</code></td>
+<td>截取 &#x2F; 删除并插入</td>
+</tr>
+<tr>
+<td><code>concat</code></td>
+<td>合并数组</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="12-比较以下两个JavaScript列表的异同点-let-list1-1-2-3-4-和let-list2-list2-push-1-list2-push-2"><a href="#12-比较以下两个JavaScript列表的异同点-let-list1-1-2-3-4-和let-list2-list2-push-1-list2-push-2" class="headerlink" title="12. 比较以下两个JavaScript列表的异同点: let list1&#x3D;[1,2,3,4]和let list2&#x3D;[]; list2.push(1); list2.push(2);?"></a>12. 比较以下两个JavaScript列表的异同点: let list1&#x3D;[1,2,3,4]和let list2&#x3D;[]; list2.push(1); list2.push(2);?</h3><p><strong>相同点</strong>：最终内容都是 <code>[1, 2]</code>。</p>
+<p><strong>不同点</strong>：</p>
+<ul>
+<li><code>list1</code> 是<strong>字面量创建</strong>，一次性定义。</li>
+<li><code>list2</code> 是<strong>动态创建</strong>，通过 <code>push</code> 逐步添加。</li>
+<li>性能上，字面量更快。</li>
+<li><code>list1</code> 有初始 <code>length</code> 为 4，但后文未体现；实际上若只比较最终值，两者元素相同。</li>
+</ul>
+<hr>
+<h3 id="13-前端模块化有哪些方式，CommonJS和ESModule的主要区别是什么"><a href="#13-前端模块化有哪些方式，CommonJS和ESModule的主要区别是什么" class="headerlink" title="13. 前端模块化有哪些方式，CommonJS和ESModule的主要区别是什么?"></a>13. 前端模块化有哪些方式，CommonJS和ESModule的主要区别是什么?</h3><p><strong>模块化方式</strong>：</p>
+<ul>
+<li>IIFE（立即执行函数）</li>
+<li>AMD &#x2F; CMD</li>
+<li>CommonJS</li>
+<li>ES Module</li>
+</ul>
+<p><strong>CommonJS vs ESModule</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>CommonJS</th>
+<th>ES Module</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>环境</td>
+<td>Node.js（默认）</td>
+<td>浏览器 + Node（需配置）</td>
+</tr>
+<tr>
+<td>加载时机</td>
+<td>运行时同步加载</td>
+<td>编译时静态分析</td>
+</tr>
+<tr>
+<td>导出</td>
+<td><code>module.exports</code> &#x2F; <code>exports</code></td>
+<td><code>export</code> &#x2F; <code>export default</code></td>
+</tr>
+<tr>
+<td>导入</td>
+<td><code>require()</code></td>
+<td><code>import</code></td>
+</tr>
+<tr>
+<td>动态导入</td>
+<td>不支持原生动态</td>
+<td><code>import()</code> 函数</td>
+</tr>
+<tr>
+<td>值的绑定</td>
+<td>导出值的拷贝</td>
+<td>导出值的实时绑定（只读）</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="14-Promise有哪三种状态-当Promise成功和失败时，分别会调用哪些函数？"><a href="#14-Promise有哪三种状态-当Promise成功和失败时，分别会调用哪些函数？" class="headerlink" title="14. Promise有哪三种状态?当Promise成功和失败时，分别会调用哪些函数？"></a>14. Promise有哪三种状态?当Promise成功和失败时，分别会调用哪些函数？</h3><p><strong>三种状态</strong>：</p>
+<ul>
+<li><code>pending</code>（进行中）</li>
+<li><code>fulfilled</code>（已成功）</li>
+<li><code>rejected</code>（已失败）</li>
+</ul>
+<p><strong>成功时</strong>：调用 <code>then</code> 的第一个回调函数。<br><strong>失败时</strong>：调用 <code>catch</code> 或 <code>then</code> 的第二个回调函数。</p>
+<hr>
+<h3 id="15-JavaScript中的作用域和作用域链是怎样的？"><a href="#15-JavaScript中的作用域和作用域链是怎样的？" class="headerlink" title="15. JavaScript中的作用域和作用域链是怎样的？"></a>15. JavaScript中的作用域和作用域链是怎样的？</h3><ul>
+<li><strong>作用域</strong>：变量和函数的可访问范围。JS 中有<strong>全局作用域、函数作用域、块级作用域</strong>（<code>let</code> &#x2F; <code>const</code>）。</li>
+<li><strong>作用域链</strong>：当在某个作用域中访问变量时，会先从当前作用域查找，若找不到则逐级向上层作用域查找，直到全局作用域，若仍找不到则报错（未声明变量）或返回 <code>undefined</code>（属性访问）。<br>这种嵌套作用域的链式查找机制称为<strong>作用域链</strong>，由函数定义时的位置决定（静态作用域&#x2F;词法作用域）。</li>
+</ul>
+<hr>
+<p>如果需要我针对第6、7、8题中你未给出的具体代码进行分析，可以把代码贴出来，我可以为你详细拆解执行顺序和输出结果。</p>
+<ol start="16">
+<li></li>
+</ol>
+
+    </div>
+</article>
+
+
+                </div>
+                <aside class="col-md-4 gal-left" id="sidebar">
+    <!-- 此为sidebar的搜索框, 非搜索结果页面 -->
+<aside id="sidebar-search">
+    <div class="search hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <form class="form-inline clearfix" id="search-form" method="get"
+              action="/search/index.html">
+            <input type="text" name="s" class="form-control" id="searchInput" placeholder="搜索文章~" autocomplete="off">
+            <button class="btn btn-danger btn-gal" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+    </div>
+</aside>
+    <aside id="sidebar-author">
+    <div class="panel panel-gal" data-aos="flip-right" data-aos-duration="3000">
+        <div class="panel-heading" style="text-align: center">
+            <i class="fa fa-quote-left"></i>
+            John Doe
+            <i class="fa fa-quote-right"></i>
+        </div>
+        <div class="author-panel text-center">
+            <img src="/imgs/avatar.jpg" width="140" height="140"
+                 alt="个人头像" class="author-image">
+            <p class="author-description"></p>
+        </div>
+    </div>
+</aside>
+    
+    <aside id="sidebar-recent_comments">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-comments"></i>
+            最新评论
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush"></ul>
+    </div>
+</aside>
+    
+    <!-- 要配置好leancloud才能开启此小工具 -->
+    
+    
+    <aside id="sidebar-recent_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            近期文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/03/26/msjs/">msjs</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/03/23/%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6%EF%BC%8C%E5%87%BD%E6%95%B0%E8%BF%9B%E9%98%B6%EF%BC%8C%E9%97%AD%E5%8C%85/">事件机制，函数进阶，闭包</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/03/23/Ajax%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98%EF%BC%9A%E4%BB%8E%E5%BE%85%E5%8A%9E%E4%BA%8B%E9%A1%B9%E7%9C%8B%E5%89%8D%E7%AB%AF%E6%95%B0%E6%8D%AE%E4%BA%A4%E4%BA%92%E4%B8%8E%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A/">Ajax异步编程实战：从待办事项看前端数据交互与事件绑定</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/03/23/axios/">axios</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/03/23/hello-world/">Hello World</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="sidebar-rand_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            随机文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/03/23/Ajax%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98%EF%BC%9A%E4%BB%8E%E5%BE%85%E5%8A%9E%E4%BA%8B%E9%A1%B9%E7%9C%8B%E5%89%8D%E7%AB%AF%E6%95%B0%E6%8D%AE%E4%BA%A4%E4%BA%92%E4%B8%8E%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A/">Ajax异步编程实战：从待办事项看前端数据交互与事件绑定</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/03/23/axios/">axios</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/03/23/hello-world/">Hello World</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/03/23/%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6%EF%BC%8C%E5%87%BD%E6%95%B0%E8%BF%9B%E9%98%B6%EF%BC%8C%E9%97%AD%E5%8C%85/">事件机制，函数进阶，闭包</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/03/26/msjs/">msjs</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="gal-sets">
+        <div class="panel panel-gal hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+            <ul class="nav nav-pills pills-gal">
+
+                
+                <li>
+                    <a href="/2026/03/26/msjs/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2026/03/26/msjs/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2026/03/26/msjs/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                </li>
+                
+            </ul>
+            <div class="tab-content">
+                
+                <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
+    
+</div>
+                
+                
+                <div class="friend-links tab-pane nav bs-sidenav fade" id="sidebar-friend-links">
+    
+    <li>
+        <a href="http://kdays.net/days/" target="_blank">KDays Forum</a>
+    </li>
+    
+    <li>
+        <a href="http://www.gal123.com/" target="_blank">绅士导航♂</a>
+    </li>
+    
+    <li>
+        <a href="http://www.moe123.com/" target="_blank">萌导航</a>
+    </li>
+    
+</div>
+                
+                
+                <div class="links tab-pane nav bs-sidenav fade" id="sidebar-links">
+    
+    <li>
+        <a href="https://github.com/ZEROKISEKI/" target="_blank">Github</a>
+    </li>
+    
+    <li>
+        <a href="https://coding.net/u/SORA1" target="_blank">Coding</a>
+    </li>
+    
+    <li>
+        <a href="https://www.zhihu.com/people/aonosora/activities" target="_blank">知乎</a>
+    </li>
+    
+</div>
+                
+            </div>
+        </div>
+    </aside>
+    
+</aside>
+            </div>
+        </div>
+    </div>
+    <footer id="gal-footer">
+    <div class="container">
+        Copyright © 2018 John Doe Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>.&nbsp;Theme by <a href="https://github.com/ZEROKISEKI" target="_blank">AONOSORA</a>
+    </div>
+</footer>
+
+<!-- 回到顶端 -->
+<div id="gal-gotop">
+    <i class="fa fa-angle-up"></i>
+</div>
+</body>
+
+<script src="/js/activate-power-mode.js"></script>
+
+<script>
+
+    // 配置highslide
+	hs.graphicsDir = '/js/highslide/graphics/'
+    hs.outlineType = "rounded-white";
+    hs.dimmingOpacity = 0.8;
+    hs.outlineWhileAnimating = true;
+    hs.showCredits = false;
+    hs.captionEval = "this.thumb.alt";
+    hs.numberPosition = "caption";
+    hs.align = "center";
+    hs.transitions = ["expand", "crossfade"];
+    hs.lang.number = '共%2张图, 当前是第%1张';
+    hs.addSlideshow({
+      interval: 5000,
+      repeat: true,
+      useControls: true,
+      fixedControls: "fit",
+      overlayOptions: {
+        opacity: 0.75,
+        position: "bottom center",
+        hideOnMouseOut: true
+      }
+    })
+
+    // 初始化aos
+    AOS.init({
+      duration: 1000,
+      delay: 0,
+      easing: 'ease-out-back'
+    });
+
+</script>
+<script>
+	POWERMODE.colorful = 'true';    // make power mode colorful
+	POWERMODE.shake = 'true';       // turn off shake
+	// TODO 这里根据具体情况修改
+	document.body.addEventListener('input', POWERMODE);
+</script>
+<script>
+    window.slideConfig = {
+      prefix: '/imgs/slide/background',
+      ext: 'jpg',
+      maxCount: '6'
+    }
+</script>
+
+<script src="/js/hs.js"></script>
+<script src="/js/blog.js"></script>
+
+
+
+
+</html>
