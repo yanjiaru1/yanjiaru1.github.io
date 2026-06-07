@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>mscss||Lazy Cat&#39;s Blog|ai全栈笔记 &amp; 技术分享</title>
+<meta name="description" content="1.描述一下css中的外边距塌陷问题及其解决方案？ 2.给定使用flex属性的css样式，分析其中盒子的最终宽度是什么？ 3.flexbox布局模型中，常用的属性及其作用是什么 4.如何使用css实现常见的两栏布局，有哪些方法 5.css选择器的优先级规则是怎样的？内联选择器和id选择器哪个优先级更高？ 6.如何实现一个元素的垂直居中 7.css有哪些常用的布局方式 8.css的box-sizin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mscss">
+<meta property="og:url" content="http://example.com/2026/03/26/mscss/index.html">
+<meta property="og:site_name" content="Lazy Cat&#39;s Blog">
+<meta property="og:description" content="1.描述一下css中的外边距塌陷问题及其解决方案？ 2.给定使用flex属性的css样式，分析其中盒子的最终宽度是什么？ 3.flexbox布局模型中，常用的属性及其作用是什么 4.如何使用css实现常见的两栏布局，有哪些方法 5.css选择器的优先级规则是怎样的？内联选择器和id选择器哪个优先级更高？ 6.如何实现一个元素的垂直居中 7.css有哪些常用的布局方式 8.css的box-sizin">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-26T08:55:05.000Z">
+<meta property="article:modified_time" content="2026-06-07T12:35:12.485Z">
+<meta property="article:author" content="Lazy Cat">
+<meta property="article:tag" content="css">
+<meta name="twitter:card" content="summary">
+
+
+<meta name="description" content="1.描述一下css中的外边距塌陷问题及其解决方案？
+2.给定使用flex属性的css样式，分析其中盒子的最终宽度是什么？
+3.flexbox布局模型中，常用的属性及其作用是什么
+4.如何使用css实现常见的两栏布局，有哪些方法
+5.css选择器的优先级规则是怎样的？内联选择器和id选择器哪个优先级更">
+
+<meta name="author" content="Lazy Cat,undefined">
+
+
+<link rel="shortcut icon" href="/favicon.png" type="image/x-icon"/>
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//cdn.staticfile.org/bootstrap/3.3.6/css/bootstrap.min.css">
+
+
+<link rel="stylesheet" href="/css/theme.css">
+
+
+<link rel="stylesheet" href="/css/syntax.css">
+
+
+<link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/9.1.0/styles/arta.min.css">
+
+<!--baidu analytics-->
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+            <a class="navbar-brand" href="/.">Lazy Cat&#39;s Blog</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                
+                <li><a href="/." class="current"><i class="icon-home"> 首页</i></a></li>
+                
+                <li><a href="/archives/"><i class="icon-archive"> 归档</i></a></li>
+                
+                <li><a href="/atom.xml"><i class="icon-rss"> 订阅</i></a></li>
+                
+                <li><a href="/about/"><i class="icon-about"> 关于</i></a></li>
+                
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="wrapper">
+    <div class="content">
+        <div class="container container-center">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="article">
+    <div class="well">
+        <h1><a href="/2026/03/26/mscss/">mscss</a></h1>
+        <div class="post-meta">
+            <div class="post-time">
+                <i class="fa fa-calendar"></i><time> 2026-03-26</time>
+            </div>
+            <div class="post-visitors-count">
+                <i class="fa fa-ge"></i>
+                <span id="/2026/03/26/mscss/" class="leancloud_visitors" data-flag-title="mscss">
+                    <span class="post-meta-item-text">阅读量 </span>
+                    <i class="leancloud-visitors-count">0</i>
+                </span>
+            </div>
+        </div>
+        <div class="post-content article-entry">
+            <p>1.描述一下css中的外边距塌陷问题及其解决方案？</p>
+<p>2.给定使用flex属性的css样式，分析其中盒子的最终宽度是什么？</p>
+<p>3.flexbox布局模型中，常用的属性及其作用是什么</p>
+<p>4.如何使用css实现常见的两栏布局，有哪些方法</p>
+<p>5.css选择器的优先级规则是怎样的？内联选择器和id选择器哪个优先级更高？</p>
+<p>6.如何实现一个元素的垂直居中</p>
+<p>7.css有哪些常用的布局方式</p>
+<p>8.css的box-sizing属性有哪些值，他们各自对盒模型计算方式有哪些影响？</p>
+<p>9.css中有哪些常见的长度单位，他们各自的使用场景和特点是什么</p>
+<p>10.css中position属性有哪些常用的值，他们各自的特点和用法是什么</p>
+<p>11.css中的相对定位relative和绝对定位absolute有什么区别，他们各自适用于哪些场景？</p>
+<p>12.css中有哪些方法可以隐藏一个div元素，他们之间有什么区别</p>
+<p>13.如何使用flexbox布局实现一个div在主轴和侧轴上的居中布局</p>
+<p>14.阐述bfc（块级格式化上下文）的概念，并提供几个世纪的应用场景和例子？</p>
+<p>15.介绍css的flex布局，主轴和交叉轴的概念是什么？如何使用flex布局实现页面排版？</p>
+<p>16.是否使用过css media queries？他们的作用是什么？</p>
+<p>17.css中 ：：before和：：after伪类如何使用？他们的应用场景是什么？</p>
+<p>18.css中实现元素水平居中有哪些常见方法？</p>
+<p>19.使用flexbox布局，如何实现一个居中对齐的盒子？</p>
+<p>20.css中，如何实现0.5像素的线条</p>
+<p>21.css盒模型包含哪些组成部分？标准和模型与怪异模型有什么区别？</p>
+<p>22.解释一下css中的伪类与伪元素有什么区别？has()和is()选择器的作用是什么</p>
+<p>23.项目中是否使用过css伪类</p>
+<p>24.css选择器有哪些种类，他们的优先级规则是怎样的，是否存在可以打破这些优先级的特殊情况？</p>
+<p>25.css盒子模型是什么，如何计算其宽度，是否还存在其他盒子模型？</p>
+<p>26.css中哪些情况会出现margin重叠问题，如何避免或解决</p>
+<p>27.css中如何清除浮动,有哪些常见方法</p>
+<p>28.解释一下justify-content和align-items在flexbox布局的作用和区别？</p>
+<p>29.描述一下css中flex属性及其常见用法</p>
+<p>30.对css盒模型有哪些理解</p>
+<p>31.css伪元素和伪类有什么区别？分别有哪些应用场景？</p>
+<p>32.解释cssbfc的概念、创建方式及其实际应用</p>
+<p>33.详细说明cssflex布局的工作原理和常见应用场景</p>
+<p>34.如何使用css实现多余文字的省略号显示？</p>
+<p>35.回流reflow和重绘repaint的概念是什么？他们之间有什么区别？</p>
+<p>36.在css中，有哪些方法可以实现元素的缩小效果</p>
+<p>37.flexbox常用的属性有哪些？</p>
+<p>38.对css的理解是什么？在学习css的过程中有没有遇到什么有意思的经历</p>
+<p>39.如何使用flexbox实现一个九宫格布局</p>
+<p>40.是否遇到过css外边距重叠问题，如何理解和解决</p>
+<p>41.如何利用cssgrid布局创建一个九宫格，并绘制出其分割线</p>
+<p>42.如何使用css实现左侧定宽，右侧自适应的两栏布局</p>
+<p>43.如何实现响应式布局</p>
+<p>44.选用css-in-js技术有哪些优势？他在站点换肤场景中是否使用？相比裸css有何不同？</p>
+<p>45.在css中如何确保样式不会相互污染？在vue项目中引入外部样式时，如果造成全局污染，通常有哪些解决方案</p>
+<p>46.css实现垂直居中的方案有哪些</p>
+<p>47.css定位方式有哪些，例如absolute、relative、sticky分别说明</p>
+<p>48.css盒模型的工作原理是什么</p>
+<p>49.如何实现组件库的主题切换功能</p>
+<p>50.css本身没有model概念，如果提及使用cssmodel ，其实现原理是什么？</p>
+<p>51.有哪些方法可以解决css样式冲突问题？</p>
+<p>这是一份全面的 CSS 面试题解答，我将按照你给出的编号逐一回答：</p>
+<hr>
+<h2 id="1-描述一下css中的外边距塌陷问题及其解决方案？"><a href="#1-描述一下css中的外边距塌陷问题及其解决方案？" class="headerlink" title="1. 描述一下css中的外边距塌陷问题及其解决方案？"></a>1. 描述一下css中的外边距塌陷问题及其解决方案？</h2><p><strong>外边距塌陷（Margin Collapse）</strong>：当两个块级元素的垂直外边距相遇时，它们会合并为一个外边距，取两者中的较大值。</p>
+<p><strong>常见场景：</strong></p>
+<ol>
+<li><strong>相邻兄弟元素</strong>：上下两个元素，margin-bottom 和 margin-top 会合并</li>
+<li><strong>父子元素</strong>：父元素与第一个&#x2F;最后一个子元素的 margin-top&#x2F;margin-bottom 会合并</li>
+<li><strong>空块元素</strong>：自身没有内容的块元素，margin-top 和 margin-bottom 会合并</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 相邻兄弟 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box1&quot;</span> <span class="attr">style</span>=<span class="string">&quot;margin-bottom: 20px;&quot;</span>&gt;</span>Box1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box2&quot;</span> <span class="attr">style</span>=<span class="string">&quot;margin-top: 30px;&quot;</span>&gt;</span>Box2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 实际间距 30px，不是 50px --&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 父子 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;parent&quot;</span> <span class="attr">style</span>=<span class="string">&quot;margin-top: 20px;&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;child&quot;</span> <span class="attr">style</span>=<span class="string">&quot;margin-top: 30px;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 父元素实际 margin-top 为 30px --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>解决方案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>相邻兄弟</td>
+<td>只给其中一个设置 margin，或使用 padding 替代</td>
+</tr>
+<tr>
+<td>父子</td>
+<td>父元素设置 <code>overflow: hidden</code>、<code>border</code>、<code>padding</code>，或使用 <code>display: flex</code></td>
+</tr>
+<tr>
+<td>通用</td>
+<td>使用 <code>padding</code> 替代 <code>margin</code>，或使用 <code>BFC</code> 隔离</td>
+</tr>
+</tbody></table>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 解决父子塌陷 */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden; <span class="comment">/* 触发 BFC */</span></span><br><span class="line">  <span class="comment">/* 或 */</span></span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid transparent;</span><br><span class="line">  <span class="comment">/* 或 */</span></span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-给定使用flex属性的css样式，分析其中盒子的最终宽度是什么？"><a href="#2-给定使用flex属性的css样式，分析其中盒子的最终宽度是什么？" class="headerlink" title="2. 给定使用flex属性的css样式，分析其中盒子的最终宽度是什么？"></a>2. 给定使用flex属性的css样式，分析其中盒子的最终宽度是什么？</h2><p><strong>flex 属性是 <code>flex-grow</code>、<code>flex-shrink</code>、<code>flex-basis</code> 的缩写。</strong></p>
+<p><strong>计算规则：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 示例 */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">600px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item1</span> &#123; <span class="attribute">flex</span>: <span class="number">1</span>; &#125;      <span class="comment">/* flex-grow: 1, flex-shrink: 1, flex-basis: 0% */</span></span><br><span class="line"><span class="selector-class">.item2</span> &#123; <span class="attribute">flex</span>: <span class="number">2</span>; &#125;      <span class="comment">/* flex-grow: 2, flex-shrink: 1, flex-basis: 0% */</span></span><br><span class="line"><span class="selector-class">.item3</span> &#123; <span class="attribute">width</span>: <span class="number">100px</span>; &#125; <span class="comment">/* 无 flex，按内容宽度 */</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>计算步骤：</strong></p>
+<ol>
+<li>计算剩余空间：<code>600px - 100px = 500px</code></li>
+<li>按 flex-grow 比例分配：<code>500px ÷ (1+2) ≈ 166.67px</code></li>
+<li>最终宽度：<ul>
+<li>item1: <code>0 + 166.67px = 166.67px</code></li>
+<li>item2: <code>0 + 333.33px = 333.33px</code></li>
+<li>item3: <code>100px</code></li>
+</ul>
+</li>
+</ol>
+<p><strong>注意</strong>：当 <code>flex-basis</code> 不为 0 时，需要先减去基础宽度再分配剩余空间。</p>
+<hr>
+<h2 id="3-flexbox布局模型中，常用的属性及其作用是什么"><a href="#3-flexbox布局模型中，常用的属性及其作用是什么" class="headerlink" title="3. flexbox布局模型中，常用的属性及其作用是什么"></a>3. flexbox布局模型中，常用的属性及其作用是什么</h2><p><strong>容器属性：</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>flex-direction</code></td>
+<td>主轴方向：row、column、row-reverse、column-reverse</td>
+</tr>
+<tr>
+<td><code>flex-wrap</code></td>
+<td>是否换行：nowrap、wrap、wrap-reverse</td>
+</tr>
+<tr>
+<td><code>flex-flow</code></td>
+<td>flex-direction 和 flex-wrap 的简写</td>
+</tr>
+<tr>
+<td><code>justify-content</code></td>
+<td>主轴对齐方式：flex-start、center、flex-end、space-between、space-around、space-evenly</td>
+</tr>
+<tr>
+<td><code>align-items</code></td>
+<td>交叉轴对齐方式：stretch、center、flex-start、flex-end、baseline</td>
+</tr>
+<tr>
+<td><code>align-content</code></td>
+<td>多根轴线对齐方式（多行时）</td>
+</tr>
+</tbody></table>
+<p><strong>项目属性：</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>order</code></td>
+<td>排序，数值越小越靠前</td>
+</tr>
+<tr>
+<td><code>flex-grow</code></td>
+<td>放大比例，默认 0</td>
+</tr>
+<tr>
+<td><code>flex-shrink</code></td>
+<td>缩小比例，默认 1</td>
+</tr>
+<tr>
+<td><code>flex-basis</code></td>
+<td>分配剩余空间前的基准宽度</td>
+</tr>
+<tr>
+<td><code>flex</code></td>
+<td>grow、shrink、basis 的简写</td>
+</tr>
+<tr>
+<td><code>align-self</code></td>
+<td>覆盖容器的 align-items</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="4-如何使用css实现常见的两栏布局，有哪些方法"><a href="#4-如何使用css实现常见的两栏布局，有哪些方法" class="headerlink" title="4. 如何使用css实现常见的两栏布局，有哪些方法"></a>4. 如何使用css实现常见的两栏布局，有哪些方法</h2><p><strong>左侧固定，右侧自适应：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;left&quot;</span>&gt;</span>固定宽度<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;right&quot;</span>&gt;</span>自适应<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>方法1：float + BFC</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.left</span> &#123; <span class="attribute">float</span>: left; <span class="attribute">width</span>: <span class="number">200px</span>; &#125;</span><br><span class="line"><span class="selector-class">.right</span> &#123; <span class="attribute">overflow</span>: hidden; &#125; <span class="comment">/* 触发 BFC */</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>方法2：flex</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123; <span class="attribute">display</span>: flex; &#125;</span><br><span class="line"><span class="selector-class">.left</span> &#123; <span class="attribute">width</span>: <span class="number">200px</span>; &#125;</span><br><span class="line"><span class="selector-class">.right</span> &#123; <span class="attribute">flex</span>: <span class="number">1</span>; &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法3：position + margin</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.left</span> &#123; <span class="attribute">position</span>: absolute; <span class="attribute">width</span>: <span class="number">200px</span>; &#125;</span><br><span class="line"><span class="selector-class">.right</span> &#123; <span class="attribute">margin-left</span>: <span class="number">200px</span>; &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法4：grid</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123; <span class="attribute">display</span>: grid; <span class="attribute">grid-template-columns</span>: <span class="number">200px</span> <span class="number">1</span>fr; &#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-css选择器的优先级规则是怎样的？内联选择器和id选择器哪个优先级更高？"><a href="#5-css选择器的优先级规则是怎样的？内联选择器和id选择器哪个优先级更高？" class="headerlink" title="5. css选择器的优先级规则是怎样的？内联选择器和id选择器哪个优先级更高？"></a>5. css选择器的优先级规则是怎样的？内联选择器和id选择器哪个优先级更高？</h2><p><strong>优先级规则（从高到低）：</strong></p>
+<table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>类型</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>最高</td>
+<td>!important</td>
+<td><code>color: red !important;</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td>内联样式</td>
+<td><code>style=&quot;color: red&quot;</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>ID 选择器</td>
+<td><code>#id</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>类&#x2F;伪类&#x2F;属性选择器</td>
+<td><code>.class</code>、<code>:hover</code>、<code>[type=&quot;text&quot;]</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>元素&#x2F;伪元素选择器</td>
+<td><code>div</code>、<code>::before</code></td>
+</tr>
+<tr>
+<td>最低</td>
+<td>通配符&#x2F;组合器</td>
+<td><code>*</code>、<code>&gt;</code>、<code>+</code>、<code>~</code></td>
+</tr>
+</tbody></table>
+<p><strong>权重计算</strong>：通常用 (a, b, c, d) 表示</p>
+<ul>
+<li>内联样式：(1, 0, 0, 0)</li>
+<li>ID：(0, 1, 0, 0)</li>
+<li>类：(0, 0, 1, 0)</li>
+<li>元素：(0, 0, 0, 1)</li>
+</ul>
+<p><strong>比较</strong>：内联选择器优先级高于 ID 选择器（除非 ID 使用了 !important）</p>
+<hr>
+<h2 id="6-如何实现一个元素的垂直居中"><a href="#6-如何实现一个元素的垂直居中" class="headerlink" title="6. 如何实现一个元素的垂直居中"></a>6. 如何实现一个元素的垂直居中</h2><p><strong>方法1：flex（推荐）</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">align-items</span>: center;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法2：absolute + transform</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.parent</span> &#123; <span class="attribute">position</span>: relative; &#125;</span><br><span class="line"><span class="selector-class">.child</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">translateY</span>(-<span class="number">50%</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法3：grid</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: grid;</span><br><span class="line">  <span class="attribute">align-items</span>: center;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法4：table-cell</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: table-cell;</span><br><span class="line">  <span class="attribute">vertical-align</span>: middle;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法5：line-height（单行文本）</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="7-css有哪些常用的布局方式"><a href="#7-css有哪些常用的布局方式" class="headerlink" title="7. css有哪些常用的布局方式"></a>7. css有哪些常用的布局方式</h2><table>
+<thead>
+<tr>
+<th>布局方式</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>正常文档流</strong></td>
+<td>默认块级&#x2F;行内排列</td>
+<td>简单页面</td>
+</tr>
+<tr>
+<td><strong>浮动布局</strong></td>
+<td>float + clear</td>
+<td>文字环绕、旧版布局</td>
+</tr>
+<tr>
+<td><strong>定位布局</strong></td>
+<td>position</td>
+<td>固定元素、弹窗</td>
+</tr>
+<tr>
+<td><strong>Flexbox</strong></td>
+<td>一维布局</td>
+<td>导航栏、卡片、列表</td>
+</tr>
+<tr>
+<td><strong>Grid</strong></td>
+<td>二维布局</td>
+<td>复杂网格、整体页面</td>
+</tr>
+<tr>
+<td><strong>多列布局</strong></td>
+<td>column-count</td>
+<td>类似报纸排版</td>
+</tr>
+<tr>
+<td><strong>响应式布局</strong></td>
+<td>media queries</td>
+<td>多端适配</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="8-css的box-sizing属性有哪些值，他们各自对盒模型计算方式有哪些影响？"><a href="#8-css的box-sizing属性有哪些值，他们各自对盒模型计算方式有哪些影响？" class="headerlink" title="8. css的box-sizing属性有哪些值，他们各自对盒模型计算方式有哪些影响？"></a>8. css的box-sizing属性有哪些值，他们各自对盒模型计算方式有哪些影响？</h2><table>
+<thead>
+<tr>
+<th>值</th>
+<th>计算方式</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>content-box</code>（默认）</td>
+<td>width &#x3D; 内容宽度</td>
+<td><code>width: 200px</code> + <code>padding: 20px</code> &#x3D; 实际宽度 240px</td>
+</tr>
+<tr>
+<td><code>border-box</code></td>
+<td>width &#x3D; 内容 + padding + border</td>
+<td><code>width: 200px</code> + <code>padding: 20px</code> &#x3D; 内容宽度 160px</td>
+</tr>
+</tbody></table>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 全局推荐设置 */</span></span><br><span class="line">* &#123;</span><br><span class="line">  <span class="attribute">box-sizing</span>: border-box;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="9-css中有哪些常见的长度单位，他们各自的使用场景和特点是什么"><a href="#9-css中有哪些常见的长度单位，他们各自的使用场景和特点是什么" class="headerlink" title="9. css中有哪些常见的长度单位，他们各自的使用场景和特点是什么"></a>9. css中有哪些常见的长度单位，他们各自的使用场景和特点是什么</h2><table>
+<thead>
+<tr>
+<th>单位</th>
+<th>类型</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>px</code></td>
+<td>绝对</td>
+<td>固定像素</td>
+<td>边框、阴影、小尺寸</td>
+</tr>
+<tr>
+<td><code>rem</code></td>
+<td>相对</td>
+<td>相对于根元素 font-size</td>
+<td>响应式文字、全局适配</td>
+</tr>
+<tr>
+<td><code>em</code></td>
+<td>相对</td>
+<td>相对于父元素 font-size</td>
+<td>局部缩放、组件内</td>
+</tr>
+<tr>
+<td><code>%</code></td>
+<td>相对</td>
+<td>相对于父元素</td>
+<td>宽度、布局</td>
+</tr>
+<tr>
+<td><code>vw/vh</code></td>
+<td>相对</td>
+<td>相对于视口宽度&#x2F;高度</td>
+<td>全屏、视口比例</td>
+</tr>
+<tr>
+<td><code>vmin/vmax</code></td>
+<td>相对</td>
+<td>相对于视口较小&#x2F;较大边</td>
+<td>保持比例</td>
+</tr>
+<tr>
+<td><code>ch</code></td>
+<td>相对</td>
+<td>相对于字符 0 宽度</td>
+<td>限制文本长度</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="10-css中position属性有哪些常用的值，他们各自的特点和用法是什么"><a href="#10-css中position属性有哪些常用的值，他们各自的特点和用法是什么" class="headerlink" title="10. css中position属性有哪些常用的值，他们各自的特点和用法是什么"></a>10. css中position属性有哪些常用的值，他们各自的特点和用法是什么</h2><table>
+<thead>
+<tr>
+<th>值</th>
+<th>定位参考</th>
+<th>是否脱离文档流</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>static</code></td>
+<td>无</td>
+<td>否</td>
+<td>默认值，top&#x2F;left 无效</td>
+</tr>
+<tr>
+<td><code>relative</code></td>
+<td>自身原位置</td>
+<td>否</td>
+<td>保留原占位，相对自身偏移</td>
+</tr>
+<tr>
+<td><code>absolute</code></td>
+<td>最近的非 static 祖先</td>
+<td>是</td>
+<td>绝对定位，不占位</td>
+</tr>
+<tr>
+<td><code>fixed</code></td>
+<td>视口</td>
+<td>是</td>
+<td>固定屏幕位置</td>
+</tr>
+<tr>
+<td><code>sticky</code></td>
+<td>父容器滚动区域</td>
+<td>混合</td>
+<td>滚动到阈值时固定</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="11-css中的相对定位relative和绝对定位absolute有什么区别，他们各自适用于哪些场景？"><a href="#11-css中的相对定位relative和绝对定位absolute有什么区别，他们各自适用于哪些场景？" class="headerlink" title="11. css中的相对定位relative和绝对定位absolute有什么区别，他们各自适用于哪些场景？"></a>11. css中的相对定位relative和绝对定位absolute有什么区别，他们各自适用于哪些场景？</h2><table>
+<thead>
+<tr>
+<th>对比</th>
+<th>relative</th>
+<th>absolute</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>参考点</strong></td>
+<td>自身原本位置</td>
+<td>最近的非 static 祖先</td>
+</tr>
+<tr>
+<td><strong>文档流</strong></td>
+<td>保留原占位</td>
+<td>脱离文档流</td>
+</tr>
+<tr>
+<td><strong>影响</strong></td>
+<td>不影响其他元素位置</td>
+<td>其他元素会占据其位置</td>
+</tr>
+</tbody></table>
+<p><strong>使用场景：</strong></p>
+<ul>
+<li><strong>relative</strong>：微调位置、作为 absolute 的参照物</li>
+<li><strong>absolute</strong>：弹窗、下拉菜单、图标定位、悬浮层</li>
+</ul>
+<hr>
+<h2 id="12-css中有哪些方法可以隐藏一个div元素，他们之间有什么区别"><a href="#12-css中有哪些方法可以隐藏一个div元素，他们之间有什么区别" class="headerlink" title="12. css中有哪些方法可以隐藏一个div元素，他们之间有什么区别"></a>12. css中有哪些方法可以隐藏一个div元素，他们之间有什么区别</h2><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>是否占位</th>
+<th>是否响应事件</th>
+<th>是否渲染</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>display: none</code></td>
+<td>否</td>
+<td>否</td>
+<td>不渲染</td>
+<td>完全隐藏</td>
+</tr>
+<tr>
+<td><code>visibility: hidden</code></td>
+<td>是</td>
+<td>否</td>
+<td>渲染但不可见</td>
+<td>保留占位</td>
+</tr>
+<tr>
+<td><code>opacity: 0</code></td>
+<td>是</td>
+<td>是</td>
+<td>渲染透明</td>
+<td>动画过渡</td>
+</tr>
+<tr>
+<td><code>position: absolute; left: -9999px</code></td>
+<td>否</td>
+<td>否</td>
+<td>移出屏幕</td>
+<td>屏幕外隐藏</td>
+</tr>
+<tr>
+<td><code>width: 0; height: 0; overflow: hidden</code></td>
+<td>否</td>
+<td>否</td>
+<td>尺寸为 0</td>
+<td>特殊场景</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="13-如何使用flexbox布局实现一个div在主轴和侧轴上的居中布局"><a href="#13-如何使用flexbox布局实现一个div在主轴和侧轴上的居中布局" class="headerlink" title="13. 如何使用flexbox布局实现一个div在主轴和侧轴上的居中布局"></a>13. 如何使用flexbox布局实现一个div在主轴和侧轴上的居中布局</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">justify-content</span>: center; <span class="comment">/* 主轴居中 */</span></span><br><span class="line">  <span class="attribute">align-items</span>: center;     <span class="comment">/* 交叉轴居中 */</span></span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100vh</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>或使用 margin: auto：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="14-阐述bfc（块级格式化上下文）的概念，并提供几个世纪的应用场景和例子？"><a href="#14-阐述bfc（块级格式化上下文）的概念，并提供几个世纪的应用场景和例子？" class="headerlink" title="14. 阐述bfc（块级格式化上下文）的概念，并提供几个世纪的应用场景和例子？"></a>14. 阐述bfc（块级格式化上下文）的概念，并提供几个世纪的应用场景和例子？</h2><p><strong>BFC（Block Formatting Context）</strong>：块级格式化上下文，是 CSS 渲染中独立的布局环境，内部元素不会影响外部。</p>
+<p><strong>触发 BFC 的方式：</strong></p>
+<ul>
+<li><code>overflow: hidden/auto/scroll</code></li>
+<li><code>float: left/right</code></li>
+<li><code>position: absolute/fixed</code></li>
+<li><code>display: inline-block/flex/grid/table</code></li>
+</ul>
+<p><strong>应用场景：</strong></p>
+<ol>
+<li><strong>清除浮动</strong></li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.clearfix</span> &#123;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden; <span class="comment">/* 触发 BFC，包含浮动元素 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>防止外边距塌陷</strong></li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden; <span class="comment">/* 隔离父子 margin */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>自适应两栏布局</strong></li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.left</span> &#123; <span class="attribute">float</span>: left; <span class="attribute">width</span>: <span class="number">200px</span>; &#125;</span><br><span class="line"><span class="selector-class">.right</span> &#123; <span class="attribute">overflow</span>: hidden; &#125; <span class="comment">/* 触发 BFC，不环绕浮动 */</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="15-介绍css的flex布局，主轴和交叉轴的概念是什么？如何使用flex布局实现页面排版？"><a href="#15-介绍css的flex布局，主轴和交叉轴的概念是什么？如何使用flex布局实现页面排版？" class="headerlink" title="15. 介绍css的flex布局，主轴和交叉轴的概念是什么？如何使用flex布局实现页面排版？"></a>15. 介绍css的flex布局，主轴和交叉轴的概念是什么？如何使用flex布局实现页面排版？</h2><p><strong>主轴（Main Axis）</strong>：由 <code>flex-direction</code> 决定的方向，项目沿主轴排列。</p>
+<p><strong>交叉轴（Cross Axis）</strong>：与主轴垂直的方向。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">flex-direction</span>: row; <span class="comment">/* 主轴：水平，交叉轴：垂直 */</span></span><br><span class="line">  <span class="comment">/* flex-direction: column; 主轴：垂直，交叉轴：水平 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>实现页面排版示例：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 典型页面布局 */</span></span><br><span class="line"><span class="selector-class">.page</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">flex-direction</span>: column;</span><br><span class="line">  <span class="attribute">min-height</span>: <span class="number">100vh</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.header</span> &#123; <span class="attribute">height</span>: <span class="number">60px</span>; &#125;</span><br><span class="line"><span class="selector-class">.main</span> &#123; <span class="attribute">flex</span>: <span class="number">1</span>; <span class="attribute">display</span>: flex; &#125; <span class="comment">/* 中间区域 flex 填充 */</span></span><br><span class="line"><span class="selector-class">.sidebar</span> &#123; <span class="attribute">width</span>: <span class="number">200px</span>; &#125;</span><br><span class="line"><span class="selector-class">.content</span> &#123; <span class="attribute">flex</span>: <span class="number">1</span>; &#125;</span><br><span class="line"><span class="selector-class">.footer</span> &#123; <span class="attribute">height</span>: <span class="number">80px</span>; &#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="16-是否使用过css-media-queries？他们的作用是什么？"><a href="#16-是否使用过css-media-queries？他们的作用是什么？" class="headerlink" title="16. 是否使用过css media queries？他们的作用是什么？"></a>16. 是否使用过css media queries？他们的作用是什么？</h2><p><strong>Media Queries</strong>：响应式设计的核心，根据设备特性（宽度、高度、分辨率等）应用不同样式。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 语法 */</span></span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">768px</span>) &#123;</span><br><span class="line">  <span class="selector-class">.container</span> &#123;</span><br><span class="line">    <span class="attribute">flex-direction</span>: column;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 常用断点 */</span></span><br><span class="line"><span class="comment">/* 手机 */</span> <span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">640px</span>) &#123; &#125;</span><br><span class="line"><span class="comment">/* 平板 */</span> <span class="keyword">@media</span> (<span class="attribute">min-width</span>: <span class="number">641px</span>) <span class="keyword">and</span> (<span class="attribute">max-width</span>: <span class="number">1024px</span>) &#123; &#125;</span><br><span class="line"><span class="comment">/* 桌面 */</span> <span class="keyword">@media</span> (<span class="attribute">min-width</span>: <span class="number">1025px</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 其他特性 */</span></span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">prefers-color-scheme</span>: dark) &#123; &#125; <span class="comment">/* 深色模式 */</span></span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">hover</span>: <span class="attribute">hover</span>) &#123; &#125; <span class="comment">/* 支持 hover */</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="17-css中-before-和-after-伪类如何使用？他们的应用场景是什么？"><a href="#17-css中-before-和-after-伪类如何使用？他们的应用场景是什么？" class="headerlink" title="17. css中 ::before 和 ::after 伪类如何使用？他们的应用场景是什么？"></a>17. css中 ::before 和 ::after 伪类如何使用？他们的应用场景是什么？</h2><p><strong>使用方式：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.element</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;前缀&quot;</span>; <span class="comment">/* 必须要有 content */</span></span><br><span class="line">  <span class="attribute">display</span>: inline-block;</span><br><span class="line">  <span class="comment">/* 其他样式 */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.element</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="attribute">display</span>: block;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>应用场景：</strong></p>
+<ul>
+<li>添加装饰性图标</li>
+<li>清除浮动：<code>.clearfix::after &#123; content: &quot;&quot;; clear: both; display: table; &#125;</code></li>
+<li>添加提示文本</li>
+<li>实现边框特效</li>
+<li>实现计数器</li>
+</ul>
+<hr>
+<h2 id="18-css中实现元素水平居中有哪些常见方法？"><a href="#18-css中实现元素水平居中有哪些常见方法？" class="headerlink" title="18. css中实现元素水平居中有哪些常见方法？"></a>18. css中实现元素水平居中有哪些常见方法？</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 1. 行内/行内块元素 */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123; <span class="attribute">text-align</span>: center; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 2. 块级元素（定宽） */</span></span><br><span class="line"><span class="selector-class">.child</span> &#123; <span class="attribute">margin</span>: <span class="number">0</span> auto; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 3. flex */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123; <span class="attribute">display</span>: flex; <span class="attribute">justify-content</span>: center; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 4. grid */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123; <span class="attribute">display</span>: grid; <span class="attribute">place-items</span>: center; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 5. absolute + transform */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123; <span class="attribute">position</span>: relative; &#125;</span><br><span class="line"><span class="selector-class">.child</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">translateX</span>(-<span class="number">50%</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="19-使用flexbox布局，如何实现一个居中对齐的盒子？"><a href="#19-使用flexbox布局，如何实现一个居中对齐的盒子？" class="headerlink" title="19. 使用flexbox布局，如何实现一个居中对齐的盒子？"></a>19. 使用flexbox布局，如何实现一个居中对齐的盒子？</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 方法1：容器控制 */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">justify-content</span>: center;</span><br><span class="line">  <span class="attribute">align-items</span>: center;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100vh</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 方法2：子项 margin */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.child</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: auto;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 方法3：grid + place-items */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: grid;</span><br><span class="line">  <span class="attribute">place-items</span>: center;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100vh</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="20-css中，如何实现0-5像素的线条"><a href="#20-css中，如何实现0-5像素的线条" class="headerlink" title="20. css中，如何实现0.5像素的线条"></a>20. css中，如何实现0.5像素的线条</h2><p><strong>方法1：transform scale</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.line</span> &#123;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">1px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#000</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">scaleY</span>(<span class="number">0.5</span>);</span><br><span class="line">  <span class="attribute">transform-origin</span>: <span class="number">0</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法2：伪元素 + transform</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.line</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.line</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">1px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#000</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">scaleY</span>(<span class="number">0.5</span>);</span><br><span class="line">  <span class="attribute">transform-origin</span>: <span class="number">0</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法3：box-shadow</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.line</span> &#123;</span><br><span class="line">  <span class="attribute">box-shadow</span>: <span class="number">0</span> <span class="number">0.5px</span> <span class="number">0</span> <span class="number">0</span> <span class="number">#000</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法4：使用 SVG</strong></p>
+<hr>
+<h2 id="21-css盒模型包含哪些组成部分？标准和模型与怪异模型有什么区别？"><a href="#21-css盒模型包含哪些组成部分？标准和模型与怪异模型有什么区别？" class="headerlink" title="21. css盒模型包含哪些组成部分？标准和模型与怪异模型有什么区别？"></a>21. css盒模型包含哪些组成部分？标准和模型与怪异模型有什么区别？</h2><p><strong>盒模型组成部分：</strong></p>
+<ul>
+<li><strong>内容（Content）</strong>：实际内容区域</li>
+<li><strong>内边距（Padding）</strong>：内容与边框之间的空间</li>
+<li><strong>边框（Border）</strong>：边框线</li>
+<li><strong>外边距（Margin）</strong>：盒子之间的空间</li>
+</ul>
+<p><strong>标准盒模型 vs 怪异盒模型：</strong></p>
+<table>
+<thead>
+<tr>
+<th>盒模型</th>
+<th>box-sizing</th>
+<th>width 计算</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标准</td>
+<td><code>content-box</code></td>
+<td>width &#x3D; 内容宽度</td>
+</tr>
+<tr>
+<td>怪异（IE）</td>
+<td><code>border-box</code></td>
+<td>width &#x3D; 内容 + padding + border</td>
+</tr>
+</tbody></table>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 标准盒模型 */</span></span><br><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">20px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid;</span><br><span class="line">  <span class="attribute">box-sizing</span>: content-box; <span class="comment">/* 实际宽度 242px */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 怪异盒模型 */</span></span><br><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">20px</span>;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid;</span><br><span class="line">  <span class="attribute">box-sizing</span>: border-box; <span class="comment">/* 实际宽度 200px，内容宽度 158px */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="22-解释一下css中的伪类与伪元素有什么区别？has-和is-选择器的作用是什么"><a href="#22-解释一下css中的伪类与伪元素有什么区别？has-和is-选择器的作用是什么" class="headerlink" title="22. 解释一下css中的伪类与伪元素有什么区别？has()和is()选择器的作用是什么"></a>22. 解释一下css中的伪类与伪元素有什么区别？has()和is()选择器的作用是什么</h2><p><strong>伪类 vs 伪元素：</strong></p>
+<table>
+<thead>
+<tr>
+<th>对比</th>
+<th>伪类</th>
+<th>伪元素</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>语法</td>
+<td>单冒号 <code>:</code></td>
+<td>双冒号 <code>::</code>（CSS3 规范）</td>
+</tr>
+<tr>
+<td>作用</td>
+<td>选择特定状态的元素</td>
+<td>创建虚拟元素</td>
+</tr>
+<tr>
+<td>示例</td>
+<td><code>:hover</code>、<code>:nth-child</code></td>
+<td><code>::before</code>、<code>::after</code></td>
+</tr>
+</tbody></table>
+<p><strong><code>:is()</code> 选择器：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 简化复杂选择器 */</span></span><br><span class="line"><span class="selector-pseudo">:is</span>(<span class="selector-tag">header</span>, <span class="selector-tag">main</span>, <span class="selector-tag">footer</span>) <span class="selector-tag">p</span> &#123; <span class="attribute">color</span>: red; &#125;</span><br><span class="line"><span class="comment">/* 等同于 */</span></span><br><span class="line"><span class="selector-tag">header</span> <span class="selector-tag">p</span>, <span class="selector-tag">main</span> <span class="selector-tag">p</span>, <span class="selector-tag">footer</span> <span class="selector-tag">p</span> &#123; <span class="attribute">color</span>: red; &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><code>:has()</code> 选择器：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 选择包含子元素的父元素 */</span></span><br><span class="line"><span class="selector-tag">div</span><span class="selector-pseudo">:has</span>(<span class="selector-tag">p</span>) &#123; <span class="attribute">background</span>: yellow; &#125; <span class="comment">/* 包含 p 的 div */</span></span><br><span class="line"><span class="selector-tag">form</span><span class="selector-pseudo">:has</span>(<span class="selector-pseudo">:invalid</span>) &#123; <span class="attribute">border</span>: <span class="number">1px</span> solid red; &#125; <span class="comment">/* 有无效字段的表单 */</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="23-项目中是否使用过css伪类"><a href="#23-项目中是否使用过css伪类" class="headerlink" title="23. 项目中是否使用过css伪类"></a>23. 项目中是否使用过css伪类</h2><p><strong>常用伪类示例：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 1. 状态伪类 */</span></span><br><span class="line"><span class="selector-class">.button</span><span class="selector-pseudo">:hover</span> &#123; <span class="attribute">background</span>: blue; &#125;</span><br><span class="line"><span class="selector-class">.input</span><span class="selector-pseudo">:focus</span> &#123; <span class="attribute">outline</span>: none; &#125;</span><br><span class="line"><span class="selector-class">.link</span><span class="selector-pseudo">:active</span> &#123; <span class="attribute">color</span>: red; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 2. 结构伪类 */</span></span><br><span class="line"><span class="selector-tag">li</span><span class="selector-pseudo">:first-child</span> &#123; <span class="attribute">margin-top</span>: <span class="number">0</span>; &#125;</span><br><span class="line"><span class="selector-tag">li</span><span class="selector-pseudo">:last-child</span> &#123; <span class="attribute">margin-bottom</span>: <span class="number">0</span>; &#125;</span><br><span class="line"><span class="selector-tag">li</span><span class="selector-pseudo">:nth-child</span>(odd) &#123; <span class="attribute">background</span>: <span class="number">#f5f5f5</span>; &#125;</span><br><span class="line"><span class="selector-tag">li</span><span class="selector-pseudo">:not</span>(<span class="selector-pseudo">:first-child</span>) &#123; <span class="attribute">border-top</span>: <span class="number">1px</span> solid <span class="number">#eee</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 3. 表单伪类 */</span></span><br><span class="line"><span class="selector-tag">input</span><span class="selector-pseudo">:checked</span> + <span class="selector-tag">label</span> &#123; <span class="attribute">color</span>: blue; &#125;</span><br><span class="line"><span class="selector-tag">input</span><span class="selector-pseudo">:disabled</span> &#123; <span class="attribute">opacity</span>: <span class="number">0.5</span>; &#125;</span><br><span class="line"><span class="selector-tag">input</span><span class="selector-pseudo">:required</span> &#123; <span class="attribute">border-color</span>: red; &#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="24-css选择器有哪些种类，他们的优先级规则是怎样的，是否存在可以打破这些优先级的特殊情况？"><a href="#24-css选择器有哪些种类，他们的优先级规则是怎样的，是否存在可以打破这些优先级的特殊情况？" class="headerlink" title="24. css选择器有哪些种类，他们的优先级规则是怎样的，是否存在可以打破这些优先级的特殊情况？"></a>24. css选择器有哪些种类，他们的优先级规则是怎样的，是否存在可以打破这些优先级的特殊情况？</h2><p><strong>选择器种类：</strong></p>
+<table>
+<thead>
+<tr>
+<th>种类</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>通配符</td>
+<td><code>*</code></td>
+</tr>
+<tr>
+<td>元素选择器</td>
+<td><code>div</code>、<code>p</code></td>
+</tr>
+<tr>
+<td>类选择器</td>
+<td><code>.class</code></td>
+</tr>
+<tr>
+<td>ID 选择器</td>
+<td><code>#id</code></td>
+</tr>
+<tr>
+<td>属性选择器</td>
+<td><code>[type=&quot;text&quot;]</code></td>
+</tr>
+<tr>
+<td>伪类选择器</td>
+<td><code>:hover</code>、<code>:nth-child</code></td>
+</tr>
+<tr>
+<td>伪元素选择器</td>
+<td><code>::before</code></td>
+</tr>
+<tr>
+<td>组合器</td>
+<td><code>&gt;</code>、<code>+</code>、<code>~</code>、空格</td>
+</tr>
+</tbody></table>
+<p><strong>优先级规则：</strong></p>
+<p>内联样式 &gt; ID &gt; 类&#x2F;属性&#x2F;伪类 &gt; 元素&#x2F;伪元素 &gt; 通配符</p>
+<p><strong>打破优先级的方式：</strong></p>
+<ol>
+<li><strong><code>!important</code></strong>：最高优先级，但应谨慎使用</li>
+<li><strong>选择器重复</strong>：<code>.class.class</code> 比 <code>.class</code> 优先级高</li>
+<li><strong>内联样式</strong>：优先级高于任何内部&#x2F;外部样式</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* !important 会覆盖所有 */</span></span><br><span class="line"><span class="selector-class">.element</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: red <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="25-css盒子模型是什么，如何计算其宽度，是否还存在其他盒子模型？"><a href="#25-css盒子模型是什么，如何计算其宽度，是否还存在其他盒子模型？" class="headerlink" title="25. css盒子模型是什么，如何计算其宽度，是否还存在其他盒子模型？"></a>25. css盒子模型是什么，如何计算其宽度，是否还存在其他盒子模型？</h2><p><strong>盒子模型</strong>：HTML 元素在页面中占据空间的矩形区域模型。</p>
+<p><strong>宽度计算：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* content-box */</span></span><br><span class="line">总宽度 = <span class="attribute">width</span> + <span class="attribute">padding-left</span> + <span class="attribute">padding-right</span> + <span class="attribute">border-left</span> + <span class="attribute">border-right</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* border-box */</span></span><br><span class="line">总宽度 = <span class="attribute">width</span>（已包含 <span class="attribute">padding</span> 和 <span class="attribute">border</span>）</span><br><span class="line">内容宽度 = <span class="attribute">width</span> - <span class="attribute">padding</span> - <span class="attribute">border</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>其他盒子模型概念：</strong></p>
+<ul>
+<li><strong>弹性盒子（Flexbox）</strong>：一维布局模型</li>
+<li><strong>网格盒子（Grid）</strong>：二维布局模型</li>
+<li><strong>多列盒子（Multi-column）</strong>：类似报纸排版</li>
+</ul>
+<hr>
+<h2 id="26-css中哪些情况会出现margin重叠问题，如何避免或解决"><a href="#26-css中哪些情况会出现margin重叠问题，如何避免或解决" class="headerlink" title="26. css中哪些情况会出现margin重叠问题，如何避免或解决"></a>26. css中哪些情况会出现margin重叠问题，如何避免或解决</h2><p><strong>出现情况：</strong></p>
+<ol>
+<li><strong>相邻兄弟元素</strong>：上下 margin 合并</li>
+<li><strong>父子元素</strong>：父元素与第一个&#x2F;最后一个子元素 margin 合并</li>
+<li><strong>空块元素</strong>：自身上下 margin 合并</li>
+</ol>
+<p><strong>解决方案：</strong></p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>解决方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>相邻兄弟</td>
+<td>只设置一个 margin，或用 padding 替代</td>
+</tr>
+<tr>
+<td>父子</td>
+<td>父元素设置 <code>overflow: hidden</code>、<code>border</code>、<code>padding</code></td>
+</tr>
+<tr>
+<td>通用</td>
+<td>使用 <code>display: flex</code> 或 <code>display: grid</code></td>
+</tr>
+<tr>
+<td>空块</td>
+<td>设置 <code>min-height</code>、<code>border</code>、<code>padding</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="27-css中如何清除浮动-有哪些常见方法"><a href="#27-css中如何清除浮动-有哪些常见方法" class="headerlink" title="27. css中如何清除浮动,有哪些常见方法"></a>27. css中如何清除浮动,有哪些常见方法</h2><p><strong>方法1：clearfix（推荐）</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.clearfix</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="attribute">display</span>: table;</span><br><span class="line">  <span class="attribute">clear</span>: both;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法2：overflow</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden; <span class="comment">/* 触发 BFC */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法3：空 div</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;clear: both;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>方法4：使用 flex&#x2F;grid 替代浮动</strong></p>
+<hr>
+<h2 id="28-解释一下justify-content和align-items在flexbox布局的作用和区别？"><a href="#28-解释一下justify-content和align-items在flexbox布局的作用和区别？" class="headerlink" title="28. 解释一下justify-content和align-items在flexbox布局的作用和区别？"></a>28. 解释一下justify-content和align-items在flexbox布局的作用和区别？</h2><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>作用方向</th>
+<th>取值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>justify-content</code></td>
+<td><strong>主轴</strong></td>
+<td>flex-start、center、flex-end、space-between、space-around、space-evenly</td>
+<td>控制项目在主轴上的对齐</td>
+</tr>
+<tr>
+<td><code>align-items</code></td>
+<td><strong>交叉轴</strong></td>
+<td>stretch、center、flex-start、flex-end、baseline</td>
+<td>控制项目在交叉轴上的对齐</td>
+</tr>
+</tbody></table>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">flex-direction</span>: row; <span class="comment">/* 主轴水平 */</span></span><br><span class="line">  <span class="attribute">justify-content</span>: center; <span class="comment">/* 水平居中 */</span></span><br><span class="line">  <span class="attribute">align-items</span>: center; <span class="comment">/* 垂直居中 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="29-描述一下css中flex属性及其常见用法"><a href="#29-描述一下css中flex属性及其常见用法" class="headerlink" title="29. 描述一下css中flex属性及其常见用法"></a>29. 描述一下css中flex属性及其常见用法</h2><p><strong>flex 是 <code>flex-grow</code>、<code>flex-shrink</code>、<code>flex-basis</code> 的缩写。</strong></p>
+<p><strong>常见用法：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 默认值 */</span></span><br><span class="line"><span class="selector-class">.item</span> &#123; <span class="attribute">flex</span>: <span class="number">0</span> <span class="number">1</span> auto; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 可伸缩，占满剩余空间 */</span></span><br><span class="line"><span class="selector-class">.item</span> &#123; <span class="attribute">flex</span>: <span class="number">1</span>; &#125;      <span class="comment">/* 1 1 0% */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 不可伸缩，根据内容决定 */</span></span><br><span class="line"><span class="selector-class">.item</span> &#123; <span class="attribute">flex</span>: none; &#125;   <span class="comment">/* 0 0 auto */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 固定宽度，不伸缩 */</span></span><br><span class="line"><span class="selector-class">.item</span> &#123; <span class="attribute">flex</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">100px</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 均分父容器宽度 */</span></span><br><span class="line"><span class="selector-class">.container</span> &gt; <span class="selector-class">.item</span> &#123; <span class="attribute">flex</span>: <span class="number">1</span>; &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>应用场景：</strong></p>
+<ul>
+<li>导航栏：<code>logo &#123; flex: 0 0 auto; &#125; .nav &#123; flex: 1; &#125;</code></li>
+<li>两栏布局：<code>.left &#123; flex: 0 0 200px; &#125; .right &#123; flex: 1; &#125;</code></li>
+<li>等分布局：<code>.item &#123; flex: 1; &#125;</code></li>
+</ul>
+<hr>
+<h2 id="30-对css盒模型有哪些理解"><a href="#30-对css盒模型有哪些理解" class="headerlink" title="30. 对css盒模型有哪些理解"></a>30. 对css盒模型有哪些理解</h2><p><strong>核心理解：</strong></p>
+<ol>
+<li><strong>组成部分</strong>：content、padding、border、margin</li>
+<li><strong>两种模型</strong>：content-box（标准）、border-box（IE&#x2F;怪异）</li>
+<li><strong>计算方式</strong>：box-sizing 决定 width&#x2F;height 包含的范围</li>
+<li><strong>外边距塌陷</strong>：垂直 margin 会合并</li>
+<li><strong>内边距影响</strong>：padding 会撑大盒子（border-box 下除外）</li>
+</ol>
+<p><strong>最佳实践</strong>：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">* &#123;</span><br><span class="line">  <span class="attribute">box-sizing</span>: border-box; <span class="comment">/* 推荐全局设置 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="31-css伪元素和伪类有什么区别？分别有哪些应用场景？"><a href="#31-css伪元素和伪类有什么区别？分别有哪些应用场景？" class="headerlink" title="31. css伪元素和伪类有什么区别？分别有哪些应用场景？"></a>31. css伪元素和伪类有什么区别？分别有哪些应用场景？</h2><table>
+<thead>
+<tr>
+<th>对比</th>
+<th>伪类</th>
+<th>伪元素</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>含义</strong></td>
+<td>选择元素的特定状态</td>
+<td>创建虚拟元素</td>
+</tr>
+<tr>
+<td><strong>语法</strong></td>
+<td><code>:</code>（单冒号）</td>
+<td><code>::</code>（双冒号）</td>
+</tr>
+<tr>
+<td><strong>数量</strong></td>
+<td>多个可同时使用</td>
+<td>每个元素最多两个（before&#x2F;after）</td>
+</tr>
+</tbody></table>
+<p><strong>伪类应用场景：</strong></p>
+<ul>
+<li><code>:hover</code>：鼠标悬停效果</li>
+<li><code>:nth-child()</code>：表格斑马纹</li>
+<li><code>:checked</code>：自定义 checkbox</li>
+<li><code>:focus</code>：表单焦点状态</li>
+<li><code>:not()</code>：排除特定元素</li>
+</ul>
+<p><strong>伪元素应用场景：</strong></p>
+<ul>
+<li><code>::before</code>&#x2F;<code>::after</code>：装饰图标、清除浮动、提示文字</li>
+<li><code>::first-letter</code>：首字下沉</li>
+<li><code>::first-line</code>：首行特殊样式</li>
+<li><code>::placeholder</code>：占位符样式</li>
+<li><code>::selection</code>：选中文本样式</li>
+</ul>
+<hr>
+<h2 id="32-解释css-bfc的概念、创建方式及其实际应用"><a href="#32-解释css-bfc的概念、创建方式及其实际应用" class="headerlink" title="32. 解释css bfc的概念、创建方式及其实际应用"></a>32. 解释css bfc的概念、创建方式及其实际应用</h2><p><strong>BFC（块级格式化上下文）</strong>：独立的渲染区域，内部元素不会影响外部。</p>
+<p><strong>创建方式：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 常用触发方式 */</span></span><br><span class="line"><span class="selector-class">.bfc</span> &#123;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;      <span class="comment">/* 最常用 */</span></span><br><span class="line">  <span class="attribute">float</span>: left;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">display</span>: inline-block;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">display</span>: grid;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>实际应用：</strong></p>
+<ol>
+<li><strong>清除浮动</strong>：父元素触发 BFC 包含浮动子元素</li>
+<li><strong>防止 margin 塌陷</strong>：BFC 隔离父子 margin</li>
+<li><strong>自适应布局</strong>：触发 BFC 的元素不与浮动元素重叠</li>
+<li><strong>多列布局</strong>：BFC 内部独立布局</li>
+</ol>
+<hr>
+<h2 id="33-详细说明css-flex布局的工作原理和常见应用场景"><a href="#33-详细说明css-flex布局的工作原理和常见应用场景" class="headerlink" title="33. 详细说明css flex布局的工作原理和常见应用场景"></a>33. 详细说明css flex布局的工作原理和常见应用场景</h2><p><strong>工作原理：</strong></p>
+<ol>
+<li><strong>主轴概念</strong>：通过 <code>flex-direction</code> 定义主轴方向</li>
+<li><strong>空间分配</strong>：<code>flex-grow</code> 分配剩余空间，<code>flex-shrink</code> 处理溢出</li>
+<li><strong>对齐方式</strong>：<code>justify-content</code> 主轴对齐，<code>align-items</code> 交叉轴对齐</li>
+<li><strong>换行控制</strong>：<code>flex-wrap</code> 决定是否换行</li>
+</ol>
+<p><strong>应用场景：</strong></p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>实现方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>导航栏</strong></td>
+<td><code>display: flex; justify-content: space-between</code></td>
+</tr>
+<tr>
+<td><strong>等分布局</strong></td>
+<td><code>.item &#123; flex: 1 &#125;</code></td>
+</tr>
+<tr>
+<td><strong>垂直居中</strong></td>
+<td><code>align-items: center</code></td>
+</tr>
+<tr>
+<td><strong>圣杯布局</strong></td>
+<td>三栏：左右固定，中间 flex: 1</td>
+</tr>
+<tr>
+<td><strong>瀑布流</strong></td>
+<td><code>flex-wrap: wrap</code> + 百分比宽度</td>
+</tr>
+<tr>
+<td><strong>卡片列表</strong></td>
+<td><code>flex-wrap: wrap</code> + 固定宽度</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="34-如何使用css实现多余文字的省略号显示？"><a href="#34-如何使用css实现多余文字的省略号显示？" class="headerlink" title="34. 如何使用css实现多余文字的省略号显示？"></a>34. 如何使用css实现多余文字的省略号显示？</h2><p><strong>单行省略：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.ellipsis</span> &#123;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">  <span class="attribute">white-space</span>: nowrap;</span><br><span class="line">  <span class="attribute">text-overflow</span>: ellipsis;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>多行省略（webkit 内核）：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.ellipsis-multi</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: -webkit-box;</span><br><span class="line">  -webkit-<span class="selector-tag">line</span>-clamp: <span class="number">3</span>;  <span class="comment">/* 显示行数 */</span></span><br><span class="line">  -webkit-<span class="attribute">box-orient</span>: vertical;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">  <span class="attribute">text-overflow</span>: ellipsis;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>多行省略（通用方案）：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.ellipsis-multi</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">max-height</span>: <span class="number">4.5em</span>;  <span class="comment">/* 3行 × 1.5行高 */</span></span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.ellipsis-multi</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;...&quot;</span>;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">right</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">background</span>: white;</span><br><span class="line">  <span class="attribute">padding-left</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="35-回流reflow和重绘repaint的概念是什么？他们之间有什么区别？"><a href="#35-回流reflow和重绘repaint的概念是什么？他们之间有什么区别？" class="headerlink" title="35. 回流reflow和重绘repaint的概念是什么？他们之间有什么区别？"></a>35. 回流reflow和重绘repaint的概念是什么？他们之间有什么区别？</h2><table>
+<thead>
+<tr>
+<th>对比</th>
+<th>回流（Reflow）</th>
+<th>重绘（Repaint）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>定义</strong></td>
+<td>重新计算元素几何属性（位置、尺寸）</td>
+<td>重新绘制元素外观（颜色、背景）</td>
+</tr>
+<tr>
+<td><strong>触发</strong></td>
+<td>布局变化</td>
+<td>样式变化不改变布局</td>
+</tr>
+<tr>
+<td><strong>开销</strong></td>
+<td>大，影响性能</td>
+<td>相对较小</td>
+</tr>
+<tr>
+<td><strong>是否必然</strong></td>
+<td>回流必然导致重绘</td>
+<td>重绘不一定导致回流</td>
+</tr>
+</tbody></table>
+<p><strong>触发回流的操作：</strong></p>
+<ul>
+<li>添加&#x2F;删除 DOM 元素</li>
+<li>改变尺寸（width、height、padding、margin）</li>
+<li>改变位置（top、left）</li>
+<li>改变字体大小</li>
+<li>窗口 resize</li>
+<li>获取 offsetWidth 等属性</li>
+</ul>
+<p><strong>优化建议：</strong></p>
+<ul>
+<li>使用 <code>transform</code> 替代 top&#x2F;left</li>
+<li>使用 <code>visibility: hidden</code> 替代 <code>display: none</code></li>
+<li>批量修改样式（class 或 cssText）</li>
+<li>使用 <code>requestAnimationFrame</code></li>
+</ul>
+<hr>
+<h2 id="36-在css中，有哪些方法可以实现元素的缩小效果"><a href="#36-在css中，有哪些方法可以实现元素的缩小效果" class="headerlink" title="36. 在css中，有哪些方法可以实现元素的缩小效果"></a>36. 在css中，有哪些方法可以实现元素的缩小效果</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 1. transform scale */</span></span><br><span class="line"><span class="selector-class">.element</span> &#123;</span><br><span class="line">  <span class="attribute">transition</span>: transform <span class="number">0.3s</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.element</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">scale</span>(<span class="number">0.9</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 2. 宽度/高度缩小 */</span></span><br><span class="line"><span class="selector-class">.element</span> &#123;</span><br><span class="line">  <span class="attribute">transition</span>: all <span class="number">0.3s</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.element</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">90%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">90%</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 3. clip-path */</span></span><br><span class="line"><span class="selector-class">.element</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">  <span class="attribute">clip-path</span>: <span class="built_in">inset</span>(<span class="number">5%</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 4. zoom（非标准） */</span></span><br><span class="line"><span class="selector-class">.element</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">  <span class="attribute">zoom</span>: <span class="number">0.9</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="37-flexbox常用的属性有哪些？"><a href="#37-flexbox常用的属性有哪些？" class="headerlink" title="37. flexbox常用的属性有哪些？"></a>37. flexbox常用的属性有哪些？</h2><p><strong>容器属性（6个）：</strong></p>
+<ul>
+<li><code>flex-direction</code></li>
+<li><code>flex-wrap</code></li>
+<li><code>flex-flow</code></li>
+<li><code>justify-content</code></li>
+<li><code>align-items</code></li>
+<li><code>align-content</code></li>
+</ul>
+<p><strong>项目属性（6个）：</strong></p>
+<ul>
+<li><code>order</code></li>
+<li><code>flex-grow</code></li>
+<li><code>flex-shrink</code></li>
+<li><code>flex-basis</code></li>
+<li><code>flex</code></li>
+<li><code>align-self</code></li>
+</ul>
+<hr>
+<h2 id="38-对css的理解是什么？在学习css的过程中有没有遇到什么有意思的经历"><a href="#38-对css的理解是什么？在学习css的过程中有没有遇到什么有意思的经历" class="headerlink" title="38. 对css的理解是什么？在学习css的过程中有没有遇到什么有意思的经历"></a>38. 对css的理解是什么？在学习css的过程中有没有遇到什么有意思的经历</h2><p><strong>CSS 理解：</strong></p>
+<ul>
+<li>CSS 是描述文档呈现方式的样式表语言</li>
+<li>核心是盒模型、布局（flex&#x2F;grid）、响应式</li>
+<li>难点在于兼容性、优先级、层叠上下文、BFC</li>
+</ul>
+<p><strong>有意思的经历（示例）：</strong></p>
+<ul>
+<li>发现 <code>margin: auto</code> 在 flex 中可以实现双轴居中</li>
+<li>理解 BFC 后解决了多年的浮动和 margin 塌陷问题</li>
+<li>使用 <code>:has()</code> 选择器实现父元素根据子元素状态改变样式</li>
+<li>实现纯 CSS 的开关、轮播图、下拉菜单</li>
+</ul>
+<hr>
+<h2 id="39-如何使用flexbox实现一个九宫格布局"><a href="#39-如何使用flexbox实现一个九宫格布局" class="headerlink" title="39. 如何使用flexbox实现一个九宫格布局"></a>39. 如何使用flexbox实现一个九宫格布局</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;grid&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;item&quot;</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;item&quot;</span>&gt;</span>2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- ... 共9个 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.grid</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">flex-wrap</span>: wrap;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item</span> &#123;</span><br><span class="line">  <span class="attribute">flex</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">33.333%</span>; <span class="comment">/* 或 width: 33.333% */</span></span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">box-sizing</span>: border-box;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用 gap 属性：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.grid</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">flex-wrap</span>: wrap;</span><br><span class="line">  <span class="attribute">gap</span>: <span class="number">10px</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">320px</span>; <span class="comment">/* 100px * 3 + 10px * 2 */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item</span> &#123;</span><br><span class="line">  <span class="attribute">flex</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="40-是否遇到过css外边距重叠问题，如何理解和解决"><a href="#40-是否遇到过css外边距重叠问题，如何理解和解决" class="headerlink" title="40. 是否遇到过css外边距重叠问题，如何理解和解决"></a>40. 是否遇到过css外边距重叠问题，如何理解和解决</h2><p><strong>遇到过，典型场景：</strong></p>
+<ul>
+<li>多个相邻卡片之间的 margin 合并</li>
+<li>父元素与子元素的 margin-top 合并</li>
+</ul>
+<p><strong>理解和解决：</strong></p>
+<ol>
+<li>理解原理：只有块级元素的垂直 margin 会合并</li>
+<li>解决方案：<ul>
+<li>使用 padding 替代 margin</li>
+<li>父元素触发 BFC（overflow: hidden）</li>
+<li>使用 flex&#x2F;grid 布局</li>
+<li>只给一个方向设置 margin</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="41-如何利用css-grid布局创建一个九宫格，并绘制出其分割线"><a href="#41-如何利用css-grid布局创建一个九宫格，并绘制出其分割线" class="headerlink" title="41. 如何利用css grid布局创建一个九宫格，并绘制出其分割线"></a>41. 如何利用css grid布局创建一个九宫格，并绘制出其分割线</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;grid&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;item&quot;</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- ... 共9个 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.grid</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: grid;</span><br><span class="line">  <span class="attribute">grid-template-columns</span>: <span class="built_in">repeat</span>(<span class="number">3</span>, <span class="number">1</span>fr);</span><br><span class="line">  <span class="attribute">grid-template-rows</span>: <span class="built_in">repeat</span>(<span class="number">3</span>, <span class="number">100px</span>);</span><br><span class="line">  <span class="attribute">gap</span>: <span class="number">2px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#000</span>; <span class="comment">/* 通过 gap 显示分割线 */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 或者用 border */</span></span><br><span class="line"><span class="selector-class">.grid</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: grid;</span><br><span class="line">  <span class="attribute">grid-template-columns</span>: <span class="built_in">repeat</span>(<span class="number">3</span>, <span class="number">1</span>fr);</span><br><span class="line">  <span class="attribute">grid-template-rows</span>: <span class="built_in">repeat</span>(<span class="number">3</span>, <span class="number">100px</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item</span> &#123;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;</span><br><span class="line">  <span class="attribute">margin</span>: -<span class="number">1px</span> <span class="number">0</span> <span class="number">0</span> -<span class="number">1px</span>; <span class="comment">/* 合并边框 */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 使用 outline */</span></span><br><span class="line"><span class="selector-class">.grid</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: grid;</span><br><span class="line">  <span class="attribute">grid-template-columns</span>: <span class="built_in">repeat</span>(<span class="number">3</span>, <span class="number">1</span>fr);</span><br><span class="line">  <span class="attribute">outline</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item</span> &#123;</span><br><span class="line">  <span class="attribute">outline</span>: <span class="number">1px</span> solid <span class="number">#ccc</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="42-如何使用css实现左侧定宽，右侧自适应的两栏布局"><a href="#42-如何使用css实现左侧定宽，右侧自适应的两栏布局" class="headerlink" title="42. 如何使用css实现左侧定宽，右侧自适应的两栏布局"></a>42. 如何使用css实现左侧定宽，右侧自适应的两栏布局</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 方法1：flex */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.left</span> &#123; <span class="attribute">width</span>: <span class="number">200px</span>; &#125;</span><br><span class="line"><span class="selector-class">.right</span> &#123; <span class="attribute">flex</span>: <span class="number">1</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 方法2：grid */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: grid;</span><br><span class="line">  <span class="attribute">grid-template-columns</span>: <span class="number">200px</span> <span class="number">1</span>fr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 方法3：float + BFC */</span></span><br><span class="line"><span class="selector-class">.left</span> &#123; <span class="attribute">float</span>: left; <span class="attribute">width</span>: <span class="number">200px</span>; &#125;</span><br><span class="line"><span class="selector-class">.right</span> &#123; <span class="attribute">overflow</span>: hidden; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 方法4：position */</span></span><br><span class="line"><span class="selector-class">.container</span> &#123; <span class="attribute">position</span>: relative; &#125;</span><br><span class="line"><span class="selector-class">.left</span> &#123; <span class="attribute">position</span>: absolute; <span class="attribute">width</span>: <span class="number">200px</span>; &#125;</span><br><span class="line"><span class="selector-class">.right</span> &#123; <span class="attribute">margin-left</span>: <span class="number">200px</span>; &#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="43-如何实现响应式布局"><a href="#43-如何实现响应式布局" class="headerlink" title="43. 如何实现响应式布局"></a>43. 如何实现响应式布局</h2><p><strong>响应式布局方法：</strong></p>
+<ol>
+<li><strong>Media Queries</strong>：根据屏幕尺寸应用不同样式</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">768px</span>) &#123;</span><br><span class="line">  <span class="selector-class">.container</span> &#123; <span class="attribute">flex-direction</span>: column; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>弹性布局</strong>：flex、grid 自动适配</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123; <span class="attribute">display</span>: flex; <span class="attribute">flex-wrap</span>: wrap; &#125;</span><br><span class="line"><span class="selector-class">.item</span> &#123; <span class="attribute">flex</span>: <span class="number">1</span>; <span class="attribute">min-width</span>: <span class="number">250px</span>; &#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>相对单位</strong>：rem、%、vw、vh</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">html</span> &#123; <span class="attribute">font-size</span>: <span class="number">16px</span>; &#125;</span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">768px</span>) &#123;</span><br><span class="line">  <span class="selector-tag">html</span> &#123; <span class="attribute">font-size</span>: <span class="number">14px</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><strong>视口设置</strong>：</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li><strong>图片响应式</strong>：</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">img</span> &#123; <span class="attribute">max-width</span>: <span class="number">100%</span>; <span class="attribute">height</span>: auto; &#125;</span><br><span class="line">&lt;<span class="selector-tag">picture</span>&gt;</span><br><span class="line">  &lt;<span class="selector-tag">source</span> srcset=&quot;large<span class="selector-class">.jpg</span>&quot; media=&quot;(<span class="attribute">min-width</span>: <span class="number">800px</span>)<span class="string">&quot;&gt;</span></span><br><span class="line"><span class="string">  &lt;img src=&quot;</span>small.jpg<span class="string">&quot;&gt;</span></span><br><span class="line"><span class="string">&lt;/picture&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="44-选用css-in-js技术有哪些优势？他在站点换肤场景中是否使用？相比裸css有何不同？"><a href="#44-选用css-in-js技术有哪些优势？他在站点换肤场景中是否使用？相比裸css有何不同？" class="headerlink" title="44. 选用css-in-js技术有哪些优势？他在站点换肤场景中是否使用？相比裸css有何不同？"></a>44. 选用css-in-js技术有哪些优势？他在站点换肤场景中是否使用？相比裸css有何不同？</h2><p><strong>CSS-in-JS 优势：</strong></p>
+<ul>
+<li><strong>作用域隔离</strong>：自动生成唯一类名，避免冲突</li>
+<li><strong>动态样式</strong>：基于 props&#x2F;state 动态计算样式</li>
+<li><strong>按需加载</strong>：只加载使用的样式</li>
+<li><strong>类型安全</strong>：TypeScript 支持</li>
+<li><strong>易于维护</strong>：样式与组件同文件</li>
+</ul>
+<p><strong>换肤场景：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// styled-components 换肤</span></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Button</span> = styled.<span class="property">button</span><span class="string">`</span></span><br><span class="line"><span class="string">  background: <span class="subst">$&#123;props =&gt; props.theme.primary&#125;</span>;</span></span><br><span class="line"><span class="string">  color: <span class="subst">$&#123;props =&gt; props.theme.text&#125;</span>;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ThemeProvider 切换主题</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">ThemeProvider</span> <span class="attr">theme</span>=<span class="string">&#123;darkTheme&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">App</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">ThemeProvider</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p><strong>与裸 CSS 对比：</strong></p>
+<table>
+<thead>
+<tr>
+<th>对比</th>
+<th>CSS-in-JS</th>
+<th>裸 CSS</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>作用域</td>
+<td>自动隔离</td>
+<td>需要命名规范（BEM）</td>
+</tr>
+<tr>
+<td>动态样式</td>
+<td>原生支持</td>
+<td>需要 CSS 变量或 JS 修改</td>
+</tr>
+<tr>
+<td>学习成本</td>
+<td>需学习框架 API</td>
+<td>标准 CSS</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>运行时开销</td>
+<td>无运行时开销</td>
+</tr>
+<tr>
+<td>调试</td>
+<td>DevTools 支持有限</td>
+<td>成熟的调试工具</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="45-在css中如何确保样式不会相互污染？在vue项目中引入外部样式时，如果造成全局污染，通常有哪些解决方案"><a href="#45-在css中如何确保样式不会相互污染？在vue项目中引入外部样式时，如果造成全局污染，通常有哪些解决方案" class="headerlink" title="45. 在css中如何确保样式不会相互污染？在vue项目中引入外部样式时，如果造成全局污染，通常有哪些解决方案"></a>45. 在css中如何确保样式不会相互污染？在vue项目中引入外部样式时，如果造成全局污染，通常有哪些解决方案</h2><p><strong>确保样式不污染的方法：</strong></p>
+<ol>
+<li><strong>CSS Modules</strong>：自动生成唯一类名</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* button.module.css */</span></span><br><span class="line"><span class="selector-class">.button</span> &#123; <span class="attribute">color</span>: red; &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> styles <span class="keyword">from</span> <span class="string">&#x27;./button.module.css&#x27;</span></span><br><span class="line">&lt;button className=&#123;styles.<span class="property">button</span>&#125;&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>BEM 命名规范</strong>：Block__Element–Modifier</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.card</span> &#123; &#125;</span><br><span class="line"><span class="selector-class">.card__title</span> &#123; &#125;</span><br><span class="line"><span class="selector-class">.card--large</span> &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>Scoped CSS（Vue）</strong>：添加 <code>scoped</code> 属性</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;style scoped&gt;</span><br><span class="line">.button &#123; color: red; &#125; /* 自动添加 data-v 属性 */</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><strong>CSS-in-JS</strong>：styled-components、emotion</li>
+</ol>
+<p><strong>Vue 中解决全局污染：</strong></p>
+<ol>
+<li><strong>使用 scoped</strong>：最常用</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;style scoped&gt;</span><br><span class="line">/* 样式只作用于当前组件 */</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>使用 CSS Modules</strong>：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;style module&gt;</span><br><span class="line">.button &#123; &#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>深度选择器</strong>：需要影响子组件时</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">deep</span>(.child-class) &#123; &#125;</span><br><span class="line">::v-deep .child-class &#123; &#125;</span><br><span class="line">&gt;&gt;&gt; <span class="selector-class">.child-class</span> &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><strong>避免在全局样式中使用元素选择器</strong>：使用类选择器</li>
+</ol>
+<hr>
+<h2 id="46-css实现垂直居中的方案有哪些"><a href="#46-css实现垂直居中的方案有哪些" class="headerlink" title="46. css实现垂直居中的方案有哪些"></a>46. css实现垂直居中的方案有哪些</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 1. flex（推荐） */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">align-items</span>: center;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 2. grid */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: grid;</span><br><span class="line">  <span class="attribute">align-items</span>: center;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 或 place-items: center; */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 3. absolute + transform */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123; <span class="attribute">position</span>: relative; &#125;</span><br><span class="line"><span class="selector-class">.child</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">translateY</span>(-<span class="number">50%</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 4. table-cell */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: table-cell;</span><br><span class="line">  <span class="attribute">vertical-align</span>: middle;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 5. line-height（单行文本） */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 6. margin: auto（flex 子项） */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123; <span class="attribute">display</span>: flex; &#125;</span><br><span class="line"><span class="selector-class">.child</span> &#123; <span class="attribute">margin</span>: auto <span class="number">0</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 7. writing-mode */</span></span><br><span class="line"><span class="selector-class">.parent</span> &#123;</span><br><span class="line">  <span class="attribute">writing-mode</span>: vertical-lr;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="47-css定位方式有哪些，例如absolute、relative、sticky分别说明"><a href="#47-css定位方式有哪些，例如absolute、relative、sticky分别说明" class="headerlink" title="47. css定位方式有哪些，例如absolute、relative、sticky分别说明"></a>47. css定位方式有哪些，例如absolute、relative、sticky分别说明</h2><table>
+<thead>
+<tr>
+<th>定位</th>
+<th>参考系</th>
+<th>是否脱离文档流</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>static</code></td>
+<td>无</td>
+<td>否</td>
+<td>默认值，top&#x2F;left 无效</td>
+</tr>
+<tr>
+<td><code>relative</code></td>
+<td>自身原本位置</td>
+<td>否</td>
+<td>保留原占位，相对偏移</td>
+</tr>
+<tr>
+<td><code>absolute</code></td>
+<td>最近的非 static 祖先</td>
+<td>是</td>
+<td>完全脱离，不占位</td>
+</tr>
+<tr>
+<td><code>fixed</code></td>
+<td>视口</td>
+<td>是</td>
+<td>固定屏幕位置，滚动时不移动</td>
+</tr>
+<tr>
+<td><code>sticky</code></td>
+<td>父容器滚动区域</td>
+<td>混合</td>
+<td>滚动到阈值时表现为 fixed</td>
+</tr>
+</tbody></table>
+<p><strong>sticky 特性：</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.header</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: sticky;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>; <span class="comment">/* 滚动到顶部时固定 */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 需要设置父容器高度，且不能有 overflow: hidden */</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="48-css盒模型的工作原理是什么"><a href="#48-css盒模型的工作原理是什么" class="headerlink" title="48. css盒模型的工作原理是什么"></a>48. css盒模型的工作原理是什么</h2><p><strong>工作原理：</strong></p>
+<ol>
+<li><strong>元素渲染为矩形盒子</strong>：每个元素生成一个或多个矩形框</li>
+<li><strong>盒子尺寸计算</strong>：由 <code>box-sizing</code> 决定 width&#x2F;height 含义</li>
+<li><strong>盒子在文档流中排列</strong>：块级垂直排列，行内水平排列</li>
+<li><strong>盒子相互作用</strong>：margin 塌陷、浮动环绕、定位层叠</li>
+</ol>
+<p><strong>层叠上下文</strong>：当元素有定位、透明度、transform 等属性时，会创建新的层叠上下文，影响 z-index 效果。</p>
+<hr>
+<h2 id="49-如何实现组件库的主题切换功能"><a href="#49-如何实现组件库的主题切换功能" class="headerlink" title="49. 如何实现组件库的主题切换功能"></a>49. 如何实现组件库的主题切换功能</h2><p><strong>方法1：CSS 变量（推荐）</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 定义主题变量 */</span></span><br><span class="line"><span class="selector-pseudo">:root</span> &#123;</span><br><span class="line">  <span class="attr">--primary-color</span>: <span class="number">#1890ff</span>;</span><br><span class="line">  <span class="attr">--bg-color</span>: <span class="number">#fff</span>;</span><br><span class="line">  <span class="attr">--text-color</span>: <span class="number">#333</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-attr">[data-theme=<span class="string">&quot;dark&quot;</span>]</span> &#123;</span><br><span class="line">  <span class="attr">--primary-color</span>: <span class="number">#3a6ea5</span>;</span><br><span class="line">  <span class="attr">--bg-color</span>: <span class="number">#1a1a1a</span>;</span><br><span class="line">  <span class="attr">--text-color</span>: <span class="number">#e0e0e0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.component</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">var</span>(--bg-color);</span><br><span class="line">  <span class="attribute">color</span>: <span class="built_in">var</span>(--text-color);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 切换主题</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">documentElement</span>.<span class="title function_">setAttribute</span>(<span class="string">&#x27;data-theme&#x27;</span>, <span class="string">&#x27;dark&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法2：动态加载 CSS 文件</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> link = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;link&#x27;</span>)</span><br><span class="line">link.<span class="property">rel</span> = <span class="string">&#x27;stylesheet&#x27;</span></span><br><span class="line">link.<span class="property">href</span> = <span class="string">`theme-<span class="subst">$&#123;theme&#125;</span>.css`</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">head</span>.<span class="title function_">appendChild</span>(link)</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法3：CSS-in-JS 主题提供者</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">ThemeProvider</span> theme=&#123;lightTheme&#125;&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">App</span> /&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">ThemeProvider</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法4：LESS&#x2F;SASS 变量 + 编译多主题</strong></p>
+<ul>
+<li>预编译多个主题 CSS 文件</li>
+<li>运行时动态切换</li>
+</ul>
+<hr>
+<h2 id="50-css本身没有model概念，如果提及使用css-model，其实现原理是什么？"><a href="#50-css本身没有model概念，如果提及使用css-model，其实现原理是什么？" class="headerlink" title="50. css本身没有model概念，如果提及使用css model，其实现原理是什么？"></a>50. css本身没有model概念，如果提及使用css model，其实现原理是什么？</h2><p><strong>可能指的是：</strong></p>
+<ol>
+<li><strong>CSS 模块化（CSS Modules）</strong></li>
+<li><strong>CSS 对象模型（CSSOM）</strong></li>
+</ol>
+<p><strong>CSS Modules 原理：</strong></p>
+<ul>
+<li>构建工具（webpack）在编译时解析 CSS</li>
+<li>将类名转换为唯一哈希值</li>
+<li>生成映射对象供 JS 使用</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 编译前</span></span><br><span class="line">.<span class="property">button</span> &#123; <span class="attr">color</span>: red; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 编译后</span></span><br><span class="line">.<span class="property">_2a3b4c</span> &#123; <span class="attr">color</span>: red; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 映射</span></span><br><span class="line">&#123; <span class="attr">button</span>: <span class="string">&quot;_2a3b4c&quot;</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>CSSOM（CSS Object Model）原理：</strong></p>
+<ul>
+<li>浏览器解析 CSS 生成的树形结构</li>
+<li>可以通过 JS 操作样式规则</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 操作 CSSOM</span></span><br><span class="line"><span class="keyword">const</span> styles = <span class="variable language_">document</span>.<span class="property">styleSheets</span>[<span class="number">0</span>]</span><br><span class="line">styles.<span class="title function_">insertRule</span>(<span class="string">&#x27;.new-class &#123; color: red &#125;&#x27;</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="51-有哪些方法可以解决css样式冲突问题？"><a href="#51-有哪些方法可以解决css样式冲突问题？" class="headerlink" title="51. 有哪些方法可以解决css样式冲突问题？"></a>51. 有哪些方法可以解决css样式冲突问题？</h2><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CSS Modules</strong></td>
+<td>自动生成唯一类名</td>
+<td>组件化项目</td>
+</tr>
+<tr>
+<td><strong>Scoped CSS</strong></td>
+<td>Vue 特有，添加 data 属性</td>
+<td>Vue 项目</td>
+</tr>
+<tr>
+<td><strong>BEM 命名</strong></td>
+<td>命名规范：Block__Element–Modifier</td>
+<td>任何项目</td>
+</tr>
+<tr>
+<td><strong>CSS-in-JS</strong></td>
+<td>样式与组件绑定</td>
+<td>React 项目</td>
+</tr>
+<tr>
+<td><strong>命名空间</strong></td>
+<td>添加前缀 <code>.myapp-</code></td>
+<td>全局样式隔离</td>
+</tr>
+<tr>
+<td><strong>Shadow DOM</strong></td>
+<td>完全隔离的样式作用域</td>
+<td>Web Components</td>
+</tr>
+<tr>
+<td><strong>!important 避免</strong></td>
+<td>不使用或谨慎使用</td>
+<td>通用规范</td>
+</tr>
+<tr>
+<td><strong>CSS 重置</strong></td>
+<td>统一浏览器默认样式</td>
+<td>基础样式</td>
+</tr>
+</tbody></table>
+<p><strong>优先级：</strong> CSS Modules &gt; Scoped CSS &gt; 命名空间 &gt; BEM</p>
+
+        </div>
+        
+        <div class="tags">
+            
+            <a href="/tags/css/">css</a>
+            
+        </div>
+        
+        
+        <div class="post-nav">
+            
+            <a class="pre" href="/2026/03/26/msjs/">
+                <i class="icon-previous">msjs</i>
+            </a>
+            
+            
+            <a class="next" href="/2026/03/24/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1/">
+                <i class="icon-next">构造函数、原型对象</i>
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+
+
+                </div>
+                <div class="col-md-4 hidden-xs">
+                    
+<div class="sidebar">
+    <div class="well">
+        <h2>标签云</h2>
+        <a href="/tags/css/" style="font-size: 15px;">css</a> <a href="/tags/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" style="font-size: 15px;">构造函数</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1/" style="font-size: 15px;">原型对象</a>
+    </div>
+</div>
+
+<div class="sidebar">
+    <div class="well">
+        <h2>归档</h2>
+        <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">2026年03月</a><span class="archive-list-count">6</span></li></ul>
+    </div>
+</div>
+
+<div class="sidebar ">
+    <div class="well">
+        <h2>最新文章</h2>
+        <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/03/26/msjs/">msjs</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/26/mscss/">mscss</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/24/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1/">构造函数、原型对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/23/%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6%EF%BC%8C%E5%87%BD%E6%95%B0%E8%BF%9B%E9%98%B6%EF%BC%8C%E9%97%AD%E5%8C%85/">事件机制，函数进阶，闭包</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/23/Ajax%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98%EF%BC%9A%E4%BB%8E%E5%BE%85%E5%8A%9E%E4%BA%8B%E9%A1%B9%E7%9C%8B%E5%89%8D%E7%AB%AF%E6%95%B0%E6%8D%AE%E4%BA%A4%E4%BA%92%E4%B8%8E%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A/">Ajax异步编程实战：从待办事项看前端数据交互与事件绑定</a></li></ul>
+    </div>
+</div>
+
+<div class="sidebar">
+    <div class="well">
+        <h2>友情链接</h2>
+        <ul>
+            
+            <li><a class="links-list-link" href="http://www.howardliu.com/" title="沉潜飞动" target='_blank'>沉潜飞动</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="side-button-wrap">
+        <a id="to-top" class="side-button icon-up-arrow" href="#top"></a>
+        <a id="to-home" class="side-button icon-home" href="/."></a>
+        <a id="to-comment-button" class="side-button icon-msg" href="#comment"></a>
+        <a id="to-bottom-button" class="side-button icon-down-arrow" href="#bottom"></a>
+    </div>
+    <a id="bottom" name="bottom"></a>
+    <footer id="footer" class="footer-distributed" style="background-color: #222222;">
+    <div class="container">
+        <div class="footer">
+            <p>Lazy Cat &copy; 2026</p>
+            <ul class="social-media">
+                
+                
+                <li>
+                    <a title="hexo-theme-clean-dark" href="https://github.com/howardliu-cn/hexo-theme-clean-dark"
+                       target="_blank">
+                        <i class="fa fa-film fa-2x"></i>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</footer>
+
+</div>
+
+<script src="//cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
+
+
+<script src="//cdn.staticfile.org/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+<script src="//cdn.staticfile.org/highlight.js/9.1.0/highlight.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script src="/js/header.js"></script>
+
+
+<script src="/js/toc.js"></script>
+
+<!--[if lt IE 9]>
+
+<script src="//cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+
+![endif]-->
+<!--fancybox-->
+
+<script src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+<script src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+<link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+<script>
+    $(document).ready(function () {
+        $("img").each(function (index, item) {
+            var p = $(item).parents()[0];
+            if($(p).is('a')) {
+                $(p).fancybox();
+                return;
+            }
+            $(p).append(function() {return "<a id='fancybox_id_"+index+"' href='" + $(item).attr("src") + "'></a>";});
+            item.remove();
+            var fancyboxItem = $("#fancybox_id_" + index);
+            fancyboxItem.append($(item));
+            fancyboxItem.fancybox();
+        });
+    });
+</script>
+
+<!--baidu auto-push-->
+
+<!--google analytics-->
+
+</body>
+</html>

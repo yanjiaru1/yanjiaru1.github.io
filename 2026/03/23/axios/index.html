@@ -1,213 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang='zh-CN'>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="author" content="John Doe">
-    
-    
-    
-    
-    
-    
-    <title>axios | Hexo</title>
-    <link href="http://example.com" rel="prefetch" />
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    
-<link rel="stylesheet" href="/css/bootstrap.min.css">
-<link rel="stylesheet" href="/css/aos.css">
-<link rel="stylesheet" href="/css/style.css">
+<title>axios||Lazy Cat&#39;s Blog|ai全栈笔记 &amp; 技术分享</title>
+<meta name="description" content="JavaScript 核心知识点总结 (Window &amp; DOM 操作)01本文档基于一个综合的 HTML&#x2F;JavaScript 示例，总结了浏览器内置对象、DOM 操作、事件处理及 Ajax 请求等核心前端概念。 1. Window 对象window 对象是浏览器中的全局对象，代表了浏览器的窗口。 1.1 全局变量与函数在全局作用域中声明的变量和函数，会自动成为 window">
+<meta property="og:type" content="article">
+<meta property="og:title" content="axios">
+<meta property="og:url" content="http://example.com/2026/03/23/axios/index.html">
+<meta property="og:site_name" content="Lazy Cat&#39;s Blog">
+<meta property="og:description" content="JavaScript 核心知识点总结 (Window &amp; DOM 操作)01本文档基于一个综合的 HTML&#x2F;JavaScript 示例，总结了浏览器内置对象、DOM 操作、事件处理及 Ajax 请求等核心前端概念。 1. Window 对象window 对象是浏览器中的全局对象，代表了浏览器的窗口。 1.1 全局变量与函数在全局作用域中声明的变量和函数，会自动成为 window">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-23T02:18:48.000Z">
+<meta property="article:modified_time" content="2026-03-23T02:37:01.703Z">
+<meta property="article:author" content="Lazy Cat">
+<meta property="article:tag" content="前端,JavaScript,CSS,HTML">
+<meta name="twitter:card" content="summary">
 
-    
-<script src="/js/jquery.min.js"></script>
 
-    
-<script src="/js/bootstrap.min.js"></script>
+<meta name="description" content="JavaScript 核心知识点总结 (Window &amp;amp;amp; DOM 操作)01本文档基于一个综合的 HTML&amp;amp;#x2F;JavaScript 示例，总结了浏览器内置对象、DOM 操作、事件处理及 Ajax 请求等核心前端概念。
+1. Window 对象window 对象是浏览器中的全局对象，代">
 
-    
-<script src="/js/aos.js"></script>
+<meta name="author" content="Lazy Cat,undefined">
 
-    
-<script src="/js/highslide/highslide-full.min.js"></script>
 
-    
-<link rel="stylesheet" href="/js/highslide/highslide.css">
+<link rel="shortcut icon" href="/favicon.png" type="image/x-icon"/>
+<link rel="icon" href="/favicon.png">
 
-    <style type="text/css">
-        @media (max-width: 768px) {
-            body {
-                background-color: #f0f0f0;
-                background: url('/imgs/xsbg.gif');
-                background-attachment: fixed;
-            }
-        }
-    </style>
-    
-    <!--<script type="text/javascript">
-      if (document.images) {
-        var avatar = new Image();
-        avatar.src = '/imgs/avatar.jpg'
-        var previews = 'preview1.jpg,preview2.jpg,preview3.jpg,preview4.jpg'.split(',')
-        var previewsPreLoad = []
-        for(var i = 0; i < length; i++) {
-          previewsPreLoad.push(new Image())
-          previewsPreLoad[previewsPreLoad.length - 1].src = '/imgs/preview' + previews[i]
-        }
-      }
-    </script>-->
+
+<link rel="stylesheet" href="//cdn.staticfile.org/bootstrap/3.3.6/css/bootstrap.min.css">
+
+
+<link rel="stylesheet" href="/css/theme.css">
+
+
+<link rel="stylesheet" href="/css/syntax.css">
+
+
+<link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/9.1.0/styles/arta.min.css">
+
+<!--baidu analytics-->
+
 <meta name="generator" content="Hexo 6.3.0"></head>
 <body>
-    <!-- 背景轮播图功能 -->
-    <section class="hidden-xs">
-    <ul class="cb-slideshow">
-        <li><span>天若</span></li>
-        <li><span>有情</span></li>
-        <li><span>天亦老</span></li>
-        <li><span>我为</span></li>
-        <li><span>长者</span></li>
-        <li><span>续一秒</span></li>
-    </ul>
-</section>
-    <!-- 欧尼酱功能, 谁用谁知道 -->
-    
-    <header class="navbar navbar-inverse" id="gal-header">
+<nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed"
-                    data-toggle="collapse" data-target=".bs-navbar-collapse"
-                    aria-expanded="false">
-                <span class="fa fa-lg fa-reorder"></span>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </button>
-            <a href="http://example.com">
-                
-                <style>
-                    #gal-header .navbar-brand {
-                        height: 54px;
-                        line-height: 24px;
-                        font-size: 28px;
-                        opacity: 1;
-                        background-color: rgba(0,0,0,0);
-                        text-shadow: 0 0 5px #fff,0 0 10px #fff,0 0 15px #fff,0 0 20px #228DFF,0 0 35px #228DFF,0 0 40px #228DFF,0 0 50px #228DFF,0 0 75px #228DFF;
-                    }
-                </style>
-                <!-- 这里使用文字(navbar_text or config.title) -->
-                <div class="navbar-brand">Hexo</div>
-                
-            </a>
+            
+            <a class="navbar-brand" href="/.">Lazy Cat&#39;s Blog</a>
         </div>
-        <div class="collapse navbar-collapse bs-navbar-collapse">
-            <ul class="nav navbar-nav" id="menu-gal">
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
                 
+                <li><a href="/." class="current"><i class="icon-home"> 首页</i></a></li>
                 
-                <li class="">
-                    <a href="/">
-                        <i class="fa fa-home"></i>首页
-                    </a>
-                </li>
+                <li><a href="/archives/"><i class="icon-archive"> 归档</i></a></li>
                 
+                <li><a href="/atom.xml"><i class="icon-rss"> 订阅</i></a></li>
                 
-                
-                <li class="">
-                    <a href="/archives">
-                        <i class="fa fa-archive"></i>归档
-                    </a>
-                </li>
-                
-                
-                
-                
-                <li class="">
-                    <a href="/categories">
-                        <i class="fa fa-list"></i>分类
-                    </a>
-                </li>
-                
-                
-                
-                
-                
-                <li class="dropdown">
-                    <!-- TODO 添加hover dropdown效果 -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false" data-hover="dropdown">
-                        <i class="fa fa-tags"></i>标签
-                    </a>
-                    <ul class="dropdown-menu">
-                        
-                        
-                        <li>
-                            <a href="/tags/dify/">dify</a>
-                        </li>
-                        
-                        <li>
-                            <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/">多模态</a>
-                        </li>
-                        
-                        
-                        
-                    </ul>
-                </li>
-                
-                
-                
-                
-                <li class="">
-                    <a href="/about">
-                        <i class="fa fa-user"></i>关于我
-                    </a>
-                </li>
-                
+                <li><a href="/about/"><i class="icon-about"> 关于</i></a></li>
                 
             </ul>
         </div>
     </div>
-</header>
-    <div id="gal-body">
-        <div class="container">
+</nav>
+<div class="wrapper">
+    <div class="content">
+        <div class="container container-center">
             <div class="row">
-                <div class="col-md-8 gal-right" id="mainstay">
-                    
-<article class="article well article-body" id="article">
-    <div class="breadcrumb">
-        <i class="fa fa-home"></i>
-        <a href="http://example.com">Hexo</a>
-        >
-        <span>axios</span>
-    </div>
-    <!-- 大型设备详细文章 -->
-    <div class="hidden-xs">
-        <div class="title-article">
-            <h1>
-                <a href="/2026/03/23/axios/">axios</a>
-            </h1>
-        </div>
-        <div class="tag-article">
-            
-            <span class="label label-gal">
-                <i class="fa fa-calendar"></i> 2026-03-23
-            </span>
-            
-        </div>
-    </div>
-    <!-- 小型设备详细文章 -->
-    <div class="visible-xs">
-        <center>
-            <div class="title-article">
-                <h4>
-                    <a href="/2026/03/23/axios/">axios</a>
-                </h4>
+                <div class="col-md-8">
+                    <div class="article">
+    <div class="well">
+        <h1><a href="/2026/03/23/axios/">axios</a></h1>
+        <div class="post-meta">
+            <div class="post-time">
+                <i class="fa fa-calendar"></i><time> 2026-03-23</time>
             </div>
-            <p>
-                <i class="fa fa-calendar"></i> 2026-03-23
-            </p>
-            <p>
-                
-                
-            </p>
-        </center>
-    </div>
-    <div class="content-article">
-        <h1 id="JavaScript-核心知识点总结-Window-DOM-操作-01"><a href="#JavaScript-核心知识点总结-Window-DOM-操作-01" class="headerlink" title="JavaScript 核心知识点总结 (Window &amp; DOM 操作)01"></a>JavaScript 核心知识点总结 (Window &amp; DOM 操作)01</h1><p>本文档基于一个综合的 HTML&#x2F;JavaScript 示例，总结了浏览器内置对象、DOM 操作、事件处理及 Ajax 请求等核心前端概念。</p>
+            <div class="post-visitors-count">
+                <i class="fa fa-ge"></i>
+                <span id="/2026/03/23/axios/" class="leancloud_visitors" data-flag-title="axios">
+                    <span class="post-meta-item-text">阅读量 </span>
+                    <i class="leancloud-visitors-count">0</i>
+                </span>
+            </div>
+        </div>
+        <div class="post-content article-entry">
+            <h1 id="JavaScript-核心知识点总结-Window-DOM-操作-01"><a href="#JavaScript-核心知识点总结-Window-DOM-操作-01" class="headerlink" title="JavaScript 核心知识点总结 (Window &amp; DOM 操作)01"></a>JavaScript 核心知识点总结 (Window &amp; DOM 操作)01</h1><p>本文档基于一个综合的 HTML&#x2F;JavaScript 示例，总结了浏览器内置对象、DOM 操作、事件处理及 Ajax 请求等核心前端概念。</p>
 <h2 id="1-Window-对象"><a href="#1-Window-对象" class="headerlink" title="1. Window 对象"></a>1. Window 对象</h2><p><code>window</code> 对象是浏览器中的全局对象，代表了浏览器的窗口。</p>
 <h3 id="1-1-全局变量与函数"><a href="#1-1-全局变量与函数" class="headerlink" title="1.1 全局变量与函数"></a>1.1 全局变量与函数</h3><p>在全局作用域中声明的变量和函数，会自动成为 <code>window</code> 对象的属性和方法。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fun = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">window</span>.<span class="property">number</span> = <span class="number">100</span>; <span class="comment">// 显式添加到 window 对象</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_">fun</span>();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(number); <span class="comment">// 输出: 100 (全局可访问)</span></span><br></pre></td></tr></table></figure>
@@ -305,294 +195,138 @@
 <hr>
 <p><strong>总结</strong>：此示例涵盖了前端开发中与浏览器交互的核心技术点，掌握这些内容是进行复杂 Web 应用开发的基础。</p>
 
+        </div>
+        
+        <div class="tags">
+            
+        </div>
+        
+        
+        <div class="post-nav">
+            
+            <a class="pre" href="/2026/03/23/Ajax%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98%EF%BC%9A%E4%BB%8E%E5%BE%85%E5%8A%9E%E4%BA%8B%E9%A1%B9%E7%9C%8B%E5%89%8D%E7%AB%AF%E6%95%B0%E6%8D%AE%E4%BA%A4%E4%BA%92%E4%B8%8E%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A/">
+                <i class="icon-previous">Ajax异步编程实战：从待办事项看前端数据交互与事件绑定</i>
+            </a>
+            
+            
+        </div>
+        
     </div>
-</article>
+</div>
 
 
                 </div>
-                <aside class="col-md-4 gal-left" id="sidebar">
-    <!-- 此为sidebar的搜索框, 非搜索结果页面 -->
-<aside id="sidebar-search">
-    <div class="search hidden-xs" data-aos="fade-up" data-aos-duration="2000">
-        <form class="form-inline clearfix" id="search-form" method="get"
-              action="/search/index.html">
-            <input type="text" name="s" class="form-control" id="searchInput" placeholder="搜索文章~" autocomplete="off">
-            <button class="btn btn-danger btn-gal" type="submit">
-                <i class="fa fa-search"></i>
-            </button>
-        </form>
+                <div class="col-md-4 hidden-xs">
+                    
+<div class="sidebar">
+    <div class="well">
+        <h2>标签云</h2>
+        <a href="/tags/css/" style="font-size: 15px;">css</a> <a href="/tags/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" style="font-size: 15px;">构造函数</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1/" style="font-size: 15px;">原型对象</a>
     </div>
-</aside>
-    <aside id="sidebar-author">
-    <div class="panel panel-gal" data-aos="flip-right" data-aos-duration="3000">
-        <div class="panel-heading" style="text-align: center">
-            <i class="fa fa-quote-left"></i>
-            John Doe
-            <i class="fa fa-quote-right"></i>
-        </div>
-        <div class="author-panel text-center">
-            <img src="/imgs/avatar.jpg" width="140" height="140"
-                 alt="个人头像" class="author-image">
-            <p class="author-description"></p>
-        </div>
-    </div>
-</aside>
-    
-    <aside id="sidebar-recent_comments">
-    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
-        <div class="panel-heading">
-            <i class="fa fa-comments"></i>
-            最新评论
-            <i class="fa fa-times-circle panel-remove"></i>
-            <i class="fa fa-chevron-circle-up panel-toggle"></i>
-        </div>
-        <ul class="list-group list-group-flush"></ul>
-    </div>
-</aside>
-    
-    <!-- 要配置好leancloud才能开启此小工具 -->
-    
-    
-    <aside id="sidebar-recent_posts">
-    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
-        <div class="panel-heading">
-            <i class="fa fa-refresh"></i>
-            近期文章
-            <i class="fa fa-times-circle panel-remove"></i>
-            <i class="fa fa-chevron-circle-up panel-toggle"></i>
-        </div>
-        <ul class="list-group list-group-flush">
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2026/06/07/%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8%E5%88%86%E9%95%9C%E6%8F%90%E7%A4%BA%E8%AF%8D-Agent-%E6%95%99%E7%A8%8B/">视频反推分镜提示词_Agent_教程</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2026/03/26/msjs/">msjs</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2026/03/23/%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6%EF%BC%8C%E5%87%BD%E6%95%B0%E8%BF%9B%E9%98%B6%EF%BC%8C%E9%97%AD%E5%8C%85/">事件机制，函数进阶，闭包</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2026/03/23/Ajax%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98%EF%BC%9A%E4%BB%8E%E5%BE%85%E5%8A%9E%E4%BA%8B%E9%A1%B9%E7%9C%8B%E5%89%8D%E7%AB%AF%E6%95%B0%E6%8D%AE%E4%BA%A4%E4%BA%92%E4%B8%8E%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A/">Ajax异步编程实战：从待办事项看前端数据交互与事件绑定</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2026/03/23/axios/">axios</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2026/03/23/hello-world/">Hello World</a>
-                </span>
-            </li>
-            
-        </ul>
-    </div>
-</aside>
-    
-    
-    <aside id="sidebar-rand_posts">
-    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
-        <div class="panel-heading">
-            <i class="fa fa-refresh"></i>
-            随机文章
-            <i class="fa fa-times-circle panel-remove"></i>
-            <i class="fa fa-chevron-circle-up panel-toggle"></i>
-        </div>
-        <ul class="list-group list-group-flush">
-            
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2026/03/23/Ajax%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98%EF%BC%9A%E4%BB%8E%E5%BE%85%E5%8A%9E%E4%BA%8B%E9%A1%B9%E7%9C%8B%E5%89%8D%E7%AB%AF%E6%95%B0%E6%8D%AE%E4%BA%A4%E4%BA%92%E4%B8%8E%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A/">Ajax异步编程实战：从待办事项看前端数据交互与事件绑定</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2026/03/23/axios/">axios</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2026/03/23/hello-world/">Hello World</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2026/03/23/%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6%EF%BC%8C%E5%87%BD%E6%95%B0%E8%BF%9B%E9%98%B6%EF%BC%8C%E9%97%AD%E5%8C%85/">事件机制，函数进阶，闭包</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2026/03/26/msjs/">msjs</a>
-                </span>
-            </li>
-            
-            <li class="list-group-item">
-                <span class="post-title">
-                    <a href="/2026/06/07/%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8%E5%88%86%E9%95%9C%E6%8F%90%E7%A4%BA%E8%AF%8D-Agent-%E6%95%99%E7%A8%8B/">视频反推分镜提示词_Agent_教程</a>
-                </span>
-            </li>
-            
-        </ul>
-    </div>
-</aside>
-    
-    
-    <aside id="gal-sets">
-        <div class="panel panel-gal hidden-xs" data-aos="fade-up" data-aos-duration="2000">
-            <ul class="nav nav-pills pills-gal">
+</div>
 
+<div class="sidebar">
+    <div class="well">
+        <h2>归档</h2>
+        <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">2026年03月</a><span class="archive-list-count">6</span></li></ul>
+    </div>
+</div>
+
+<div class="sidebar ">
+    <div class="well">
+        <h2>最新文章</h2>
+        <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/03/26/msjs/">msjs</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/26/mscss/">mscss</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/24/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1/">构造函数、原型对象</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/23/%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6%EF%BC%8C%E5%87%BD%E6%95%B0%E8%BF%9B%E9%98%B6%EF%BC%8C%E9%97%AD%E5%8C%85/">事件机制，函数进阶，闭包</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/23/Ajax%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98%EF%BC%9A%E4%BB%8E%E5%BE%85%E5%8A%9E%E4%BA%8B%E9%A1%B9%E7%9C%8B%E5%89%8D%E7%AB%AF%E6%95%B0%E6%8D%AE%E4%BA%A4%E4%BA%92%E4%B8%8E%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A/">Ajax异步编程实战：从待办事项看前端数据交互与事件绑定</a></li></ul>
+    </div>
+</div>
+
+<div class="sidebar">
+    <div class="well">
+        <h2>友情链接</h2>
+        <ul>
+            
+            <li><a class="links-list-link" href="http://www.howardliu.com/" title="沉潜飞动" target='_blank'>沉潜飞动</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="side-button-wrap">
+        <a id="to-top" class="side-button icon-up-arrow" href="#top"></a>
+        <a id="to-home" class="side-button icon-home" href="/."></a>
+        <a id="to-comment-button" class="side-button icon-msg" href="#comment"></a>
+        <a id="to-bottom-button" class="side-button icon-down-arrow" href="#bottom"></a>
+    </div>
+    <a id="bottom" name="bottom"></a>
+    <footer id="footer" class="footer-distributed" style="background-color: #222222;">
+    <div class="container">
+        <div class="footer">
+            <p>Lazy Cat &copy; 2026</p>
+            <ul class="social-media">
+                
                 
                 <li>
-                    <a href="/2026/03/23/axios/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
-                </li>
-                
-                
-                <li>
-                    <a href="/2026/03/23/axios/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
-                </li>
-                
-                
-                <li>
-                    <a href="/2026/03/23/axios/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                    <a title="hexo-theme-clean-dark" href="https://github.com/howardliu-cn/hexo-theme-clean-dark"
+                       target="_blank">
+                        <i class="fa fa-film fa-2x"></i>
+                    </a>
                 </li>
                 
             </ul>
-            <div class="tab-content">
-                
-                <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
-    
-    <a href="/tags/dify/" style="font-size: 13.53255788780326px;" class="tag-cloud-link">dify</a>
-    
-    <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/" style="font-size: 17.866452710924072px;" class="tag-cloud-link">多模态</a>
-    
-</div>
-                
-                
-                <div class="friend-links tab-pane nav bs-sidenav fade" id="sidebar-friend-links">
-    
-    <li>
-        <a href="http://kdays.net/days/" target="_blank">KDays Forum</a>
-    </li>
-    
-    <li>
-        <a href="http://www.gal123.com/" target="_blank">绅士导航♂</a>
-    </li>
-    
-    <li>
-        <a href="http://www.moe123.com/" target="_blank">萌导航</a>
-    </li>
-    
-</div>
-                
-                
-                <div class="links tab-pane nav bs-sidenav fade" id="sidebar-links">
-    
-    <li>
-        <a href="https://github.com/ZEROKISEKI/" target="_blank">Github</a>
-    </li>
-    
-    <li>
-        <a href="https://coding.net/u/SORA1" target="_blank">Coding</a>
-    </li>
-    
-    <li>
-        <a href="https://www.zhihu.com/people/aonosora/activities" target="_blank">知乎</a>
-    </li>
-    
-</div>
-                
-            </div>
         </div>
-    </aside>
-    
-</aside>
-            </div>
-        </div>
-    </div>
-    <footer id="gal-footer">
-    <div class="container">
-        Copyright © 2018 John Doe Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>.&nbsp;Theme by <a href="https://github.com/ZEROKISEKI" target="_blank">AONOSORA</a>
     </div>
 </footer>
 
-<!-- 回到顶端 -->
-<div id="gal-gotop">
-    <i class="fa fa-angle-up"></i>
 </div>
-</body>
 
-<script src="/js/activate-power-mode.js"></script>
+<script src="//cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
 
+
+<script src="//cdn.staticfile.org/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+<script src="//cdn.staticfile.org/highlight.js/9.1.0/highlight.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script src="/js/header.js"></script>
+
+
+<script src="/js/toc.js"></script>
+
+<!--[if lt IE 9]>
+
+<script src="//cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+
+![endif]-->
+<!--fancybox-->
+
+<script src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+<script src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+<link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
 <script>
-
-    // 配置highslide
-	hs.graphicsDir = '/js/highslide/graphics/'
-    hs.outlineType = "rounded-white";
-    hs.dimmingOpacity = 0.8;
-    hs.outlineWhileAnimating = true;
-    hs.showCredits = false;
-    hs.captionEval = "this.thumb.alt";
-    hs.numberPosition = "caption";
-    hs.align = "center";
-    hs.transitions = ["expand", "crossfade"];
-    hs.lang.number = '共%2张图, 当前是第%1张';
-    hs.addSlideshow({
-      interval: 5000,
-      repeat: true,
-      useControls: true,
-      fixedControls: "fit",
-      overlayOptions: {
-        opacity: 0.75,
-        position: "bottom center",
-        hideOnMouseOut: true
-      }
-    })
-
-    // 初始化aos
-    AOS.init({
-      duration: 1000,
-      delay: 0,
-      easing: 'ease-out-back'
+    $(document).ready(function () {
+        $("img").each(function (index, item) {
+            var p = $(item).parents()[0];
+            if($(p).is('a')) {
+                $(p).fancybox();
+                return;
+            }
+            $(p).append(function() {return "<a id='fancybox_id_"+index+"' href='" + $(item).attr("src") + "'></a>";});
+            item.remove();
+            var fancyboxItem = $("#fancybox_id_" + index);
+            fancyboxItem.append($(item));
+            fancyboxItem.fancybox();
+        });
     });
-
-</script>
-<script>
-	POWERMODE.colorful = 'true';    // make power mode colorful
-	POWERMODE.shake = 'true';       // turn off shake
-	// TODO 这里根据具体情况修改
-	document.body.addEventListener('input', POWERMODE);
-</script>
-<script>
-    window.slideConfig = {
-      prefix: '/imgs/slide/background',
-      ext: 'jpg',
-      maxCount: '6'
-    }
 </script>
 
-<script src="/js/hs.js"></script>
-<script src="/js/blog.js"></script>
+<!--baidu auto-push-->
 
+<!--google analytics-->
 
-
-
+</body>
 </html>
