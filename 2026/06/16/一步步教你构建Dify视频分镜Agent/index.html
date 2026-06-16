@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>一步步教你构建Dify视频分镜Agent||Lazy Cat&#39;s Blog|ai全栈笔记 &amp; 技术分享</title>
+<meta name="description" content="本文面向有 Dify 基础、想扩展视频处理能力的开发者。按步骤操作，预计 30 分钟完成全部搭建。  最终效果： 在 Dify 上传一段视频，自动拆分为多个分镜，每个分镜附带 AI 生成的画面主体、动作、环境、运镜描述，同时写入飞书多维表格并关联关键帧截图。 效果预览： 123456789101112131415161718192021COPYDify 输出面板  # 视频分镜脚本  共 12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一步步教你构建Dify视频分镜Agent">
+<meta property="og:url" content="http://example.com/2026/06/16/%E4%B8%80%E6%AD%A5%E6%AD%A5%E6%95%99%E4%BD%A0%E6%9E%84%E5%BB%BADify%E8%A7%86%E9%A2%91%E5%88%86%E9%95%9CAgent/index.html">
+<meta property="og:site_name" content="Lazy Cat&#39;s Blog">
+<meta property="og:description" content="本文面向有 Dify 基础、想扩展视频处理能力的开发者。按步骤操作，预计 30 分钟完成全部搭建。  最终效果： 在 Dify 上传一段视频，自动拆分为多个分镜，每个分镜附带 AI 生成的画面主体、动作、环境、运镜描述，同时写入飞书多维表格并关联关键帧截图。 效果预览： 123456789101112131415161718192021COPYDify 输出面板  # 视频分镜脚本  共 12">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-16T12:50:54.000Z">
+<meta property="article:modified_time" content="2026-06-16T12:51:33.497Z">
+<meta property="article:author" content="Lazy Cat">
+<meta property="article:tag" content="dify">
+<meta property="article:tag" content="ffmpeg">
+<meta property="article:tag" content="飞书">
+<meta name="twitter:card" content="summary">
+
+
+<meta name="description" content="本文面向有 Dify 基础、想扩展视频处理能力的开发者。按步骤操作，预计 30 分钟完成全部搭建。
+
+最终效果： 在 Dify 上传一段视频，自动拆分为多个分镜，每个分镜附带 AI 生成的画面主体、动作、环境、运镜描述，同时写入飞书多维表格并关联关键帧截图。
+效果预览：
+12345678910111">
+
+<meta name="author" content="Lazy Cat,undefined">
+
+
+<link rel="shortcut icon" href="/favicon.png" type="image/x-icon"/>
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//cdn.staticfile.org/bootstrap/3.3.6/css/bootstrap.min.css">
+
+
+<link rel="stylesheet" href="/css/theme.css">
+
+
+<link rel="stylesheet" href="/css/syntax.css">
+
+
+<link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/9.1.0/styles/arta.min.css">
+
+<!--baidu analytics-->
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+            <a class="navbar-brand" href="/.">Lazy Cat&#39;s Blog</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                
+                <li><a href="/." class="current"><i class="icon-home"> 首页</i></a></li>
+                
+                <li><a href="/archives/"><i class="icon-archive"> 归档</i></a></li>
+                
+                <li><a href="/atom.xml"><i class="icon-rss"> 订阅</i></a></li>
+                
+                <li><a href="/about/"><i class="icon-about"> 关于</i></a></li>
+                
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="wrapper">
+    <div class="content">
+        <div class="container container-center">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="article">
+    <div class="well">
+        <h1><a href="/2026/06/16/%E4%B8%80%E6%AD%A5%E6%AD%A5%E6%95%99%E4%BD%A0%E6%9E%84%E5%BB%BADify%E8%A7%86%E9%A2%91%E5%88%86%E9%95%9CAgent/">一步步教你构建Dify视频分镜Agent</a></h1>
+        <div class="post-meta">
+            <div class="post-time">
+                <i class="fa fa-calendar"></i><time> 2026-06-16</time>
+            </div>
+            <div class="post-visitors-count">
+                <i class="fa fa-ge"></i>
+                <span id="/2026/06/16/%E4%B8%80%E6%AD%A5%E6%AD%A5%E6%95%99%E4%BD%A0%E6%9E%84%E5%BB%BADify%E8%A7%86%E9%A2%91%E5%88%86%E9%95%9CAgent/" class="leancloud_visitors" data-flag-title="一步步教你构建Dify视频分镜Agent">
+                    <span class="post-meta-item-text">阅读量 </span>
+                    <i class="leancloud-visitors-count">0</i>
+                </span>
+            </div>
+        </div>
+        <div class="post-content article-entry">
+            <blockquote>
+<p>本文面向有 Dify 基础、想扩展视频处理能力的开发者。按步骤操作，预计 30 分钟完成全部搭建。</p>
+</blockquote>
+<p><strong>最终效果：</strong> 在 Dify 上传一段视频，自动拆分为多个分镜，每个分镜附带 AI 生成的画面主体、动作、环境、运镜描述，同时写入飞书多维表格并关联关键帧截图。</p>
+<p><strong>效果预览：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">COPYDify 输出面板</span><br><span class="line">  # 视频分镜脚本</span><br><span class="line">  共 12 个分镜</span><br><span class="line"></span><br><span class="line">  ## 分镜01:活力少年奔跑亮相(0s-3.5s)</span><br><span class="line">  画面主体:穿着黄上衣蓝背带裤的卡通少年</span><br><span class="line">  动作:手持AD钙奶瓶，面带笑容向前奔跑</span><br><span class="line">  环境:阳光明媚的童话风格小镇</span><br><span class="line">  运镜:跟随少年奔跑的低角度跟拍镜头</span><br><span class="line"></span><br><span class="line">  ![分镜01](http://localhost/shots/abc123_frame_000.jpg)</span><br><span class="line">  ---</span><br><span class="line"></span><br><span class="line">飞书多维表格</span><br><span class="line">  ┌────────┬──────────┬────────┬──────┬──────┬──────┬────────┐</span><br><span class="line">  │分镜编号│ 时间范围  │画面主体│ 动作 │ 环境 │ 运镜 │关键帧  │</span><br><span class="line">  ├────────┼──────────┼────────┼──────┼──────┼──────┼────────┤</span><br><span class="line">  │分镜01  │ 0s-3.5s  │ ...    │ ...  │ ...  │ ...  │ [图片] │</span><br><span class="line">  │分镜02  │ 3.5s-6s  │ ...    │ ...  │ ...  │ ...  │ [图片] │</span><br><span class="line">  │...     │ ...      │ ...    │ ...  │ ...  │ ...  │ [图片] │</span><br><span class="line">  └────────┴──────────┴────────┴──────┴──────┴──────┴────────┘</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://927927ya.github.io/2026/06/14/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BAdify%E4%B8%8E%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8agent/#1-%E5%89%8D%E7%BD%AE%E5%87%86%E5%A4%87">前置准备</a></li>
+<li><a target="_blank" rel="noopener" href="https://927927ya.github.io/2026/06/14/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BAdify%E4%B8%8E%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8agent/#2-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84">整体架构</a></li>
+<li><a target="_blank" rel="noopener" href="https://927927ya.github.io/2026/06/14/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BAdify%E4%B8%8E%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8agent/#3-%E9%85%8D%E7%BD%AE%E9%A3%9E%E4%B9%A6%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0">配置飞书开放平台</a></li>
+<li><a target="_blank" rel="noopener" href="https://927927ya.github.io/2026/06/14/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BAdify%E4%B8%8E%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8agent/#4-dify-%E9%83%A8%E7%BD%B2">Dify 部署</a></li>
+<li><a target="_blank" rel="noopener" href="https://927927ya.github.io/2026/06/14/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BAdify%E4%B8%8E%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8agent/#5-%E6%90%AD%E5%BB%BA-ffmpeg-server">搭建 ffmpeg-server</a></li>
+<li>在 Dify 中搭建工作流<ul>
+<li><a target="_blank" rel="noopener" href="https://927927ya.github.io/2026/06/14/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BAdify%E4%B8%8E%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8agent/#%E6%96%B9%E5%BC%8F%E4%B8%80%E5%AF%BC%E5%85%A5-dsl-%E6%8E%A8%E8%8D%90">方式一：导入 DSL</a></li>
+<li><a target="_blank" rel="noopener" href="https://927927ya.github.io/2026/06/14/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BAdify%E4%B8%8E%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8agent/#%E6%96%B9%E5%BC%8F%E4%BA%8C%E6%89%8B%E5%8A%A8%E6%8B%96%E6%8B%BD%E6%90%AD%E5%BB%BA">方式二：手动拖拽搭建</a></li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://927927ya.github.io/2026/06/14/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BAdify%E4%B8%8E%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8agent/#7-%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95">运行测试</a></li>
+<li><a target="_blank" rel="noopener" href="https://927927ya.github.io/2026/06/14/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BAdify%E4%B8%8E%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8agent/#8-%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF%E4%B8%8E%E4%BF%AE%E5%A4%8D">常见错误与修复</a></li>
+<li><a target="_blank" rel="noopener" href="https://927927ya.github.io/2026/06/14/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BAdify%E4%B8%8E%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8agent/#9-%E9%99%84%E5%BD%95%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0%E8%B0%83%E4%BC%98">附录：核心参数调优</a></li>
+<li><a target="_blank" rel="noopener" href="https://927927ya.github.io/2026/06/14/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BAdify%E4%B8%8E%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8agent/#10-%E6%89%A9%E5%B1%95%E4%B8%8D%E6%8E%A5%E9%A3%9E%E4%B9%A6%E7%9A%84%E7%AE%80%E5%8C%96%E7%89%88">扩展：不接飞书的简化版</a></li>
+<li><a target="_blank" rel="noopener" href="https://927927ya.github.io/2026/06/14/%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BAdify%E4%B8%8E%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8agent/#11-%E7%BB%B4%E6%8A%A4%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5">维护命令速查</a></li>
+</ol>
+<hr>
+<h2 id="1-前置准备"><a href="#1-前置准备" class="headerlink" title="1. 前置准备"></a>1. 前置准备</h2><h3 id="硬件与软件"><a href="#硬件与软件" class="headerlink" title="硬件与软件"></a>硬件与软件</h3><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>要求</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>操作系统</td>
+<td>Windows &#x2F; macOS &#x2F; Linux</td>
+<td>本文以 Windows 为例</td>
+</tr>
+<tr>
+<td>Docker Desktop</td>
+<td>最新版</td>
+<td>需正常运行</td>
+</tr>
+<tr>
+<td>Dify</td>
+<td>1.14.2（自部署）</td>
+<td>通过 Docker Compose 部署</td>
+</tr>
+<tr>
+<td>通义千问 API Key</td>
+<td>有效</td>
+<td>在 dashscope 申请</td>
+</tr>
+</tbody></table>
+<h3 id="你需要准备的东西"><a href="#你需要准备的东西" class="headerlink" title="你需要准备的东西"></a>你需要准备的东西</h3><ol>
+<li><strong>一台能跑 Docker 的电脑</strong>（16GB 内存以上推荐）</li>
+<li><strong>Dify 已部署并能访问</strong>（见第 4 节）</li>
+<li><strong>通义千问 API Key</strong>（格式如 <code>sk-xxxx</code>，用于 AI 视觉分析）</li>
+<li><strong>飞书账号</strong>（用于多维表格展示，可选但推荐）</li>
+<li><strong>一个测试视频</strong>（MP4 格式，30 秒以内为宜）</li>
+</ol>
+<h3 id="目录约定"><a href="#目录约定" class="headerlink" title="目录约定"></a>目录约定</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">COPYdify/docker/                         ← Dify Docker 目录（已有）</span><br><span class="line">├── docker-compose.yml</span><br><span class="line">├── nginx/</span><br><span class="line">├── ssrf_proxy/</span><br><span class="line">├── volumes/</span><br><span class="line">└── ffmpeg-server/                   ← 本教程新建</span><br><span class="line">    ├── Dockerfile</span><br><span class="line">    └── server.py</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-整体架构"><a href="#2-整体架构" class="headerlink" title="2. 整体架构"></a>2. 整体架构</h2><h3 id="为什么不在-Dify-里直接处理？"><a href="#为什么不在-Dify-里直接处理？" class="headerlink" title="为什么不在 Dify 里直接处理？"></a>为什么不在 Dify 里直接处理？</h3><p>Dify 的沙箱（gVisor）有几条硬限制，导致视频处理走不通：</p>
+<table>
+<thead>
+<tr>
+<th>限制</th>
+<th>影响</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>禁止 <code>subprocess</code></td>
+<td>无法运行 FFmpeg</td>
+</tr>
+<tr>
+<td>禁止写临时文件</td>
+<td><code>tempfile</code> 权限不足</td>
+</tr>
+<tr>
+<td>变量 200KB 上限</td>
+<td>base64 图片会被截断</td>
+</tr>
+<tr>
+<td>迭代节点变量作用域隔离</td>
+<td>迭代内部结果外部拿不到</td>
+</tr>
+</tbody></table>
+<p><strong>解决思路：</strong> 把「视频下载 + FFmpeg 处理 + AI 分析 + 飞书写入」全部抽到一个独立的 Docker 容器（<code>ffmpeg-server</code>）中，Dify 只负责发起 HTTP 调用和展示结果。</p>
+<h3 id="数据流"><a href="#数据流" class="headerlink" title="数据流"></a>数据流</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">COPY用户浏览器 → Dify Web</span><br><span class="line">                │</span><br><span class="line">                ▼</span><br><span class="line">┌──────────────────────────────┐</span><br><span class="line">│  Dify 工作流                  │</span><br><span class="line">│                              │</span><br><span class="line">│  开始 → 提取关键帧 → 解析    │</span><br><span class="line">│  → AI 描述 → 格式化          │</span><br><span class="line">│  → 飞书认证 → 创建记录       │</span><br><span class="line">│  → 同步图片 → 结束           │</span><br><span class="line">└──────────┬───────────────────┘</span><br><span class="line">           │ HTTP 调用</span><br><span class="line">           ▼</span><br><span class="line">┌──────────────────────────────┐</span><br><span class="line">│  ffmpeg-server :5002         │</span><br><span class="line">│                              │</span><br><span class="line">│  1. 从 Dify API 下载视频     │</span><br><span class="line">│  2. FFmpeg 场景检测          │</span><br><span class="line">│  3. 提取关键帧（512px）      │</span><br><span class="line">│  4. 千问 LLM 逐帧描述        │</span><br><span class="line">│  5. 格式化 Markdown          │</span><br><span class="line">│  6. 飞书批量写入 + 图片关联  │</span><br><span class="line">└──────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-配置飞书开放平台"><a href="#3-配置飞书开放平台" class="headerlink" title="3. 配置飞书开放平台"></a>3. 配置飞书开放平台</h2><h3 id="3-1-创建企业自建应用"><a href="#3-1-创建企业自建应用" class="headerlink" title="3.1 创建企业自建应用"></a>3.1 创建企业自建应用</h3><ol>
+<li>打开<a target="_blank" rel="noopener" href="https://open.feishu.cn/app">飞书开放平台</a></li>
+<li>点击「创建企业自建应用」</li>
+<li>进入「凭证与基础信息」，记录 <strong>App ID</strong> 和 <strong>App Secret</strong></li>
+</ol>
+<h3 id="3-2-添加权限"><a href="#3-2-添加权限" class="headerlink" title="3.2 添加权限"></a>3.2 添加权限</h3><p>进入「权限管理」，添加以下权限并发布版本：</p>
+<ul>
+<li><code>bitable:app</code> — 多维表格应用的管理权限</li>
+<li><code>drive:file</code> — 云空间文件的上传权限</li>
+</ul>
+<h3 id="3-3-创建多维表格"><a href="#3-3-创建多维表格" class="headerlink" title="3.3 创建多维表格"></a>3.3 创建多维表格</h3><ol>
+<li>飞书 → 工作台 → 多维表格 → 新建空白表格</li>
+<li>按以下顺序创建 8 列：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>字段类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>分镜编号</td>
+<td>文本</td>
+</tr>
+<tr>
+<td>时间范围</td>
+<td>文本</td>
+</tr>
+<tr>
+<td>画面主体</td>
+<td>文本</td>
+</tr>
+<tr>
+<td>动作</td>
+<td>文本</td>
+</tr>
+<tr>
+<td>环境</td>
+<td>文本</td>
+</tr>
+<tr>
+<td>运镜</td>
+<td>文本</td>
+</tr>
+<tr>
+<td>AI描述</td>
+<td>文本</td>
+</tr>
+<tr>
+<td>关键帧截图</td>
+<td>附件</td>
+</tr>
+</tbody></table>
+<ol>
+<li>从浏览器地址栏获取两个 ID：<ul>
+<li><code>app_token</code>：<code>https://xxx.feishu.cn/base/&#123;app_token&#125;?table=...</code></li>
+<li><code>table_id</code>：<code>?table=&#123;table_id&#125;&amp;view=...</code></li>
+</ul>
+</li>
+<li><strong>获取 <code>img_field_id</code></strong>：在多维表格中点击「关键帧截图」列表头 → F12 开发者工具 → Elements 搜索该列对应的 <code>field_id</code>（格式如 <code>fldxxxxx</code>）</li>
+</ol>
+<h3 id="3-4-添加应用为协作者"><a href="#3-4-添加应用为协作者" class="headerlink" title="3.4 添加应用为协作者"></a>3.4 添加应用为协作者</h3><p>打开多维表格 → 右上角「···」→「更多」→「添加文档应用」→ 搜索你的应用 → 添加 → 权限选 <strong>可管理</strong>。</p>
+<h3 id="3-5-发布应用"><a href="#3-5-发布应用" class="headerlink" title="3.5 发布应用"></a>3.5 发布应用</h3><p>开放平台 →「版本管理与发布」→ 创建版本 <code>1.0.0</code> → 申请发布（自建应用通常秒过）。</p>
+<hr>
+<h2 id="4-Dify-部署"><a href="#4-Dify-部署" class="headerlink" title="4. Dify 部署"></a>4. Dify 部署</h2><h3 id="4-1-科学上网"><a href="#4-1-科学上网" class="headerlink" title="4.1 科学上网"></a>4.1 科学上网</h3><p><a target="_blank" rel="noopener" href="https://47.238.146.96/auth/register?code=ulvjRea7">https://47.238.146.96/auth/register?code=ulvjRea7</a></p>
+<h3 id="4-2-Docker-Desktop-镜像加速"><a href="#4-2-Docker-Desktop-镜像加速" class="headerlink" title="4.2 Docker Desktop 镜像加速"></a>4.2 Docker Desktop 镜像加速</h3><p><a target="_blank" rel="noopener" href="https://www.docker.com/get-started/">https://www.docker.com/get-started/</a></p>
+<p>打开 Docker Desktop → Settings → Docker Engine，添加以下加速器：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;features&quot;: &#123;</span><br><span class="line">    &quot;buildkit&quot;: true</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;registry-mirrors&quot;: [</span><br><span class="line">    &quot;https://docker.1ms.run&quot;,</span><br><span class="line">    &quot;https://docker.rainbond.cc&quot;,</span><br><span class="line">    &quot;https://dockerpull.com&quot;,</span><br><span class="line">    &quot;https://dockerproxy.cn&quot;,</span><br><span class="line">    &quot;https://hub.crdz.top&quot;,</span><br><span class="line">    &quot;https://docker.nju.edu.cn&quot;,</span><br><span class="line">    &quot;https://docker.m.daocloud.io&quot;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-部署-Dify"><a href="#4-3-部署-Dify" class="headerlink" title="4.3 部署 Dify"></a>4.3 部署 Dify</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/langgenius/dify.git</span><br><span class="line">cd dify/docker</span><br><span class="line">cp .env.example .env</span><br><span class="line">docker compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>等待 2-3 分钟后查看状态：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">COPYdocker compose ps</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-4-STORAGE-TYPE-配置"><a href="#4-4-STORAGE-TYPE-配置" class="headerlink" title="4.4 STORAGE_TYPE 配置"></a>4.4 STORAGE_TYPE 配置</h3><p>Dify 默认使用 <code>opendal</code> 存储，上传文件不落本地。ffmpeg-server 需要从本地存储读取文件，必须改为 <code>local</code>：</p>
+<p>编辑 <code>.env</code> 文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">STORAGE_TYPE=local</span><br></pre></td></tr></table></figure>
+
+<p>然后重启 Dify：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker compose down</span><br><span class="line">docker compose up -d</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-5-添加模型提供商"><a href="#4-5-添加模型提供商" class="headerlink" title="4.5 添加模型提供商"></a>4.5 添加模型提供商</h3><p>打开 Dify → 右上角头像 →「设置」→「模型提供商」→ 添加「通义千问」，填入你的 API Key。</p>
+<h3 id="4-6-清理重建（如果环境没配好）"><a href="#4-6-清理重建（如果环境没配好）" class="headerlink" title="4.6 清理重建（如果环境没配好）"></a>4.6 清理重建（如果环境没配好）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># 停止所有容器</span><br><span class="line">docker compose down</span><br><span class="line"></span><br><span class="line"># 删除所有数据卷（清理数据库和缓存）</span><br><span class="line">docker compose down -v</span><br><span class="line"></span><br><span class="line"># 删除所有损坏的镜像</span><br><span class="line">docker rmi langgenius/dify-api:1.14.2</span><br><span class="line">docker rmi langgenius/dify-web:1.14.2</span><br><span class="line">docker rmi langgenius/dify-plugin-daemon:0.6.1-local</span><br><span class="line">docker rmi langgenius/dify-sandbox:0.2.15</span><br><span class="line"></span><br><span class="line"># 清理 Docker 构建缓存</span><br><span class="line">docker system prune -a -f</span><br><span class="line"></span><br><span class="line"># 重新拉取镜像</span><br><span class="line">docker compose pull</span><br><span class="line"></span><br><span class="line"># 重新启动</span><br><span class="line">docker compose up -d</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-7-数据库连接问题修复"><a href="#4-7-数据库连接问题修复" class="headerlink" title="4.7 数据库连接问题修复"></a>4.7 数据库连接问题修复</h3><p>如果数据库一直转圈：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 在 docker 目录下创建 pg_hba.conf（允许内网访问）</span><br><span class="line">echo &quot;host all all 172.18.0.0/16 md5&quot; &gt;&gt; pg_hba.conf</span><br></pre></td></tr></table></figure>
+
+<p>打开 <code>docker-compose.yml</code>，找到 <code>db_postgres</code> 服务，在 <code>command</code> 中添加：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">command: &gt;</span><br><span class="line">  postgres -c &#x27;max_connections=$&#123;POSTGRES_MAX_CONNECTIONS:-100&#125;&#x27;</span><br><span class="line">           -c &#x27;shared_buffers=$&#123;POSTGRES_SHARED_BUFFERS:-128MB&#125;&#x27;</span><br><span class="line">           -c &#x27;work_mem=$&#123;POSTGRES_WORK_MEM:-4MB&#125;&#x27;</span><br><span class="line">           -c &#x27;maintenance_work_mem=$&#123;POSTGRES_MAINTENANCE_WORK_MEM:-64MB&#125;&#x27;</span><br><span class="line">           -c &#x27;effective_cache_size=$&#123;POSTGRES_EFFECTIVE_CACHE_SIZE:-4096MB&#125;&#x27;</span><br><span class="line">           -c &#x27;statement_timeout=$&#123;POSTGRES_STATEMENT_TIMEOUT:-0&#125;&#x27;</span><br><span class="line">           -c &#x27;idle_in_transaction_session_timeout=$&#123;POSTGRES_IDLE_IN_TRANSACTION_SESSION_TIMEOUT:-0&#125;&#x27;</span><br><span class="line">           -c &#x27;password_encryption=md5&#x27;                    # 添加这行</span><br><span class="line">           -c &#x27;listen_addresses=*&#x27;                         # 添加这行</span><br></pre></td></tr></table></figure>
+
+<p>重新创建数据库容器：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker compose down</span><br><span class="line">docker compose up -d db_postgres</span><br><span class="line"></span><br><span class="line"># 等待 30 秒</span><br><span class="line">Start-Sleep -Seconds 30</span><br><span class="line"></span><br><span class="line"># 启动所有服务</span><br><span class="line">docker compose up -d</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-搭建-ffmpeg-server"><a href="#5-搭建-ffmpeg-server" class="headerlink" title="5. 搭建 ffmpeg-server"></a>5. 搭建 ffmpeg-server</h2><p>在 <code>dify/docker</code> 目录下新建 <code>ffmpeg-server</code> 文件夹。</p>
+<h3 id="5-1-Dockerfile"><a href="#5-1-Dockerfile" class="headerlink" title="5.1 Dockerfile"></a>5.1 Dockerfile</h3><p>文件路径：<code>dify/docker/ffmpeg-server/Dockerfile</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">FROM langgenius/dify-api:1.14.2</span><br><span class="line">USER root</span><br><span class="line"></span><br><span class="line"># 安装 FFmpeg（清华源加速）</span><br><span class="line">RUN sed -i &#x27;s/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g&#x27; /etc/apt/sources.list.d/debian.sources 2&gt;/dev/null; \</span><br><span class="line">    apt-get update &amp;&amp; apt-get install -y ffmpeg &amp;&amp; \</span><br><span class="line">    rm -rf /var/lib/apt/lists/*</span><br><span class="line"></span><br><span class="line"># 安装 Python 依赖</span><br><span class="line">RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple flask requests</span><br><span class="line"></span><br><span class="line"> server.py /app/server.py</span><br><span class="line">WORKDIR /app</span><br><span class="line">ENTRYPOINT []</span><br><span class="line">CMD [&quot;python&quot;, &quot;server.py&quot;]</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-server-py"><a href="#5-2-server-py" class="headerlink" title="5.2 server.py"></a>5.2 server.py</h3><p>文件路径：<code>dify/docker/ffmpeg-server/server.py</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br><span class="line">524</span><br><span class="line">525</span><br><span class="line">526</span><br><span class="line">527</span><br><span class="line">528</span><br><span class="line">529</span><br><span class="line">530</span><br><span class="line">531</span><br><span class="line">532</span><br><span class="line">533</span><br><span class="line">534</span><br><span class="line">535</span><br><span class="line">536</span><br><span class="line">537</span><br><span class="line">538</span><br><span class="line">539</span><br><span class="line">540</span><br><span class="line">541</span><br><span class="line">542</span><br><span class="line">543</span><br><span class="line">544</span><br><span class="line">545</span><br><span class="line">546</span><br><span class="line">547</span><br><span class="line">548</span><br><span class="line">549</span><br><span class="line">550</span><br><span class="line">551</span><br><span class="line">552</span><br><span class="line">553</span><br><span class="line">554</span><br><span class="line">555</span><br><span class="line">556</span><br><span class="line">557</span><br><span class="line">558</span><br><span class="line">559</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line">import json</span><br><span class="line">import base64</span><br><span class="line">import os</span><br><span class="line">import tempfile</span><br><span class="line">import shutil</span><br><span class="line">import re</span><br><span class="line">import time</span><br><span class="line">import uuid</span><br><span class="line">import threading</span><br><span class="line">from flask import Flask, request, jsonify, send_from_directory</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line">SHOTS_DIR = &quot;/app/shots&quot;</span><br><span class="line">os.makedirs(SHOTS_DIR, exist_ok=True)</span><br><span class="line"></span><br><span class="line">_result_cache = &#123;&#125;</span><br><span class="line">_cache_lock = threading.Lock()</span><br><span class="line">CACHE_TTL = 600</span><br><span class="line"></span><br><span class="line">SCENE_THRESHOLD = 0.25</span><br><span class="line">MAX_SHOTS = 50</span><br><span class="line">FALLBACK_INTERVAL = 2.0</span><br><span class="line">KEYFRAME_QUALITY = 10</span><br><span class="line">KEYFRAME_WIDTH = 512</span><br><span class="line"></span><br><span class="line">LLM_API_KEY = os.environ.get(&quot;LLM_API_KEY&quot;, &quot;&quot;)</span><br><span class="line">LLM_MODEL = os.environ.get(&quot;LLM_MODEL&quot;, &quot;qwen-vl-max&quot;)</span><br><span class="line">LLM_API_URL = &quot;https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.route(&#x27;/shots/&lt;path:filename&gt;&#x27;)</span><br><span class="line">def serve_shot(filename):</span><br><span class="line">    return send_from_directory(SHOTS_DIR, filename)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def _j(resp):</span><br><span class="line">    t = resp.content.decode(&quot;utf-8&quot;, errors=&quot;ignore&quot;)</span><br><span class="line">    try:</span><br><span class="line">        start = t.index(&quot;&#123;&quot;)</span><br><span class="line">        end = t.rindex(&quot;&#125;&quot;)</span><br><span class="line">        return json.loads(t[start:end+1])</span><br><span class="line">    except (ValueError, json.JSONDecodeError):</span><br><span class="line">        return &#123;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def _download_video_from_request(req):</span><br><span class="line">    ct = req.content_type or &#x27;&#x27;</span><br><span class="line">    if &#x27;json&#x27; in ct:</span><br><span class="line">        data = req.json</span><br><span class="line">        file_url = data.get(&#x27;file_url&#x27;, &#x27;&#x27;).strip(&#x27;&#123;&#125;&#x27;)</span><br><span class="line">        if not file_url:</span><br><span class="line">            raise ValueError(&#x27;file_url required&#x27;)</span><br><span class="line">        if file_url.startswith(&#x27;/&#x27;):</span><br><span class="line">            file_url = f&quot;http://api:5001&#123;file_url&#125;&quot;</span><br><span class="line">        app.logger.warning(&quot;downloading file_url=%s&quot;, file_url)</span><br><span class="line">        resp = requests.get(file_url, timeout=120)</span><br><span class="line">        if resp.status_code != 200:</span><br><span class="line">            uuid_match = re.search(r&#x27;/files/([a-f0-9-]+)/&#x27;, file_url)</span><br><span class="line">            video_bytes = None</span><br><span class="line">            if uuid_match:</span><br><span class="line">                file_uuid = uuid_match.group(1)</span><br><span class="line">                storage_dir = &quot;/app/storage/upload_files&quot;</span><br><span class="line">                if os.path.isdir(storage_dir):</span><br><span class="line">                    for tenant_dir in os.listdir(storage_dir):</span><br><span class="line">                        tp = os.path.join(storage_dir, tenant_dir)</span><br><span class="line">                        if not os.path.isdir(tp):</span><br><span class="line">                            continue</span><br><span class="line">                        for fname in os.listdir(tp):</span><br><span class="line">                            if file_uuid in fname:</span><br><span class="line">                                with open(os.path.join(tp, fname), &#x27;rb&#x27;) as f:</span><br><span class="line">                                    video_bytes = f.read()</span><br><span class="line">                                app.logger.warning(&quot;found file in storage: %s/%s&quot;, tenant_dir, fname)</span><br><span class="line">                                break</span><br><span class="line">                        if video_bytes:</span><br><span class="line">                            break</span><br><span class="line">            if not video_bytes:</span><br><span class="line">                raise ValueError(f&#x27;下载视频失败: HTTP &#123;resp.status_code&#125;&#x27;)</span><br><span class="line">        else:</span><br><span class="line">            video_bytes = resp.content</span><br><span class="line">    else:</span><br><span class="line">        video_bytes = req.data</span><br><span class="line">        app.logger.warning(&quot;binary upload size=%s&quot;, len(video_bytes) if video_bytes else 0)</span><br><span class="line">    if not video_bytes or len(video_bytes) &lt; 100:</span><br><span class="line">        raise ValueError(f&#x27;视频数据无效: &#123;len(video_bytes) if video_bytes else 0&#125; bytes&#x27;)</span><br><span class="line">    return video_bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def _extract_shots(video_bytes):</span><br><span class="line">    tmp_dir = tempfile.mkdtemp()</span><br><span class="line">    session_id = uuid.uuid4().hex[:12]</span><br><span class="line">    now_t = time.time()</span><br><span class="line">    for f in os.listdir(SHOTS_DIR):</span><br><span class="line">        fp = os.path.join(SHOTS_DIR, f)</span><br><span class="line">        if os.path.isfile(fp) and now_t - os.path.getmtime(fp) &gt; 3600:</span><br><span class="line">            os.remove(fp)</span><br><span class="line">    try:</span><br><span class="line">        video_path = os.path.join(tmp_dir, &quot;input.mp4&quot;)</span><br><span class="line">        with open(video_path, &#x27;wb&#x27;) as f:</span><br><span class="line">            f.write(video_bytes)</span><br><span class="line"></span><br><span class="line">        result = subprocess.run(</span><br><span class="line">            [&#x27;ffprobe&#x27;, &#x27;-v&#x27;, &#x27;quiet&#x27;, &#x27;-print_format&#x27;, &#x27;json&#x27;, &#x27;-show_format&#x27;, video_path],</span><br><span class="line">            capture_output=True, text=True</span><br><span class="line">        )</span><br><span class="line">        info = json.loads(result.stdout)</span><br><span class="line">        if &#x27;format&#x27; not in info or &#x27;duration&#x27; not in info.get(&#x27;format&#x27;, &#123;&#125;):</span><br><span class="line">            raise ValueError(&#x27;ffprobe 无 format 信息&#x27;)</span><br><span class="line">        total_duration = float(info[&#x27;format&#x27;][&#x27;duration&#x27;])</span><br><span class="line"></span><br><span class="line">        detect_cmd = [</span><br><span class="line">            &#x27;ffmpeg&#x27;, &#x27;-i&#x27;, video_path,</span><br><span class="line">            &#x27;-filter:v&#x27;, f&quot;select=&#x27;gt(scene,&#123;SCENE_THRESHOLD&#125;)&#x27;,showinfo&quot;,</span><br><span class="line">            &#x27;-f&#x27;, &#x27;null&#x27;, &#x27;-&#x27;</span><br><span class="line">        ]</span><br><span class="line">        result = subprocess.run(detect_cmd, capture_output=True, text=True)</span><br><span class="line"></span><br><span class="line">        timestamps = [0.0]</span><br><span class="line">        for line in result.stderr.split(&#x27;\n&#x27;):</span><br><span class="line">            match = re.search(r&#x27;pts_time:([\d.]+)&#x27;, line)</span><br><span class="line">            if match:</span><br><span class="line">                t = float(match.group(1))</span><br><span class="line">                if 0.1 &lt; t &lt; total_duration - 0.1:</span><br><span class="line">                    timestamps.append(t)</span><br><span class="line">        timestamps.append(total_duration)</span><br><span class="line">        timestamps = sorted(set(round(t, 1) for t in timestamps))</span><br><span class="line"></span><br><span class="line">        warning = None</span><br><span class="line">        if len(timestamps) &lt;= 2:</span><br><span class="line">            timestamps = [0.0]</span><br><span class="line">            t = FALLBACK_INTERVAL</span><br><span class="line">            while t &lt; total_duration:</span><br><span class="line">                timestamps.append(round(t, 1))</span><br><span class="line">                t += FALLBACK_INTERVAL</span><br><span class="line">            timestamps.append(total_duration)</span><br><span class="line">            warning = &quot;未检测到明显场景切换，已按固定间隔拆分&quot;</span><br><span class="line"></span><br><span class="line">        if len(timestamps) - 1 &gt; MAX_SHOTS:</span><br><span class="line">            timestamps = timestamps[:MAX_SHOTS + 1]</span><br><span class="line">            timestamps[-1] = total_duration</span><br><span class="line">            warning = f&quot;分镜数超过上限，已截取前 &#123;MAX_SHOTS&#125; 个&quot;</span><br><span class="line"></span><br><span class="line">        shots = []</span><br><span class="line">        for i in range(len(timestamps) - 1):</span><br><span class="line">            start_t = timestamps[i]</span><br><span class="line">            end_t = timestamps[i + 1]</span><br><span class="line">            mid_t = (start_t + end_t) / 2</span><br><span class="line">            duration = round(end_t - start_t, 1)</span><br><span class="line"></span><br><span class="line">            frame_path = os.path.join(tmp_dir, f&quot;frame_&#123;i:03d&#125;.jpg&quot;)</span><br><span class="line">            subprocess.run([</span><br><span class="line">                &#x27;ffmpeg&#x27;, &#x27;-ss&#x27;, str(mid_t), &#x27;-i&#x27;, video_path,</span><br><span class="line">                &#x27;-vframes&#x27;, &#x27;1&#x27;, &#x27;-vf&#x27;, f&#x27;scale=&#123;KEYFRAME_WIDTH&#125;:-1&#x27;,</span><br><span class="line">                &#x27;-q:v&#x27;, str(KEYFRAME_QUALITY), &#x27;-y&#x27;, frame_path</span><br><span class="line">            ], capture_output=True)</span><br><span class="line"></span><br><span class="line">            shot_filename = f&quot;&#123;session_id&#125;_frame_&#123;i:03d&#125;.jpg&quot;</span><br><span class="line">            if os.path.exists(frame_path) and os.path.getsize(frame_path) &gt; 0:</span><br><span class="line">                shutil.copy2(frame_path, os.path.join(SHOTS_DIR, shot_filename))</span><br><span class="line"></span><br><span class="line">            shots.append(&#123;</span><br><span class="line">                &quot;id&quot;: i + 1,</span><br><span class="line">                &quot;start_time&quot;: start_t,</span><br><span class="line">                &quot;end_time&quot;: end_t,</span><br><span class="line">                &quot;duration&quot;: duration,</span><br><span class="line">                &quot;image_url&quot;: f&quot;http://ffmpeg-server:5002/shots/&#123;shot_filename&#125;&quot;</span><br><span class="line">            &#125;)</span><br><span class="line">        return shots, warning or &quot;&quot;</span><br><span class="line">    finally:</span><br><span class="line">        shutil.rmtree(tmp_dir, ignore_errors=True)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def _describe_shot(shot_id, start_t, end_t, duration, img_b64):</span><br><span class="line">    if not LLM_API_KEY or not img_b64:</span><br><span class="line">        return &#123;</span><br><span class="line">            &quot;shot_id&quot;: shot_id,</span><br><span class="line">            &quot;time_range&quot;: f&quot;&#123;start_t&#125;-&#123;end_t&#125;&quot;,</span><br><span class="line">            &quot;subject&quot;: &quot;未知&quot;,</span><br><span class="line">            &quot;action&quot;: &quot;未知&quot;,</span><br><span class="line">            &quot;environment&quot;: &quot;未知&quot;,</span><br><span class="line">            &quot;camera_movement&quot;: &quot;固定&quot;,</span><br><span class="line">            &quot;style&quot;: &quot;常规&quot;,</span><br><span class="line">            &quot;duration&quot;: duration</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    system_prompt = (</span><br><span class="line">        &quot;你是一个专业的影视分镜分析师。根据输入的关键帧图片和时间信息，生成该分镜的结构化描述。&quot;</span><br><span class="line">        &quot;只输出 JSON，不要任何额外文字。\n\n&quot;</span><br><span class="line">        &#x27;JSON 字段说明：\n&#x27;</span><br><span class="line">        &#x27;- &quot;title&quot;: 简短的标题\n&#x27;</span><br><span class="line">        &#x27;- &quot;subject&quot;: 画面主体描述\n&#x27;</span><br><span class="line">        &#x27;- &quot;action&quot;: 动作描述\n&#x27;</span><br><span class="line">        &#x27;- &quot;environment&quot;: 环境描述\n&#x27;</span><br><span class="line">        &#x27;- &quot;camera_movement&quot;: 运镜方式\n&#x27;</span><br><span class="line">        &#x27;- &quot;style&quot;: 风格控制描述\n&#x27;</span><br><span class="line">        &#x27;- &quot;description&quot;: 完整的自然语言场景描述，约50-100字&#x27;</span><br><span class="line">    )</span><br><span class="line">    user_prompt = f&quot;该分镜时间范围：&#123;start_t&#125;s - &#123;end_t&#125;s，持续时间&#123;duration&#125;s。请分析这张关键帧图片并输出分镜描述 JSON。&quot;</span><br><span class="line"></span><br><span class="line">    messages = [</span><br><span class="line">        &#123;&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: [&#123;&quot;type&quot;: &quot;text&quot;, &quot;text&quot;: system_prompt&#125;]&#125;,</span><br><span class="line">        &#123;&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: [</span><br><span class="line">            &#123;&quot;type&quot;: &quot;image_url&quot;, &quot;image_url&quot;: &#123;&quot;url&quot;: img_b64&#125;&#125;,</span><br><span class="line">            &#123;&quot;type&quot;: &quot;text&quot;, &quot;text&quot;: user_prompt&#125;</span><br><span class="line">        ]&#125;</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    try:</span><br><span class="line">        resp = requests.post(</span><br><span class="line">            LLM_API_URL,</span><br><span class="line">            headers=&#123;</span><br><span class="line">                &quot;Authorization&quot;: f&quot;Bearer &#123;LLM_API_KEY&#125;&quot;,</span><br><span class="line">                &quot;Content-Type&quot;: &quot;application/json&quot;</span><br><span class="line">            &#125;,</span><br><span class="line">            json=&#123;</span><br><span class="line">                &quot;model&quot;: LLM_MODEL,</span><br><span class="line">                &quot;messages&quot;: messages,</span><br><span class="line">                &quot;temperature&quot;: 0.3,</span><br><span class="line">                &quot;max_tokens&quot;: 1024</span><br><span class="line">            &#125;,</span><br><span class="line">            timeout=60</span><br><span class="line">        )</span><br><span class="line">        if resp.status_code == 200:</span><br><span class="line">            content = resp.json()[&quot;choices&quot;][0][&quot;message&quot;][&quot;content&quot;]</span><br><span class="line">            try:</span><br><span class="line">                content = content.replace(&quot;```json&quot;, &quot;&quot;).replace(&quot;```&quot;, &quot;&quot;).strip()</span><br><span class="line">                result = json.loads(content)</span><br><span class="line">                result[&quot;shot_id&quot;] = shot_id</span><br><span class="line">                result[&quot;time_range&quot;] = f&quot;&#123;start_t&#125;-&#123;end_t&#125;&quot;</span><br><span class="line">                result[&quot;duration&quot;] = duration</span><br><span class="line">                return result</span><br><span class="line">            except Exception:</span><br><span class="line">                return &#123;&quot;shot_id&quot;: shot_id, &quot;time_range&quot;: f&quot;&#123;start_t&#125;-&#123;end_t&#125;&quot;, &quot;subject&quot;: content[:100], &quot;action&quot;: &quot;见描述&quot;, &quot;environment&quot;: &quot;见描述&quot;, &quot;camera_movement&quot;: &quot;固定&quot;, &quot;style&quot;: &quot;常规&quot;, &quot;duration&quot;: duration&#125;</span><br><span class="line">        else:</span><br><span class="line">            return &#123;&quot;shot_id&quot;: shot_id, &quot;time_range&quot;: f&quot;&#123;start_t&#125;-&#123;end_t&#125;&quot;, &quot;subject&quot;: f&quot;API错误:&#123;resp.status_code&#125;&quot;, &quot;action&quot;: &quot;重试&quot;, &quot;environment&quot;: &quot;&quot;, &quot;camera_movement&quot;: &quot;固定&quot;, &quot;style&quot;: &quot;&quot;, &quot;duration&quot;: duration&#125;</span><br><span class="line">    except Exception as e:</span><br><span class="line">        return &#123;&quot;shot_id&quot;: shot_id, &quot;time_range&quot;: f&quot;&#123;start_t&#125;-&#123;end_t&#125;&quot;, &quot;subject&quot;: str(e)[:100], &quot;action&quot;: &quot;&quot;, &quot;environment&quot;: &quot;&quot;, &quot;camera_movement&quot;: &quot;固定&quot;, &quot;style&quot;: &quot;&quot;, &quot;duration&quot;: duration&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def _format_shots(shots):</span><br><span class="line">    def _fmt_time(t):</span><br><span class="line">        return str(int(t)) if t == int(t) else str(t)</span><br><span class="line">    lines = []</span><br><span class="line">    lines.append(f&quot;# 视频分镜脚本\n\n共 &#123;len(shots)&#125; 个分镜\n&quot;)</span><br><span class="line">    for shot in shots:</span><br><span class="line">        desc = shot.get(&quot;description&quot;, &#123;&#125;)</span><br><span class="line">        sid = desc.get(&quot;shot_id&quot;, shot.get(&quot;id&quot;, &quot;?&quot;))</span><br><span class="line">        title = desc.get(&quot;title&quot;, &quot;&quot;)</span><br><span class="line">        sub = desc.get(&quot;subject&quot;, &quot;（见下方描述）&quot;)</span><br><span class="line">        act = desc.get(&quot;action&quot;, &quot;&quot;)</span><br><span class="line">        env = desc.get(&quot;environment&quot;, &quot;&quot;)</span><br><span class="line">        cam = desc.get(&quot;camera_movement&quot;, &quot;固定&quot;)</span><br><span class="line">        sty = desc.get(&quot;style&quot;, &quot;&quot;)</span><br><span class="line">        raw_desc = desc.get(&quot;description&quot;, &quot;&quot;)</span><br><span class="line">        tr_fmt = f&quot;&#123;_fmt_time(shot[&#x27;start_time&#x27;])&#125;s-&#123;_fmt_time(shot[&#x27;end_time&#x27;])&#125;s&quot;</span><br><span class="line">        if title:</span><br><span class="line">            lines.append(f&quot;## 分镜&#123;sid:02d&#125;:&#123;title&#125;(&#123;tr_fmt&#125;)&quot;)</span><br><span class="line">        else:</span><br><span class="line">            lines.append(f&quot;## 分镜&#123;sid:02d&#125;（&#123;tr_fmt&#125;）&quot;)</span><br><span class="line">        lines.append(&quot;&quot;)</span><br><span class="line">        lines.append(f&quot;画面主体:&#123;sub&#125;&quot;)</span><br><span class="line">        if act:</span><br><span class="line">            lines.append(f&quot;动作:&#123;act&#125;&quot;)</span><br><span class="line">        if env:</span><br><span class="line">            lines.append(f&quot;环境:&#123;env&#125;&quot;)</span><br><span class="line">        if cam:</span><br><span class="line">            lines.append(f&quot;运镜:&#123;cam&#125;&quot;)</span><br><span class="line">        if sty:</span><br><span class="line">            lines.append(f&quot;风格控制:&#123;sty&#125;&quot;)</span><br><span class="line">        if raw_desc:</span><br><span class="line">            lines.append(&quot;&quot;)</span><br><span class="line">            lines.append(raw_desc)</span><br><span class="line">        img_url = shot.get(&quot;image_url&quot;, &quot;&quot;)</span><br><span class="line">        if img_url:</span><br><span class="line">            lines.append(&quot;&quot;)</span><br><span class="line">            lines.append(f&quot;![分镜&#123;sid:02d&#125;](&#123;img_url&#125;)&quot;)</span><br><span class="line">        lines.append(&quot;&quot;)</span><br><span class="line">        lines.append(&quot;---&quot;)</span><br><span class="line">        lines.append(&quot;&quot;)</span><br><span class="line">    return &quot;\n&quot;.join(lines)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def _feishu_create_records(shots, config):</span><br><span class="line">    app_id = config.get(&quot;app_id&quot;)</span><br><span class="line">    app_secret = config.get(&quot;app_secret&quot;)</span><br><span class="line">    app_token = config.get(&quot;app_token&quot;)</span><br><span class="line">    table_id = config.get(&quot;table_id&quot;)</span><br><span class="line">    if not all([app_id, app_secret, app_token, table_id]):</span><br><span class="line">        raise ValueError(&quot;Missing feishu config&quot;)</span><br><span class="line"></span><br><span class="line">    auth_resp = requests.post(</span><br><span class="line">        &quot;https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal&quot;,</span><br><span class="line">        json=&#123;&quot;app_id&quot;: app_id, &quot;app_secret&quot;: app_secret&#125;, timeout=30)</span><br><span class="line">    auth = _j(auth_resp)</span><br><span class="line">    if auth.get(&quot;code&quot;) != 0:</span><br><span class="line">        raise ValueError(f&quot;Token failed: &#123;auth.get(&#x27;msg&#x27;,&#x27;&#x27;)&#125;&quot;)</span><br><span class="line">    token = auth[&quot;tenant_access_token&quot;]</span><br><span class="line"></span><br><span class="line">    expected_first_id = f&quot;分镜&#123;shots[0].get(&#x27;description&#x27;, &#123;&#125;).get(&#x27;shot_id&#x27;, shots[0].get(&#x27;id&#x27;, 1)):02d&#125;&quot;</span><br><span class="line">    query_resp = requests.post(</span><br><span class="line">        f&quot;https://open.feishu.cn/open-apis/bitable/v1/apps/&#123;app_token&#125;/tables/&#123;table_id&#125;/records/search&quot;,</span><br><span class="line">        headers=&#123;&quot;Authorization&quot;: f&quot;Bearer &#123;token&#125;&quot;, &quot;Content-Type&quot;: &quot;application/json&quot;&#125;,</span><br><span class="line">        json=&#123;&quot;filter&quot;: &#123;&quot;conjunction&quot;: &quot;and&quot;, &quot;conditions&quot;: [</span><br><span class="line">            &#123;&quot;field_name&quot;: &quot;分镜编号&quot;, &quot;operator&quot;: &quot;is&quot;, &quot;value&quot;: [expected_first_id]&#125;</span><br><span class="line">        ]&#125;, &quot;page_size&quot;: 1&#125;,</span><br><span class="line">        timeout=30)</span><br><span class="line">    query_data = _j(query_resp)</span><br><span class="line"></span><br><span class="line">    if query_data.get(&quot;code&quot;) == 0 and query_data.get(&quot;data&quot;, &#123;&#125;).get(&quot;items&quot;):</span><br><span class="line">        app.logger.warning(&quot;Feishu records already exist, skip create&quot;)</span><br><span class="line">        return &#123;&quot;ok&quot;: True, &quot;skipped&quot;: True, &quot;message&quot;: &quot;Records already exist&quot;&#125;</span><br><span class="line"></span><br><span class="line">    records = []</span><br><span class="line">    for i, s in enumerate(shots):</span><br><span class="line">        d = s.get(&quot;description&quot;, &#123;&#125;)</span><br><span class="line">        records.append(&#123;&quot;fields&quot;: &#123;</span><br><span class="line">            &quot;分镜编号&quot;: f&quot;分镜&#123;d.get(&#x27;shot_id&#x27;, s.get(&#x27;id&#x27;, i+1)):02d&#125;&quot;,</span><br><span class="line">            &quot;时间范围&quot;: d.get(&quot;time_range&quot;, f&quot;&#123;s.get(&#x27;start_time&#x27;,&#x27;&#x27;)&#125;-&#123;s.get(&#x27;end_time&#x27;,&#x27;&#x27;)&#125;&quot;),</span><br><span class="line">            &quot;画面主体&quot;: d.get(&quot;subject&quot;, &quot;&quot;),</span><br><span class="line">            &quot;动作&quot;: d.get(&quot;action&quot;, &quot;&quot;),</span><br><span class="line">            &quot;环境&quot;: d.get(&quot;environment&quot;, &quot;&quot;),</span><br><span class="line">            &quot;运镜&quot;: d.get(&quot;camera_movement&quot;, &quot;&quot;),</span><br><span class="line">            &quot;AI描述&quot;: d.get(&quot;description&quot;, &quot;&quot;),</span><br><span class="line">        &#125;&#125;)</span><br><span class="line">    create_resp = requests.post(</span><br><span class="line">        f&quot;https://open.feishu.cn/open-apis/bitable/v1/apps/&#123;app_token&#125;/tables/&#123;table_id&#125;/records/batch_create&quot;,</span><br><span class="line">        headers=&#123;&quot;Authorization&quot;: f&quot;Bearer &#123;token&#125;&quot;, &quot;Content-Type&quot;: &quot;application/json&quot;&#125;,</span><br><span class="line">        json=&#123;&quot;records&quot;: [&#123;&quot;fields&quot;: r[&quot;fields&quot;]&#125; for r in records]&#125;, timeout=60)</span><br><span class="line">    create_data = _j(create_resp)</span><br><span class="line">    if create_data.get(&quot;code&quot;) != 0:</span><br><span class="line">        raise ValueError(f&quot;Create failed: &#123;create_data.get(&#x27;msg&#x27;,&#x27;&#x27;)&#125;&quot;)</span><br><span class="line"></span><br><span class="line">    return &#123;&quot;ok&quot;: True, &quot;created&quot;: len(create_data[&quot;data&quot;][&quot;records&quot;])&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def _feishu_upload_images(shots, config):</span><br><span class="line">    app_id = config.get(&quot;app_id&quot;)</span><br><span class="line">    app_secret = config.get(&quot;app_secret&quot;)</span><br><span class="line">    app_token = config.get(&quot;app_token&quot;)</span><br><span class="line">    table_id = config.get(&quot;table_id&quot;)</span><br><span class="line">    img_field_id = config.get(&quot;img_field_id&quot;)</span><br><span class="line">    if not all([app_id, app_secret, app_token, table_id, img_field_id]):</span><br><span class="line">        raise ValueError(&quot;Missing feishu config&quot;)</span><br><span class="line">    auth_resp = requests.post(</span><br><span class="line">        &quot;https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal&quot;,</span><br><span class="line">        json=&#123;&quot;app_id&quot;: app_id, &quot;app_secret&quot;: app_secret&#125;, timeout=30)</span><br><span class="line">    auth = _j(auth_resp)</span><br><span class="line">    if auth.get(&quot;code&quot;) != 0:</span><br><span class="line">        raise ValueError(f&quot;Token failed: &#123;auth.get(&#x27;msg&#x27;,&#x27;&#x27;)&#125;&quot;)</span><br><span class="line">    token = auth[&quot;tenant_access_token&quot;]</span><br><span class="line"></span><br><span class="line">    expected_first_id = f&quot;分镜&#123;shots[0].get(&#x27;description&#x27;, &#123;&#125;).get(&#x27;shot_id&#x27;, shots[0].get(&#x27;id&#x27;, 1)):02d&#125;&quot;</span><br><span class="line">    query_resp = requests.post(</span><br><span class="line">        f&quot;https://open.feishu.cn/open-apis/bitable/v1/apps/&#123;app_token&#125;/tables/&#123;table_id&#125;/records/search&quot;,</span><br><span class="line">        headers=&#123;&quot;Authorization&quot;: f&quot;Bearer &#123;token&#125;&quot;, &quot;Content-Type&quot;: &quot;application/json&quot;&#125;,</span><br><span class="line">        json=&#123;&quot;filter&quot;: &#123;&quot;conjunction&quot;: &quot;and&quot;, &quot;conditions&quot;: [</span><br><span class="line">            &#123;&quot;field_name&quot;: &quot;分镜编号&quot;, &quot;operator&quot;: &quot;is&quot;, &quot;value&quot;: [expected_first_id]&#125;</span><br><span class="line">        ]&#125;, &quot;page_size&quot;: 1&#125;,</span><br><span class="line">        timeout=30)</span><br><span class="line">    query_data = _j(query_resp)</span><br><span class="line">    existing_records = []</span><br><span class="line">    if query_data.get(&quot;code&quot;) == 0 and query_data.get(&quot;data&quot;, &#123;&#125;).get(&quot;items&quot;):</span><br><span class="line">        list_resp = requests.get(</span><br><span class="line">            f&quot;https://open.feishu.cn/open-apis/bitable/v1/apps/&#123;app_token&#125;/tables/&#123;table_id&#125;/records?page_size=100&quot;,</span><br><span class="line">            headers=&#123;&quot;Authorization&quot;: f&quot;Bearer &#123;token&#125;&quot;&#125;, timeout=30)</span><br><span class="line">        list_data = _j(list_resp)</span><br><span class="line">        if list_data.get(&quot;code&quot;) == 0:</span><br><span class="line">            existing_records = list_data.get(&quot;data&quot;, &#123;&#125;).get(&quot;items&quot;, [])</span><br><span class="line">            existing_records.sort(key=lambda x: x.get(&quot;fields&quot;, &#123;&#125;).get(&quot;分镜编号&quot;, &quot;&quot;))</span><br><span class="line"></span><br><span class="line">    if len(existing_records) &gt;= len(shots):</span><br><span class="line">        create_records = existing_records[:len(shots)]</span><br><span class="line">    else:</span><br><span class="line">        records = []</span><br><span class="line">        for i, s in enumerate(shots):</span><br><span class="line">            d = s.get(&quot;description&quot;, &#123;&#125;)</span><br><span class="line">            records.append(&#123;&quot;fields&quot;: &#123;</span><br><span class="line">                &quot;分镜编号&quot;: f&quot;分镜&#123;d.get(&#x27;shot_id&#x27;, s.get(&#x27;id&#x27;, i+1)):02d&#125;&quot;,</span><br><span class="line">                &quot;时间范围&quot;: d.get(&quot;time_range&quot;, f&quot;&#123;s.get(&#x27;start_time&#x27;,&#x27;&#x27;)&#125;-&#123;s.get(&#x27;end_time&#x27;,&#x27;&#x27;)&#125;&quot;),</span><br><span class="line">                &quot;画面主体&quot;: d.get(&quot;subject&quot;, &quot;&quot;),</span><br><span class="line">                &quot;动作&quot;: d.get(&quot;action&quot;, &quot;&quot;),</span><br><span class="line">                &quot;环境&quot;: d.get(&quot;environment&quot;, &quot;&quot;),</span><br><span class="line">                &quot;运镜&quot;: d.get(&quot;camera_movement&quot;, &quot;&quot;),</span><br><span class="line">                &quot;AI描述&quot;: d.get(&quot;description&quot;, &quot;&quot;),</span><br><span class="line">            &#125;&#125;)</span><br><span class="line">        create_resp = requests.post(</span><br><span class="line">            f&quot;https://open.feishu.cn/open-apis/bitable/v1/apps/&#123;app_token&#125;/tables/&#123;table_id&#125;/records/batch_create&quot;,</span><br><span class="line">            headers=&#123;&quot;Authorization&quot;: f&quot;Bearer &#123;token&#125;&quot;, &quot;Content-Type&quot;: &quot;application/json&quot;&#125;,</span><br><span class="line">            json=&#123;&quot;records&quot;: [&#123;&quot;fields&quot;: r[&quot;fields&quot;]&#125; for r in records]&#125;, timeout=60)</span><br><span class="line">        create_data = _j(create_resp)</span><br><span class="line">        if create_data.get(&quot;code&quot;) != 0:</span><br><span class="line">            raise ValueError(f&quot;Create failed: &#123;create_data.get(&#x27;msg&#x27;,&#x27;&#x27;)&#125;&quot;)</span><br><span class="line">        create_records = create_data[&quot;data&quot;][&quot;records&quot;]</span><br><span class="line"></span><br><span class="line">    for idx, cr in enumerate(create_records):</span><br><span class="line">        b64 = shots[idx].get(&quot;key_frame_base64&quot;, &quot;&quot;)</span><br><span class="line">        if not b64:</span><br><span class="line">            image_url = shots[idx].get(&quot;image_url&quot;, &quot;&quot;)</span><br><span class="line">            fname_local = os.path.basename(image_url)</span><br><span class="line">            local_path = os.path.join(SHOTS_DIR, fname_local)</span><br><span class="line">            if os.path.exists(local_path):</span><br><span class="line">                with open(local_path, &#x27;rb&#x27;) as f:</span><br><span class="line">                    b64 = f&quot;data:image/jpeg;base64,&#123;base64.b64encode(f.read()).decode(&#x27;utf-8&#x27;)&#125;&quot;</span><br><span class="line">        if not b64:</span><br><span class="line">            continue</span><br><span class="line">        try:</span><br><span class="line">            img_data = base64.b64decode(b64.split(&quot;,&quot;, 1)[1] if &quot;,&quot; in b64 else b64)</span><br><span class="line">            fname = f&quot;shot_&#123;idx+1:02d&#125;.jpg&quot;</span><br><span class="line">            boundary = &quot;----&quot; + uuid.uuid4().hex[:16]</span><br><span class="line">            mp_head = (</span><br><span class="line">                f&quot;--&#123;boundary&#125;\r\n&quot;</span><br><span class="line">                f&#x27;Content-Disposition: form-data; name=&quot;file_name&quot;\r\n\r\n&#123;fname&#125;\r\n&#x27;</span><br><span class="line">                f&quot;--&#123;boundary&#125;\r\n&quot;</span><br><span class="line">                f&#x27;Content-Disposition: form-data; name=&quot;parent_type&quot;\r\n\r\nbitable\r\n&#x27;</span><br><span class="line">                f&quot;--&#123;boundary&#125;\r\n&quot;</span><br><span class="line">                f&#x27;Content-Disposition: form-data; name=&quot;parent_node&quot;\r\n\r\n&#123;app_token&#125;\r\n&#x27;</span><br><span class="line">                f&quot;--&#123;boundary&#125;\r\n&quot;</span><br><span class="line">                f&#x27;Content-Disposition: form-data; name=&quot;size&quot;\r\n\r\n&#123;len(img_data)&#125;\r\n&#x27;</span><br><span class="line">                f&quot;--&#123;boundary&#125;\r\n&quot;</span><br><span class="line">                f&#x27;Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;&#123;fname&#125;&quot;\r\n&#x27;</span><br><span class="line">                &quot;Content-Type: image/jpeg\r\n\r\n&quot;</span><br><span class="line">            )</span><br><span class="line">            mp_tail = f&quot;\r\n--&#123;boundary&#125;--\r\n&quot;</span><br><span class="line">            mp_body = mp_head.encode() + img_data + mp_tail.encode()</span><br><span class="line">            up_resp = requests.post(</span><br><span class="line">                &quot;https://open.feishu.cn/open-apis/drive/v1/files/upload_all&quot;,</span><br><span class="line">                headers=&#123;</span><br><span class="line">                    &quot;Authorization&quot;: f&quot;Bearer &#123;token&#125;&quot;,</span><br><span class="line">                    &quot;Content-Type&quot;: f&quot;multipart/form-data; boundary=&#123;boundary&#125;&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                data=mp_body,</span><br><span class="line">                timeout=60)</span><br><span class="line">            up_data = _j(up_resp)</span><br><span class="line">            if up_data.get(&quot;code&quot;) != 0:</span><br><span class="line">                app.logger.warning(&quot;Drive上传失败 分镜%d: %s&quot;, idx+1, up_data.get(&quot;msg&quot;,&quot;&quot;))</span><br><span class="line">                continue</span><br><span class="line">            ft = up_data[&quot;data&quot;][&quot;file_token&quot;]</span><br><span class="line">            update_resp = requests.put(</span><br><span class="line">                f&quot;https://open.feishu.cn/open-apis/bitable/v1/apps/&#123;app_token&#125;/tables/&#123;table_id&#125;/records/&#123;cr[&#x27;record_id&#x27;]&#125;&quot;,</span><br><span class="line">                headers=&#123;&quot;Authorization&quot;: f&quot;Bearer &#123;token&#125;&quot;, &quot;Content-Type&quot;: &quot;application/json&quot;&#125;,</span><br><span class="line">                json=&#123;&quot;fields&quot;: &#123;&quot;关键帧截图&quot;: [&#123;&quot;file_token&quot;: ft, &quot;name&quot;: fname, &quot;size&quot;: len(img_data), &quot;type&quot;: &quot;image/jpeg&quot;&#125;]&#125;&#125;,</span><br><span class="line">                timeout=60)</span><br><span class="line">            u = _j(update_resp)</span><br><span class="line">            if u.get(&quot;code&quot;) != 0:</span><br><span class="line">                app.logger.warning(&quot;更新附件失败 分镜%d: %s&quot;, idx+1, u.get(&quot;msg&quot;,&quot;&quot;))</span><br><span class="line">        except Exception as e:</span><br><span class="line">            app.logger.warning(&quot;上传异常 分镜%d: %s&quot;, idx+1, str(e)[:80])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.route(&#x27;/extract&#x27;, methods=[&#x27;POST&#x27;])</span><br><span class="line">def extract():</span><br><span class="line">    try:</span><br><span class="line">        data = request.get_json(force=True)</span><br><span class="line">        file_url = data.get(&#x27;file_url&#x27;, &#x27;&#x27;)</span><br><span class="line">        cache_key = file_url or request.data[:200].hex()</span><br><span class="line"></span><br><span class="line">        with _cache_lock:</span><br><span class="line">            if cache_key in _result_cache:</span><br><span class="line">                cached_time, cached_result = _result_cache[cache_key]</span><br><span class="line">                if time.time() - cached_time &lt; CACHE_TTL:</span><br><span class="line">                    return jsonify(cached_result)</span><br><span class="line"></span><br><span class="line">        video_bytes = _download_video_from_request(request)</span><br><span class="line">        shots, warning = _extract_shots(video_bytes)</span><br><span class="line">        result = &#123;</span><br><span class="line">            &quot;shots&quot;: shots,</span><br><span class="line">            &quot;total_shots&quot;: len(shots),</span><br><span class="line">            &quot;warning&quot;: warning</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        with _cache_lock:</span><br><span class="line">            _result_cache[cache_key] = (time.time(), result)</span><br><span class="line"></span><br><span class="line">        return jsonify(result)</span><br><span class="line">    except Exception as e:</span><br><span class="line">        app.logger.error(&quot;Extract error: %s&quot;, e)</span><br><span class="line">        return jsonify(&#123;&quot;error&quot;: str(e)&#125;), 500</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.route(&#x27;/describe&#x27;, methods=[&#x27;POST&#x27;])</span><br><span class="line">def describe():</span><br><span class="line">    data = request.json or &#123;&#125;</span><br><span class="line">    shots = data.get(&quot;shots&quot;, [])</span><br><span class="line">    if not shots:</span><br><span class="line">        return jsonify(&#123;&quot;error&quot;: &quot;shots required&quot;&#125;), 400</span><br><span class="line"></span><br><span class="line">    for i, shot in enumerate(shots):</span><br><span class="line">        img_b64 = &quot;&quot;</span><br><span class="line">        image_url = shot.get(&quot;image_url&quot;, &quot;&quot;)</span><br><span class="line">        if image_url:</span><br><span class="line">            fname = os.path.basename(image_url)</span><br><span class="line">            local_path = os.path.join(SHOTS_DIR, fname)</span><br><span class="line">            if os.path.exists(local_path):</span><br><span class="line">                with open(local_path, &#x27;rb&#x27;) as f:</span><br><span class="line">                    img_b64 = f&quot;data:image/jpeg;base64,&#123;base64.b64encode(f.read()).decode(&#x27;utf-8&#x27;)&#125;&quot;</span><br><span class="line">            else:</span><br><span class="line">                try:</span><br><span class="line">                    r = requests.get(image_url, timeout=30)</span><br><span class="line">                    if r.status_code == 200:</span><br><span class="line">                        img_b64 = f&quot;data:image/jpeg;base64,&#123;base64.b64encode(r.content).decode(&#x27;utf-8&#x27;)&#125;&quot;</span><br><span class="line">                except Exception:</span><br><span class="line">                    pass</span><br><span class="line"></span><br><span class="line">        description = _describe_shot(</span><br><span class="line">            shot[&quot;id&quot;], shot[&quot;start_time&quot;], shot[&quot;end_time&quot;], shot[&quot;duration&quot;], img_b64</span><br><span class="line">        )</span><br><span class="line">        shot[&quot;description&quot;] = description</span><br><span class="line">        shot[&quot;key_frame_base64&quot;] = img_b64</span><br><span class="line">        if i &lt; len(shots) - 1:</span><br><span class="line">            time.sleep(0.5)</span><br><span class="line"></span><br><span class="line">    return jsonify(&#123;</span><br><span class="line">        &quot;shots&quot;: shots,</span><br><span class="line">        &quot;total_shots&quot;: len(shots)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.route(&#x27;/format&#x27;, methods=[&#x27;POST&#x27;])</span><br><span class="line">def format_endpoint():</span><br><span class="line">    data = request.json or &#123;&#125;</span><br><span class="line">    shots = data.get(&quot;shots&quot;, [])</span><br><span class="line">    formatted = _format_shots(shots)</span><br><span class="line">    return jsonify(&#123;&quot;formatted&quot;: formatted&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.route(&#x27;/feishu-create&#x27;, methods=[&#x27;POST&#x27;])</span><br><span class="line">def feishu_create():</span><br><span class="line">    data = request.json or &#123;&#125;</span><br><span class="line">    shots = data.get(&quot;shots&quot;, [])</span><br><span class="line">    config = data.get(&quot;feishu&quot;, &#123;&#125;)</span><br><span class="line">    if not shots:</span><br><span class="line">        return jsonify(&#123;&quot;error&quot;: &quot;shots required&quot;&#125;), 400</span><br><span class="line">    if not config.get(&quot;app_id&quot;):</span><br><span class="line">        return jsonify(&#123;&quot;error&quot;: &quot;feishu app_id required&quot;&#125;), 400</span><br><span class="line">    try:</span><br><span class="line">        result = _feishu_create_records(shots, config)</span><br><span class="line">        return jsonify(result)</span><br><span class="line">    except Exception as e:</span><br><span class="line">        return jsonify(&#123;&quot;ok&quot;: False, &quot;error&quot;: str(e)[:200]&#125;), 500</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@app.route(&#x27;/feishu&#x27;, methods=[&#x27;POST&#x27;])</span><br><span class="line">def feishu():</span><br><span class="line">    data = request.json or &#123;&#125;</span><br><span class="line">    shots = data.get(&quot;shots&quot;, [])</span><br><span class="line">    config = data.get(&quot;feishu&quot;, &#123;&#125;)</span><br><span class="line">    if not config.get(&quot;app_id&quot;):</span><br><span class="line">        return jsonify(&#123;&quot;error&quot;: &quot;feishu app_id required&quot;&#125;), 400</span><br><span class="line">    try:</span><br><span class="line">        _feishu_upload_images(shots, config)</span><br><span class="line">        return jsonify(&#123;&quot;ok&quot;: True, &quot;uploaded&quot;: len(shots)&#125;)</span><br><span class="line">    except Exception as e:</span><br><span class="line">        return jsonify(&#123;&quot;ok&quot;: False, &quot;error&quot;: str(e)[:200]&#125;), 500</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    app.run(host=&#x27;0.0.0.0&#x27;, port=5002)</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-修改-docker-compose-yml"><a href="#5-3-修改-docker-compose-yml" class="headerlink" title="5.3 修改 docker-compose.yml"></a>5.3 修改 docker-compose.yml</h3><p>在 <code>docker-compose.yml</code> 的 <code>services</code> 中添加：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg-server:</span><br><span class="line">  build: ./ffmpeg-server</span><br><span class="line">  container_name: ffmpeg-server</span><br><span class="line">  restart: always</span><br><span class="line">  ports:</span><br><span class="line">    - &quot;5002:5002&quot;</span><br><span class="line">  volumes:</span><br><span class="line">    - ./volumes/ffmpeg-shots:/app/shots</span><br><span class="line">    - ../storage:/app/storage:ro</span><br><span class="line">  environment:</span><br><span class="line">    - LLM_API_KEY=$&#123;LLM_API_KEY&#125;</span><br><span class="line">    - LLM_MODEL=$&#123;LLM_MODEL:-qwen-vl-max&#125;</span><br><span class="line">  networks:</span><br><span class="line">    - default</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-4-配置-nginx-代理（可选，用于在-Dify-输出中显示图片）"><a href="#5-4-配置-nginx-代理（可选，用于在-Dify-输出中显示图片）" class="headerlink" title="5.4 配置 nginx 代理（可选，用于在 Dify 输出中显示图片）"></a>5.4 配置 nginx 代理（可选，用于在 Dify 输出中显示图片）</h3><p>文件：<code>dify/docker/nginx/conf.d/default.conf.template</code></p>
+<p>在 <code>location /triggers</code> 后面添加：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location /shots &#123;</span><br><span class="line">  proxy_pass http://ffmpeg-server:5002;</span><br><span class="line">  include proxy.conf;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-5-配置-SSRF-代理白名单"><a href="#5-5-配置-SSRF-代理白名单" class="headerlink" title="5.5 配置 SSRF 代理白名单"></a>5.5 配置 SSRF 代理白名单</h3><p>文件：<code>dify/docker/ssrf_proxy/squid.conf.template</code></p>
+<p>确保 <code>acl allowed_domains</code> 包含 ffmpeg-server 和通义千问域名：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">acl allowed_domains dstdomain .marketplace.dify.ai api nginx ffmpeg-server .aliyuncs.com dashscope.aliyuncs.com</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-6-配置沙箱超时（可选）"><a href="#5-6-配置沙箱超时（可选）" class="headerlink" title="5.6 配置沙箱超时（可选）"></a>5.6 配置沙箱超时（可选）</h3><p>文件：<code>dify/docker/volumes/sandbox/conf/config.yaml</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">worker_timeout: 300</span><br><span class="line">enable_network: True</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-7-构建并启动"><a href="#5-7-构建并启动" class="headerlink" title="5.7 构建并启动"></a>5.7 构建并启动</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cd dify/docker</span><br><span class="line"></span><br><span class="line"># 构建并启动 ffmpeg-server</span><br><span class="line">docker compose up -d --build ffmpeg-server</span><br><span class="line"></span><br><span class="line"># 重启相关服务</span><br><span class="line">docker compose restart nginx</span><br><span class="line">docker compose restart ssrf_proxy</span><br></pre></td></tr></table></figure>
+
+<p>验证：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker logs ffmpeg-server --tail 10</span><br><span class="line"># 应看到：* Running on http://0.0.0.0:5002</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-8-在-env-中添加-LLM-配置"><a href="#5-8-在-env-中添加-LLM-配置" class="headerlink" title="5.8 在 .env 中添加 LLM 配置"></a>5.8 在 .env 中添加 LLM 配置</h3><p>编辑 <code>dify/docker/.env</code>，添加：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LLM_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span><br><span class="line">LLM_MODEL=qwen-vl-max</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="6-在-Dify-中搭建工作流"><a href="#6-在-Dify-中搭建工作流" class="headerlink" title="6. 在 Dify 中搭建工作流"></a>6. 在 Dify 中搭建工作流</h2><h3 id="6-0-认识-DSL-文件"><a href="#6-0-认识-DSL-文件" class="headerlink" title="6.0 认识 DSL 文件"></a>6.0 认识 DSL 文件</h3><p>DSL（Domain Specific Language）是 Dify 的工作流导出格式，它是一个 YAML 文件，包含所有节点的配置、连线、坐标和变量定义。DSL 的作用：</p>
+<ul>
+<li><strong>一键还原工作流</strong>：导入后自动生成所有节点</li>
+<li><strong>版本管理</strong>：可以用 Git 管理工作流版本</li>
+<li><strong>跨实例迁移</strong>：从一个 Dify 实例导出，导入另一个</li>
+</ul>
+<p>DSL 文件结构（简化示意）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">app:</span><br><span class="line">  name: 视频反推分镜Agent</span><br><span class="line">  mode: workflow</span><br><span class="line">workflow:</span><br><span class="line">  graph:</span><br><span class="line">    nodes: [...]    # 10 个节点的完整配置</span><br><span class="line">    edges: [...]    # 9 条连线关系</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="方式一：导入-DSL（推荐）"><a href="#方式一：导入-DSL（推荐）" class="headerlink" title="方式一：导入 DSL（推荐）"></a>方式一：导入 DSL（推荐）</h3><p>如果你有 <code>视频反推分镜Agent.yml</code> DSL 文件：</p>
+<ol>
+<li>打开 Dify →「工作室」→「创建空白应用」→ 选择「工作流」</li>
+<li>进入画布后，点击右上角「···」→「导入 DSL」</li>
+<li>选择 DSL 文件，等待 3-5 秒自动加载</li>
+</ol>
+<p>导入后，将画布上的节点按以下结构排列：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[开始] → [提取视频关键帧] → [解析并内嵌图片] → [生成分镜脚本] → [格式化输出]</span><br><span class="line"></span><br><span class="line">[结束] ← [同步图片到飞书] ← [飞书创建记录] ← [提取BODY] ← [飞书获取AC]</span><br></pre></td></tr></table></figure>
+
+<p>然后按 3.3-3.5 节的配置替换飞书凭证。</p>
+<hr>
+<h3 id="方式二：手动拖拽搭建"><a href="#方式二：手动拖拽搭建" class="headerlink" title="方式二：手动拖拽搭建"></a>方式二：手动拖拽搭建</h3><p>如果你想完全理解每个节点的作用，可以手动从零搭建。</p>
+<h4 id="节点-1：「开始」节点"><a href="#节点-1：「开始」节点" class="headerlink" title="节点 1：「开始」节点"></a>节点 1：「开始」节点</h4><table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>变量名</td>
+<td><code>video</code></td>
+</tr>
+<tr>
+<td>类型</td>
+<td>文件（File）</td>
+</tr>
+<tr>
+<td>允许格式</td>
+<td><code>.mp4, .mov, .avi, .mkv</code></td>
+</tr>
+<tr>
+<td>文件类型</td>
+<td>视频</td>
+</tr>
+<tr>
+<td>上传方式</td>
+<td>本地上传</td>
+</tr>
+<tr>
+<td>必填</td>
+<td>开启</td>
+</tr>
+</tbody></table>
+<h4 id="节点-2：「提取视频关键帧」节点（HTTP-请求）"><a href="#节点-2：「提取视频关键帧」节点（HTTP-请求）" class="headerlink" title="节点 2：「提取视频关键帧」节点（HTTP 请求）"></a>节点 2：「提取视频关键帧」节点（HTTP 请求）</h4><ul>
+<li><strong>请求方法</strong>：POST</li>
+<li><strong>URL</strong>：<code>http://ffmpeg-server:5002/extract</code></li>
+<li><strong>Body 类型</strong>：raw-text</li>
+<li><strong>Content-Type</strong>：application&#x2F;json</li>
+<li><strong>Body 内容</strong>：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;file_url&quot;: &quot;&#123;&#123;#start.video.url#&#125;&#125;&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>最大读取超时</strong>：600 秒</li>
+<li><strong>重试次数</strong>：0</li>
+</ul>
+<blockquote>
+<p>在 Dify 编辑器中，Body 里输入 <code>&#123;&#123;#` 会自动弹出变量选择器，选择 `start` → `video` → `url` 即可。
+
+#### 节点 3：「解析并内嵌图片」节点（代码执行）
+
+- **输入变量**：`http_body` ← `&#123;&#123;#提取视频关键帧.body#&#125;&#125;</code></p>
+</blockquote>
+<ul>
+<li><p>输出变量</p>
+<p>：</p>
+<ul>
+<li><code>shots</code> — <code>array[object]</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>代码：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import json</span><br><span class="line"></span><br><span class="line">def main(http_body: str) -&gt; dict:</span><br><span class="line">    if isinstance(http_body, str):</span><br><span class="line">        data = json.loads(http_body)</span><br><span class="line">    else:</span><br><span class="line">        data = http_body</span><br><span class="line">    shots = data.get(&quot;shots&quot;, [])</span><br><span class="line">    return &#123;</span><br><span class="line">        &quot;shots&quot;: shots,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>作用</strong>：解析 HTTP 返回的 JSON，提取 <code>shots</code> 数组供下游使用。注意输出的 <code>shots</code> 类型是 <code>array[object]</code>（不是 <code>array_object</code>，Dify 枚举值必须带方括号）。</p>
+</blockquote>
+<h4 id="节点-4：「生成分镜脚本」节点（HTTP-请求）"><a href="#节点-4：「生成分镜脚本」节点（HTTP-请求）" class="headerlink" title="节点 4：「生成分镜脚本」节点（HTTP 请求）"></a>节点 4：「生成分镜脚本」节点（HTTP 请求）</h4><ul>
+<li><strong>请求方法</strong>：POST</li>
+<li><strong>URL</strong>：<code>http://ffmpeg-server:5002/describe</code></li>
+<li><strong>Body 类型</strong>：json</li>
+<li><strong>Body 内容</strong>：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;shots&quot;: &quot;&#123;&#123;#解析并内嵌图片.shots#&#125;&#125;&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>最大读取超时</strong>：600 秒</li>
+<li><strong>重试次数</strong>：0</li>
+</ul>
+<blockquote>
+<p><strong>说明</strong>：Body 类型选 <code>json</code>，Dify 会对 <code>&#123;&#123;#...#&#125;&#125;</code> 变量做类型感知替换——字符串加引号，数组&#x2F;对象以原始 JSON 插入。<code>shots</code> 是 <code>array[object]</code>，所以插入后是合法的 JSON 数组。</p>
+</blockquote>
+<h4 id="节点-5：「格式化输出」节点（代码执行）⭐-核心节点"><a href="#节点-5：「格式化输出」节点（代码执行）⭐-核心节点" class="headerlink" title="节点 5：「格式化输出」节点（代码执行）⭐ 核心节点"></a>节点 5：「格式化输出」节点（代码执行）⭐ 核心节点</h4><ul>
+<li><p><strong>输入变量</strong>：<code>http_body</code> ← <code>&#123;&#123;#生成分镜脚本.body#&#125;&#125;</code></p>
+</li>
+<li><p>输出变量</p>
+<p>：</p>
+<ul>
+<li><code>markdown</code> — <code>string</code></li>
+<li><code>total_shots</code> — <code>number</code></li>
+<li><code>warning</code> — <code>string</code></li>
+<li><code>feishu_body</code> — <code>array[object]</code></li>
+<li><code>shots</code> — <code>array[object]</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>代码：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">import json</span><br><span class="line"></span><br><span class="line">def main(http_body: str) -&gt; dict:</span><br><span class="line">    if isinstance(http_body, str):</span><br><span class="line">        data = json.loads(http_body)</span><br><span class="line">    else:</span><br><span class="line">        data = http_body</span><br><span class="line"></span><br><span class="line">    shots = data.get(&quot;shots&quot;, [])</span><br><span class="line">    total_shots = len(shots)</span><br><span class="line"></span><br><span class="line">    def _fmt_time(t):</span><br><span class="line">        return str(int(t)) if t == int(t) else str(t)</span><br><span class="line"></span><br><span class="line">    lines = []</span><br><span class="line">    lines.append(f&quot;# 视频分镜脚本\n\n共 &#123;total_shots&#125; 个分镜\n&quot;)</span><br><span class="line"></span><br><span class="line">    for shot in shots:</span><br><span class="line">        desc = shot.get(&quot;description&quot;, &#123;&#125;)</span><br><span class="line">        sid = desc.get(&quot;shot_id&quot;, shot.get(&quot;id&quot;, &quot;?&quot;))</span><br><span class="line">        title = desc.get(&quot;title&quot;, &quot;&quot;)</span><br><span class="line">        sub = desc.get(&quot;subject&quot;, &quot;（见下方描述）&quot;)</span><br><span class="line">        act = desc.get(&quot;action&quot;, &quot;&quot;)</span><br><span class="line">        env = desc.get(&quot;environment&quot;, &quot;&quot;)</span><br><span class="line">        cam = desc.get(&quot;camera_movement&quot;, &quot;固定&quot;)</span><br><span class="line">        sty = desc.get(&quot;style&quot;, &quot;&quot;)</span><br><span class="line">        raw_desc = desc.get(&quot;description&quot;, &quot;&quot;)</span><br><span class="line"></span><br><span class="line">        tr_fmt = f&quot;&#123;_fmt_time(shot[&#x27;start_time&#x27;])&#125;s-&#123;_fmt_time(shot[&#x27;end_time&#x27;])&#125;s&quot;</span><br><span class="line">        if title:</span><br><span class="line">            lines.append(f&quot;## 分镜&#123;sid:02d&#125;:&#123;title&#125;(&#123;tr_fmt&#125;)&quot;)</span><br><span class="line">        else:</span><br><span class="line">            lines.append(f&quot;## 分镜&#123;sid:02d&#125;（&#123;tr_fmt&#125;）&quot;)</span><br><span class="line">        lines.append(&quot;&quot;)</span><br><span class="line">        lines.append(f&quot;画面主体:&#123;sub&#125;&quot;)</span><br><span class="line">        if act:</span><br><span class="line">            lines.append(f&quot;动作:&#123;act&#125;&quot;)</span><br><span class="line">        if env:</span><br><span class="line">            lines.append(f&quot;环境:&#123;env&#125;&quot;)</span><br><span class="line">        if cam:</span><br><span class="line">            lines.append(f&quot;运镜:&#123;cam&#125;&quot;)</span><br><span class="line">        if sty:</span><br><span class="line">            lines.append(f&quot;风格控制:&#123;sty&#125;&quot;)</span><br><span class="line">        if raw_desc:</span><br><span class="line">            lines.append(&quot;&quot;)</span><br><span class="line">            lines.append(raw_desc)</span><br><span class="line">        img_url = shot.get(&quot;image_url&quot;, &quot;&quot;)</span><br><span class="line">        if img_url:</span><br><span class="line">            lines.append(&quot;&quot;)</span><br><span class="line">            lines.append(f&quot;![分镜&#123;sid:02d&#125;](&#123;img_url&#125;)&quot;)</span><br><span class="line">        lines.append(&quot;&quot;)</span><br><span class="line">        lines.append(&quot;---&quot;)</span><br><span class="line">        lines.append(&quot;&quot;)</span><br><span class="line"></span><br><span class="line">    markdown = &quot;\n&quot;.join(lines)</span><br><span class="line"></span><br><span class="line">    feishu_records = []</span><br><span class="line">    for s in shots:</span><br><span class="line">        d = s.get(&quot;description&quot;, &#123;&#125;)</span><br><span class="line">        feishu_records.append(&#123;</span><br><span class="line">            &quot;fields&quot;: &#123;</span><br><span class="line">                &quot;分镜编号&quot;: f&quot;分镜&#123;d.get(&#x27;shot_id&#x27;, s.get(&#x27;id&#x27;, 1)):02d&#125;&quot;,</span><br><span class="line">                &quot;时间范围&quot;: d.get(&quot;time_range&quot;, f&quot;&#123;s.get(&#x27;start_time&#x27;, &#x27;&#x27;)&#125;-&#123;s.get(&#x27;end_time&#x27;, &#x27;&#x27;)&#125;&quot;),</span><br><span class="line">                &quot;画面主体&quot;: d.get(&quot;subject&quot;, &quot;&quot;),</span><br><span class="line">                &quot;动作&quot;: d.get(&quot;action&quot;, &quot;&quot;),</span><br><span class="line">                &quot;环境&quot;: d.get(&quot;environment&quot;, &quot;&quot;),</span><br><span class="line">                &quot;运镜&quot;: d.get(&quot;camera_movement&quot;, &quot;&quot;),</span><br><span class="line">                &quot;AI描述&quot;: d.get(&quot;description&quot;, &quot;&quot;),</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">    return &#123;</span><br><span class="line">        &quot;markdown&quot;: markdown,</span><br><span class="line">        &quot;total_shots&quot;: total_shots,</span><br><span class="line">        &quot;warning&quot;: data.get(&quot;warning&quot;, &quot;&quot;),</span><br><span class="line">        &quot;feishu_body&quot;: feishu_records,</span><br><span class="line">        &quot;shots&quot;: shots,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>五个输出变量的用途</strong>：</p>
+<ul>
+<li><code>markdown</code> → 展示在 Dify 运行面板</li>
+<li><code>total_shots</code> → 分镜总数</li>
+<li><code>warning</code> → 警告信息（如场景检测失败）</li>
+<li><code>feishu_body</code> → 飞书多维表格的记录数据</li>
+<li><code>shots</code> → 完整的分镜数据，传给飞书 HTTP 节点</li>
+</ul>
+</blockquote>
+<h4 id="节点-6：「飞书获取AC」节点（HTTP-请求）"><a href="#节点-6：「飞书获取AC」节点（HTTP-请求）" class="headerlink" title="节点 6：「飞书获取AC」节点（HTTP 请求）"></a>节点 6：「飞书获取AC」节点（HTTP 请求）</h4><ul>
+<li><strong>请求方法</strong>：POST</li>
+<li><strong>URL</strong>：<code>https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal</code></li>
+<li><strong>Body 类型</strong>：raw-text</li>
+<li><strong>Content-Type</strong>：application&#x2F;json</li>
+<li><strong>Body 内容</strong>：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;app_id&quot;: &quot;cli_你的AppID&quot;,</span><br><span class="line">  &quot;app_secret&quot;: &quot;你的AppSecret&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>最大读取超时</strong>：60 秒</li>
+<li><strong>重试次数</strong>：0</li>
+</ul>
+<h4 id="节点-7：「提取BODY」节点（代码执行）"><a href="#节点-7：「提取BODY」节点（代码执行）" class="headerlink" title="节点 7：「提取BODY」节点（代码执行）"></a>节点 7：「提取BODY」节点（代码执行）</h4><ul>
+<li><p><strong>输入变量</strong>：<code>http_body</code> ← <code>&#123;&#123;#飞书获取AC.body#&#125;&#125;</code></p>
+</li>
+<li><p>输出变量</p>
+<p>：</p>
+<ul>
+<li><code>token</code> — <code>string</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>代码：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import json</span><br><span class="line"></span><br><span class="line">def main(http_body: str) -&gt; dict:</span><br><span class="line">    if isinstance(http_body, str):</span><br><span class="line">        data = json.loads(http_body)</span><br><span class="line">    else:</span><br><span class="line">        data = http_body</span><br><span class="line"></span><br><span class="line">    return &#123;</span><br><span class="line">        &quot;token&quot;: data.get(&quot;tenant_access_token&quot;, &quot;&quot;)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="节点-8：「飞书创建记录」节点（HTTP-请求）"><a href="#节点-8：「飞书创建记录」节点（HTTP-请求）" class="headerlink" title="节点 8：「飞书创建记录」节点（HTTP 请求）"></a>节点 8：「飞书创建记录」节点（HTTP 请求）</h4><ul>
+<li><strong>请求方法</strong>：POST</li>
+<li><strong>URL</strong>：<code>http://ffmpeg-server:5002/feishu-create</code></li>
+<li><strong>Body 类型</strong>：json</li>
+<li><strong>Body 内容</strong>：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;shots&quot;: &quot;&#123;&#123;#格式化输出.shots#&#125;&#125;&quot;,</span><br><span class="line">  &quot;feishu&quot;: &#123;</span><br><span class="line">    &quot;app_id&quot;: &quot;cli_你的AppID&quot;,</span><br><span class="line">    &quot;app_secret&quot;: &quot;你的AppSecret&quot;,</span><br><span class="line">    &quot;app_token&quot;: &quot;你的app_token&quot;,</span><br><span class="line">    &quot;table_id&quot;: &quot;你的table_id&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>最大读取超时</strong>：60 秒</li>
+<li><strong>重试次数</strong>：0</li>
+</ul>
+<blockquote>
+<p><strong>去重原理</strong>：Dify 底层在网络波动时会隐式重试 HTTP 请求。<code>/feishu-create</code> 端点内置了先查询后创建的机制，重复请求不会创建重复记录。</p>
+</blockquote>
+<h4 id="节点-9：「同步图片到飞书」节点（HTTP-请求）"><a href="#节点-9：「同步图片到飞书」节点（HTTP-请求）" class="headerlink" title="节点 9：「同步图片到飞书」节点（HTTP 请求）"></a>节点 9：「同步图片到飞书」节点（HTTP 请求）</h4><ul>
+<li><strong>请求方法</strong>：POST</li>
+<li><strong>URL</strong>：<code>http://ffmpeg-server:5002/feishu</code></li>
+<li><strong>Body 类型</strong>：json</li>
+<li><strong>Body 内容</strong>：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;shots&quot;: &quot;&#123;&#123;#格式化输出.shots#&#125;&#125;&quot;,</span><br><span class="line">  &quot;feishu&quot;: &#123;</span><br><span class="line">    &quot;app_id&quot;: &quot;cli_你的AppID&quot;,</span><br><span class="line">    &quot;app_secret&quot;: &quot;你的AppSecret&quot;,</span><br><span class="line">    &quot;app_token&quot;: &quot;你的app_token&quot;,</span><br><span class="line">    &quot;table_id&quot;: &quot;你的table_id&quot;,</span><br><span class="line">    &quot;img_field_id&quot;: &quot;你的img_field_id&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>最大读取超时</strong>：600 秒</li>
+<li><strong>重试次数</strong>：0</li>
+</ul>
+<h4 id="节点-10：「结束」节点"><a href="#节点-10：「结束」节点" class="headerlink" title="节点 10：「结束」节点"></a>节点 10：「结束」节点</h4><p>添加 4 个输出变量：</p>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>result</code></td>
+<td><code>&#123;&#123;#格式化输出.markdown#&#125;&#125;</code></td>
+<td>Markdown 分镜脚本</td>
+</tr>
+<tr>
+<td><code>total_shots</code></td>
+<td><code>&#123;&#123;#格式化输出.total_shots#&#125;&#125;</code></td>
+<td>分镜总数</td>
+</tr>
+<tr>
+<td><code>warning</code></td>
+<td><code>&#123;&#123;#格式化输出.warning#&#125;&#125;</code></td>
+<td>警告信息</td>
+</tr>
+<tr>
+<td><code>feishu_result</code></td>
+<td><code>&#123;&#123;#同步图片到飞书.body#&#125;&#125;</code></td>
+<td>飞书同步结果</td>
+</tr>
+</tbody></table>
+<h3 id="连线总图"><a href="#连线总图" class="headerlink" title="连线总图"></a>连线总图</h3><p>手动搭建完成后，按以下顺序连接 9 条连线：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">COPY[开始] ──→ [提取视频关键帧] ──→ [解析并内嵌图片] ──→ [生成分镜脚本]</span><br><span class="line">                                                           │</span><br><span class="line">                                                           ↓</span><br><span class="line">                                               [格式化输出]</span><br><span class="line">                                                           │</span><br><span class="line">                                                           ↓</span><br><span class="line">[结束] ←── [同步图片到飞书] ←── [飞书创建记录] ←── [提取BODY] ←── [飞书获取AC]</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>从</th>
+<th>到</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>开始</td>
+<td>提取视频关键帧</td>
+<td>视频 URL 传给 ffmpeg-server</td>
+</tr>
+<tr>
+<td>提取视频关键帧</td>
+<td>解析并内嵌图片</td>
+<td>HTTP 响应解析</td>
+</tr>
+<tr>
+<td>解析并内嵌图片</td>
+<td>生成分镜脚本</td>
+<td>shots 传给 describe</td>
+</tr>
+<tr>
+<td>生成分镜脚本</td>
+<td>格式化输出</td>
+<td>AI 结果格式化</td>
+</tr>
+<tr>
+<td>格式化输出</td>
+<td>飞书获取AC</td>
+<td>触发飞书操作链</td>
+</tr>
+<tr>
+<td>飞书获取AC</td>
+<td>提取BODY</td>
+<td>提取 token</td>
+</tr>
+<tr>
+<td>提取BODY</td>
+<td>飞书创建记录</td>
+<td>创建飞书表格记录</td>
+</tr>
+<tr>
+<td>飞书创建记录</td>
+<td>同步图片到飞书</td>
+<td>上传并关联图片</td>
+</tr>
+<tr>
+<td>同步图片到飞书</td>
+<td>结束</td>
+<td>汇总输出</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="7-运行测试"><a href="#7-运行测试" class="headerlink" title="7. 运行测试"></a>7. 运行测试</h2><h3 id="7-1-发布并运行"><a href="#7-1-发布并运行" class="headerlink" title="7.1 发布并运行"></a>7.1 发布并运行</h3><ol>
+<li>点击右上角「发布」（输入版本描述）</li>
+<li>点击「运行」，上传一个 MP4 视频</li>
+<li>点击「开始运行」</li>
+</ol>
+<p><strong>视频建议：</strong></p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>建议值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>时长</td>
+<td>10-60 秒</td>
+</tr>
+<tr>
+<td>分辨率</td>
+<td>1080p 及以下</td>
+</tr>
+<tr>
+<td>格式</td>
+<td>MP4 (H.264)</td>
+</tr>
+<tr>
+<td>大小</td>
+<td>50MB 以内</td>
+</tr>
+</tbody></table>
+<h3 id="7-2-观察执行"><a href="#7-2-观察执行" class="headerlink" title="7.2 观察执行"></a>7.2 观察执行</h3><p>工作流最耗时的环节：</p>
+<ul>
+<li><strong>提取视频关键帧</strong> — FFmpeg 场景检测，几秒到几十秒</li>
+<li><strong>生成分镜脚本</strong> — 逐帧调千问 API，12 个分镜约 30 秒</li>
+<li><strong>同步图片到飞书</strong> — 上传图片，12 张约 20-40 秒</li>
+</ul>
+<p>总耗时通常在 <strong>1-2 分钟</strong>。</p>
+<h3 id="7-3-查看结果"><a href="#7-3-查看结果" class="headerlink" title="7.3 查看结果"></a>7.3 查看结果</h3><p><strong>Dify 输出示例：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">COPY# 视频分镜脚本</span><br><span class="line"></span><br><span class="line">共 12 个分镜</span><br><span class="line"></span><br><span class="line">## 分镜01:活力少年奔跑亮相(0s-3.5s)</span><br><span class="line"></span><br><span class="line">画面主体:穿着黄上衣蓝背带裤的卡通少年</span><br><span class="line">动作:手持AD钙奶瓶，面带笑容向前奔跑</span><br><span class="line">环境:阳光明媚的童话风格小镇</span><br><span class="line">运镜:跟随少年奔跑的低角度跟拍镜头</span><br><span class="line"></span><br><span class="line">阳光洒落的童话小镇中，一名活力四射的卡通少年...</span><br><span class="line"></span><br><span class="line">![分镜01](http://ffmpeg-server:5002/shots/abc123_frame_000.jpg)</span><br><span class="line"></span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<p><strong>飞书表格：</strong> 打开多维表格，应看到 12 行记录，每行对应一个分镜，「关键帧截图」列有图片附件。</p>
+<hr>
+<h2 id="8-常见错误与修复"><a href="#8-常见错误与修复" class="headerlink" title="8. 常见错误与修复"></a>8. 常见错误与修复</h2><h3 id="8-1-http-boddy-参数名拼写错误"><a href="#8-1-http-boddy-参数名拼写错误" class="headerlink" title="8.1 http_boddy 参数名拼写错误"></a>8.1 <code>http_boddy</code> 参数名拼写错误</h3><p><strong>错误信息：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">COPYTypeError: main() got an unexpected keyword argument &#x27;http_boddy&#x27;.</span><br><span class="line">Did you mean &#x27;http_body&#x27;?</span><br></pre></td></tr></table></figure>
+
+<p><strong>原因：</strong> 代码执行节点配置的输入变量名为 <code>http_boddy</code>（多了一个 d），但 <code>main</code> 函数的参数名是 <code>http_body</code>。沙箱调用 <code>main(http_boddy=...)</code> 时报错。</p>
+<p><strong>修复：</strong> 在代码节点配置中将变量名改回 <code>http_body</code>，或直接修改数据库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">COPYimport psycopg2</span><br><span class="line"></span><br><span class="line">conn = psycopg2.connect(</span><br><span class="line">    host=&quot;db_postgres&quot;,</span><br><span class="line">    port=5432,</span><br><span class="line">    user=&quot;postgres&quot;,</span><br><span class="line">    password=&quot;difyai123456&quot;,</span><br><span class="line">    dbname=&quot;dify&quot;</span><br><span class="line">)</span><br><span class="line">cur = conn.cursor()</span><br><span class="line">cur.execute(&quot;SELECT id, graph FROM workflows WHERE id = &#x27;your-workflow-id&#x27;&quot;)</span><br><span class="line">wid, graph_text = cur.fetchone()</span><br><span class="line">graph_text = graph_text.replace(&#x27;&quot;variable&quot;:&quot;http_boddy&quot;&#x27;, &#x27;&quot;variable&quot;:&quot;http_body&quot;&#x27;)</span><br><span class="line">cur.execute(&quot;UPDATE workflows SET graph = %s WHERE id = %s&quot;, (graph_text, wid))</span><br><span class="line">conn.commit()</span><br><span class="line">cur.close()</span><br><span class="line">conn.close()</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-2-代码节点-IndentationError-unexpected-indent"><a href="#8-2-代码节点-IndentationError-unexpected-indent" class="headerlink" title="8.2 代码节点 IndentationError: unexpected indent"></a>8.2 代码节点 <code>IndentationError: unexpected indent</code></h3><p><strong>原因：</strong> 代码执行节点残留了默认模板代码（<code>def main(arg1, arg2)</code> 未删除），且新增的 <code>def main</code> 前面有多余空格缩进。</p>
+<p><strong>修复：</strong> 删除残留模板代码，<code>def main</code> 必须顶格写（无前导空格）。</p>
+<h3 id="8-3-嵌套函数-fmt-time-缩进错误"><a href="#8-3-嵌套函数-fmt-time-缩进错误" class="headerlink" title="8.3 嵌套函数 _fmt_time 缩进错误"></a>8.3 嵌套函数 <code>_fmt_time</code> 缩进错误</h3><p><strong>原因：</strong> <code>def _fmt_time(t)</code> 没有缩进在 <code>main</code> 函数内部，导致 <code>IndentationError</code>。</p>
+<p><strong>修复：</strong> <code>def _fmt_time(t):</code> 必须缩进在 <code>main</code> 函数体内（7 个空格或 1 个 tab）。</p>
+<h3 id="8-4-HTTP-节点-400-Bad-Request（三花括号问题）"><a href="#8-4-HTTP-节点-400-Bad-Request（三花括号问题）" class="headerlink" title="8.4 HTTP 节点 400 Bad Request（三花括号问题）"></a>8.4 HTTP 节点 400 Bad Request（三花括号问题）</h3><p><strong>错误信息：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">COPYRequest failed with status code 400</span><br></pre></td></tr></table></figure>
+
+<p><strong>原因：</strong> Dify 的 HTTP 请求节点<strong>不支持 <code>&#123;&#123;&#123;...&#125;&#125;&#125;</code>（三花括号）语法</strong>，只识别 <code>&#123;&#123;#...#&#125;&#125;</code>（双花括号）。如果代码节点做了 <code>json.dumps(shots)</code> 得到一个字符串，再用 <code>&#123;&#123;&#123;...&#125;&#125;&#125;</code> 插入，最终 body 中包含字面的 <code>&#123;&#123;&#123;` 文本，不是合法 JSON。
+
+**正确做法：**
+
+1. 代码节点输出 `shots` 作为 `array[object]`（原始 Python 列表），不做 `json.dumps`
+2. HTTP 节点的 Body 类型选 **json**（非 raw-text）
+3. 模板引用使用 `&#123;&#123;#node_id.shots#&#125;&#125;</code>（单层花括号）</p>
+<h3 id="8-5-输出类型枚举值错误"><a href="#8-5-输出类型枚举值错误" class="headerlink" title="8.5 输出类型枚举值错误"></a>8.5 输出类型枚举值错误</h3><p><strong>错误信息：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">COPYInput should be &#x27;number&#x27;, &#x27;integer&#x27;, &#x27;float&#x27;, &#x27;string&#x27;, &#x27;object&#x27;, ...</span><br></pre></td></tr></table></figure>
+
+<p><strong>原因：</strong> 代码节点输出 schema 中 <code>shots</code> 的类型写成了 <code>array_object</code>，但 Dify 的有效枚举值是 <code>array[object]</code>（带方括号）。</p>
+<p><strong>修复：</strong> <code>array_object</code> → <code>array[object]</code></p>
+<h3 id="8-6-HTTP-超时"><a href="#8-6-HTTP-超时" class="headerlink" title="8.6 HTTP 超时"></a>8.6 HTTP 超时</h3><p><strong>原因：</strong> 视频太长或分镜太多，处理时间超过默认 60 秒超时。</p>
+<p><strong>修复：</strong> 将 HTTP 节点的「最大读取超时」和「最大写入超时」设为 <strong>600 秒</strong>。</p>
+<h3 id="8-7-飞书记录重复"><a href="#8-7-飞书记录重复" class="headerlink" title="8.7 飞书记录重复"></a>8.7 飞书记录重复</h3><p><strong>原因：</strong> Dify 底层在网络波动时会隐式重试 HTTP 请求。</p>
+<p><strong>修复：</strong> 确保调用的是 <code>http://ffmpeg-server:5002/feishu-create</code>（带去重），而不是直连飞书 API。</p>
+<h3 id="8-8-图片在-Dify-输出中不显示"><a href="#8-8-图片在-Dify-输出中不显示" class="headerlink" title="8.8 图片在 Dify 输出中不显示"></a>8.8 图片在 Dify 输出中不显示</h3><p><strong>原因：</strong> <code>image_url</code> 是容器内地址，浏览器无法直接访问。</p>
+<p><strong>修复：</strong> 在 nginx 中配置 <code>/shots</code> 代理（见 5.4 节）并重启 nginx。</p>
+<h3 id="8-9-ffmpeg-server-日志显示「下载视频失败-HTTP-404」"><a href="#8-9-ffmpeg-server-日志显示「下载视频失败-HTTP-404」" class="headerlink" title="8.9 ffmpeg-server 日志显示「下载视频失败: HTTP 404」"></a>8.9 ffmpeg-server 日志显示「下载视频失败: HTTP 404」</h3><p><strong>原因：</strong> Dify 文件签名 URL 在容器间无法验证，或 <code>STORAGE_TYPE</code> 不是 <code>local</code>。</p>
+<p><strong>修复：</strong></p>
+<ul>
+<li>确认 <code>.env</code> 中 <code>STORAGE_TYPE=local</code></li>
+<li>确认 ffmpeg-server 挂载了 <code>../storage:/app/storage:ro</code></li>
+<li>重启 Dify</li>
+</ul>
+<h3 id="关键技术要点"><a href="#关键技术要点" class="headerlink" title="关键技术要点"></a>关键技术要点</h3><table>
+<thead>
+<tr>
+<th>要点</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Dify 沙箱变量传递</td>
+<td>沙箱调用 <code>main(**inputs_obj)</code>，参数名必须与节点变量配置完全一致</td>
+</tr>
+<tr>
+<td>Dify 模板语法</td>
+<td>HTTP 节点仅支持 <code>&#123;&#123;#node_id.field#&#125;&#125;</code>，不支持 <code>&#123;&#123;&#123;...&#125;&#125;&#125;</code></td>
+</tr>
+<tr>
+<td><code>json</code> vs <code>raw-text</code> Body</td>
+<td><code>json</code> 类型做 JSON 感知替换（数组&#x2F;对象 → 原始 JSON）；<code>raw-text</code> 只做文本替换</td>
+</tr>
+<tr>
+<td>代码节点输出</td>
+<td>直接返回 Python 对象（列表、字典），Dify 自动序列化，无需 <code>json.dumps()</code></td>
+</tr>
+<tr>
+<td>数据库修改</td>
+<td>workflow 配置存储在 PostgreSQL 的 <code>workflows.graph</code> 字段中</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="9-附录：核心参数调优"><a href="#9-附录：核心参数调优" class="headerlink" title="9. 附录：核心参数调优"></a>9. 附录：核心参数调优</h2><h3 id="场景检测灵敏度"><a href="#场景检测灵敏度" class="headerlink" title="场景检测灵敏度"></a>场景检测灵敏度</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">COPYSCENE_THRESHOLD = 0.25   # 默认值，0~1，越小越敏感</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>分镜数（30秒视频）</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0.4</td>
+<td>约 8-12 个</td>
+<td>访谈、教学、慢节奏</td>
+</tr>
+<tr>
+<td>0.25</td>
+<td>约 12-20 个</td>
+<td>普通视频、Vlog</td>
+</tr>
+<tr>
+<td>0.1</td>
+<td>30+ 个</td>
+<td>快节奏混剪、预告片</td>
+</tr>
+</tbody></table>
+<h3 id="关键帧质量"><a href="#关键帧质量" class="headerlink" title="关键帧质量"></a>关键帧质量</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">KEYFRAME_QUALITY = 10   # JPEG 质量（2-31，越小越高清）</span><br><span class="line">KEYFRAME_WIDTH = 512    # 缩放宽度</span><br></pre></td></tr></table></figure>
+
+<h3 id="LLM-参数"><a href="#LLM-参数" class="headerlink" title="LLM 参数"></a>LLM 参数</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">temperature = 0.3   # 越低输出越稳定</span><br><span class="line">max_tokens = 1024   # 足够输出完整 JSON</span><br></pre></td></tr></table></figure>
+
+<h3 id="调用间隔"><a href="#调用间隔" class="headerlink" title="调用间隔"></a>调用间隔</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">time.sleep(0.5)   # 每次千问 API 调用间隔 0.5 秒，防 429 限流</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="10-扩展：不接飞书的简化版"><a href="#10-扩展：不接飞书的简化版" class="headerlink" title="10. 扩展：不接飞书的简化版"></a>10. 扩展：不接飞书的简化版</h2><p>如果只需要在 Dify 里查看分镜结果，不需要飞书，可以大幅简化工作流：</p>
+<p><strong>保留节点：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">开始 → 提取视频关键帧 → 解析并内嵌图片 → 生成分镜脚本 → 格式化输出 → 结束</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除节点：</strong></p>
+<ul>
+<li>飞书获取 AC</li>
+<li>提取 BODY</li>
+<li>飞书创建记录</li>
+<li>同步图片到飞书</li>
+</ul>
+<p>server.py 仍然需要（FFmpeg 和 LLM 调用必须在沙箱外执行）。</p>
+<hr>
+<h2 id="11-维护命令速查"><a href="#11-维护命令速查" class="headerlink" title="11. 维护命令速查"></a>11. 维护命令速查</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># 查看 ffmpeg-server 日志</span><br><span class="line">docker logs ffmpeg-server --tail 50</span><br><span class="line"></span><br><span class="line"># 重建并重启 ffmpeg-server</span><br><span class="line">cd dify/docker</span><br><span class="line">docker compose up -d --build ffmpeg-server</span><br><span class="line"></span><br><span class="line"># 重启 Nginx</span><br><span class="line">docker compose restart nginx</span><br><span class="line"></span><br><span class="line"># 重启 SSRF 代理</span><br><span class="line">docker compose restart ssrf_proxy</span><br><span class="line"></span><br><span class="line"># 重启整个 Dify</span><br><span class="line">docker compose down</span><br><span class="line">docker compose up -d</span><br></pre></td></tr></table></figure>
+        </div>
+        
+        <div class="tags">
+            
+            <a href="/tags/dify/">dify</a>
+            
+            <a href="/tags/ffmpeg/">ffmpeg</a>
+            
+            <a href="/tags/%E9%A3%9E%E4%B9%A6/">飞书</a>
+            
+        </div>
+        
+        
+        <div class="post-nav">
+            
+            
+            <a class="next" href="/2026/06/16/Claude-Code-CC-Switch-%E6%8E%A5%E5%85%A5%E5%9B%BD%E4%BA%A7%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/">
+                <i class="icon-next">Claude Code + CC Switch 接入国产大模型完整教程</i>
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+
+
+                </div>
+                <div class="col-md-4 hidden-xs">
+                    
+<div class="sidebar">
+    <div class="well">
+        <h2>标签云</h2>
+        <a href="/tags/dify/" style="font-size: 15px;">dify</a> <a href="/tags/css/" style="font-size: 15px;">css</a> <a href="/tags/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" style="font-size: 15px;">构造函数</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1/" style="font-size: 15px;">原型对象</a> <a href="/tags/ffmpeg/" style="font-size: 15px;">ffmpeg</a> <a href="/tags/%E9%A3%9E%E4%B9%A6/" style="font-size: 15px;">飞书</a>
+    </div>
+</div>
+
+<div class="sidebar">
+    <div class="well">
+        <h2>归档</h2>
+        <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/06/">2026年06月</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">2026年03月</a><span class="archive-list-count">6</span></li></ul>
+    </div>
+</div>
+
+<div class="sidebar ">
+    <div class="well">
+        <h2>最新文章</h2>
+        <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/06/16/%E4%B8%80%E6%AD%A5%E6%AD%A5%E6%95%99%E4%BD%A0%E6%9E%84%E5%BB%BADify%E8%A7%86%E9%A2%91%E5%88%86%E9%95%9CAgent/">一步步教你构建Dify视频分镜Agent</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/16/Claude-Code-CC-Switch-%E6%8E%A5%E5%85%A5%E5%9B%BD%E4%BA%A7%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/">Claude Code + CC Switch 接入国产大模型完整教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/26/msjs/">msjs</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/26/mscss/">mscss</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/24/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1/">构造函数、原型对象</a></li></ul>
+    </div>
+</div>
+
+<div class="sidebar">
+    <div class="well">
+        <h2>友情链接</h2>
+        <ul>
+            
+            <li><a class="links-list-link" href="http://www.howardliu.com/" title="沉潜飞动" target='_blank'>沉潜飞动</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="side-button-wrap">
+        <a id="to-top" class="side-button icon-up-arrow" href="#top"></a>
+        <a id="to-home" class="side-button icon-home" href="/."></a>
+        <a id="to-comment-button" class="side-button icon-msg" href="#comment"></a>
+        <a id="to-bottom-button" class="side-button icon-down-arrow" href="#bottom"></a>
+    </div>
+    <a id="bottom" name="bottom"></a>
+    <footer id="footer" class="footer-distributed" style="background-color: #222222;">
+    <div class="container">
+        <div class="footer">
+            <p>Lazy Cat &copy; 2026</p>
+            <ul class="social-media">
+                
+                
+                <li>
+                    <a title="hexo-theme-clean-dark" href="https://github.com/howardliu-cn/hexo-theme-clean-dark"
+                       target="_blank">
+                        <i class="fa fa-film fa-2x"></i>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</footer>
+
+</div>
+
+<script src="//cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
+
+
+<script src="//cdn.staticfile.org/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+<script src="//cdn.staticfile.org/highlight.js/9.1.0/highlight.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script src="/js/header.js"></script>
+
+
+<script src="/js/toc.js"></script>
+
+<!--[if lt IE 9]>
+
+<script src="//cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+
+![endif]-->
+<!--fancybox-->
+
+<script src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+<script src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+<link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+<script>
+    $(document).ready(function () {
+        $("img").each(function (index, item) {
+            var p = $(item).parents()[0];
+            if($(p).is('a')) {
+                $(p).fancybox();
+                return;
+            }
+            $(p).append(function() {return "<a id='fancybox_id_"+index+"' href='" + $(item).attr("src") + "'></a>";});
+            item.remove();
+            var fancyboxItem = $("#fancybox_id_" + index);
+            fancyboxItem.append($(item));
+            fancyboxItem.fancybox();
+        });
+    });
+</script>
+
+<!--baidu auto-push-->
+
+<!--google analytics-->
+
+</body>
+</html>
