@@ -1,14 +1,25 @@
-<!DOCTYPE html>
-<html lang='zh-CN'>
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-<meta name="renderer" content="webkit">
-<meta http-equiv="Cache-Control" content="no-siteapp"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书）||Lazy Cat&#39;s Blog|ai全栈笔记 &amp; 技术分享</title>
-<meta name="description" content="从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书） 本教程基于 Dify 工作流，实现上传视频 → 提取关键帧 → AI 生成分镜脚本 → 自动写入飞书电子表格的全流程自动化。   目录 整体流程概览 前置准备 节点详细配置 节点 1：开始 节点 2：提取视频关键帧 节点 3：解析并内嵌图片 节点 4：生成分镜脚本（LLM） 节点 5：获取飞书 Access Token">
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Lazy Cat">
+  <meta name="keywords" content="前端,JavaScript,CSS,HTML">
+  
+    <meta name="description" content="从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书） 本教程基于 Dify 工作流，实现上传视频 → 提取关键帧 → AI 生成分镜脚本 → 自动写入飞书电子表格的全流程自动化。   目录 整体流程概览 前置准备 节点详细配置 节点 1：开始 节点 2：提取视频关键帧 节点 3：解析并内嵌图片 节点 4：生成分镜脚本（LLM） 节点 5：获取飞书 Access Token">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书）">
 <meta property="og:url" content="http://example.com/2026/06/07/%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8%E5%88%86%E9%95%9C%E6%8F%90%E7%A4%BA%E8%AF%8D-Agent-%E2%80%94-%E5%AE%8C%E6%95%B4%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/index.html">
@@ -20,94 +31,358 @@
 <meta property="article:author" content="Lazy Cat">
 <meta property="article:tag" content="dify">
 <meta property="article:tag" content="飞书表格">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书） - Lazy Cat&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
-<meta name="description" content="从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书）
-本教程基于 Dify 工作流，实现上传视频 → 提取关键帧 → AI 生成分镜脚本 → 自动写入飞书电子表格的全流程自动化。
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
 
 
-目录
-整体流程概览
-前置准备
-节点详细配置
-节点 1：开始
-节点 2：提取视频关键帧
-节点">
 
-<meta name="author" content="Lazy Cat,undefined">
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
 
 
-<link rel="shortcut icon" href="/favicon.png" type="image/x-icon"/>
-<link rel="icon" href="/favicon.png">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
 
 
-<link rel="stylesheet" href="//cdn.staticfile.org/bootstrap/3.3.6/css/bootstrap.min.css">
+<link  rel="stylesheet" href="/css/main.css" />
 
 
-<link rel="stylesheet" href="/css/theme.css">
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
 
 
-<link rel="stylesheet" href="/css/syntax.css">
 
 
-<link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
 
 
-<link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/9.1.0/styles/arta.min.css">
-
-<!--baidu analytics-->
-
+  
 <meta name="generator" content="Hexo 6.3.0"></head>
+
+
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            
-            <a class="navbar-brand" href="/.">Lazy Cat&#39;s Blog</a>
-        </div>
-        <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                
-                <li><a href="/." class="current"><i class="icon-home"> 首页</i></a></li>
-                
-                <li><a href="/archives/"><i class="icon-archive"> 归档</i></a></li>
-                
-                <li><a href="/atom.xml"><i class="icon-rss"> 订阅</i></a></li>
-                
-                <li><a href="/about/"><i class="icon-about"> 关于</i></a></li>
-                
-            </ul>
-        </div>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Lazy Cat&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
     </div>
+  </div>
 </nav>
-<div class="wrapper">
-    <div class="content">
-        <div class="container container-center">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="article">
-    <div class="well">
-        <h1><a href="/2026/06/07/%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8%E5%88%86%E9%95%9C%E6%8F%90%E7%A4%BA%E8%AF%8D-Agent-%E2%80%94-%E5%AE%8C%E6%95%B4%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/">从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书）</a></h1>
-        <div class="post-meta">
-            <div class="post-time">
-                <i class="fa fa-calendar"></i><time> 2026-06-07</time>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
             </div>
-            <div class="post-visitors-count">
-                <i class="fa fa-ge"></i>
-                <span id="/2026/06/07/%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8%E5%88%86%E9%95%9C%E6%8F%90%E7%A4%BA%E8%AF%8D-Agent-%E2%80%94-%E5%AE%8C%E6%95%B4%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/" class="leancloud_visitors" data-flag-title="从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书）">
-                    <span class="post-meta-item-text">阅读量 </span>
-                    <i class="leancloud-visitors-count">0</i>
-                </span>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
             </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书）"></span>
+          
         </div>
-        <div class="post-content article-entry">
-            <h1 id="从视频到脚本：手把手搭建-AI-分镜提示词-Agent（Dify-飞书）"><a href="#从视频到脚本：手把手搭建-AI-分镜提示词-Agent（Dify-飞书）" class="headerlink" title="从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书）"></a>从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书）</h1><blockquote>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-06-07 20:59" pubdate>
+          2026年6月7日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          10k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          84 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="从视频到脚本：手把手搭建-AI-分镜提示词-Agent（Dify-飞书）"><a href="#从视频到脚本：手把手搭建-AI-分镜提示词-Agent（Dify-飞书）" class="headerlink" title="从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书）"></a>从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书）</h1><blockquote>
 <p>本教程基于 Dify 工作流，实现上传视频 → 提取关键帧 → AI 生成分镜脚本 → 自动写入飞书电子表格的全流程自动化。</p>
 </blockquote>
 <hr>
@@ -133,7 +408,7 @@
 <li><a href="#6-%E8%BF%90%E8%A1%8C%E6%95%88%E6%9E%9C%E8%AF%B4%E6%98%8E">运行效果说明</a></li>
 </ol>
 <hr>
-<h2 id="1-整体流程概览"><a href="#1-整体流程概览" class="headerlink" title="1. 整体流程概览"></a>1. 整体流程概览</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">开始（上传视频）</span><br><span class="line">  ↓</span><br><span class="line">提取视频关键帧（FFmpeg 插件）</span><br><span class="line">  ↓</span><br><span class="line">解析并内嵌图片（Code 节点）</span><br><span class="line">  ↓</span><br><span class="line">生成分镜脚本（LLM / 通义千问）</span><br><span class="line">  ↓</span><br><span class="line">获取飞书 Access Token（HTTP 请求）</span><br><span class="line">  ↓</span><br><span class="line">提取 Access Token（Code 节点）</span><br><span class="line">  ↓</span><br><span class="line">新建飞书电子表格（HTTP 请求）</span><br><span class="line">  ↓</span><br><span class="line">获取 Sheet ID（Code 节点）</span><br><span class="line">  ↓</span><br><span class="line">拼接写入 Body（Code 节点）</span><br><span class="line">  ↓</span><br><span class="line">写入表格内容（HTTP 请求）</span><br><span class="line">  ↓</span><br><span class="line">结束</span><br></pre></td></tr></table></figure>
+<h2 id="1-整体流程概览"><a href="#1-整体流程概览" class="headerlink" title="1. 整体流程概览"></a>1. 整体流程概览</h2><figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs gauss">开始（上传视频）<br>  ↓<br>提取视频关键帧（FFmpeg 插件）<br>  ↓<br>解析并内嵌图片（<span class="hljs-built_in">Code</span> 节点）<br>  ↓<br>生成分镜脚本（LLM / 通义千问）<br>  ↓<br>获取飞书 Access <span class="hljs-built_in">Token</span>（HTTP 请求）<br>  ↓<br>提取 Access <span class="hljs-built_in">Token</span>（<span class="hljs-built_in">Code</span> 节点）<br>  ↓<br>新建飞书电子表格（HTTP 请求）<br>  ↓<br>获取 Sheet ID（<span class="hljs-built_in">Code</span> 节点）<br>  ↓<br>拼接写入 Body（<span class="hljs-built_in">Code</span> 节点）<br>  ↓<br>写入表格内容（HTTP 请求）<br>  ↓<br>结束<br></code></pre></td></tr></table></figure>
 
 <p>整个工作流共 <strong>11 个节点</strong>，其中 HTTP 请求节点 3 个、代码执行节点 4 个、工具节点 1 个、LLM 节点 1 个。</p>
 <hr>
@@ -250,7 +525,7 @@
 </tr>
 </tbody></table>
 <p><strong>代码</strong>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">files: <span class="built_in">list</span>, json_data: <span class="built_in">str</span></span>) -&gt; <span class="built_in">dict</span>:</span><br><span class="line">    shots = []</span><br><span class="line">    frame_lines_text = []</span><br><span class="line">    frame_lines_md = []</span><br><span class="line">    </span><br><span class="line">    json_list = []</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        json_list = json.loads(json_data) <span class="keyword">if</span> json_data <span class="keyword">else</span> []</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line">    time_map = &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span> json_list <span class="keyword">and</span> <span class="built_in">isinstance</span>(json_list, <span class="built_in">list</span>):</span><br><span class="line">        <span class="keyword">for</span> frame_info <span class="keyword">in</span> json_list:</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">isinstance</span>(frame_info, <span class="built_in">dict</span>) <span class="keyword">and</span> <span class="string">&#x27;frames&#x27;</span> <span class="keyword">in</span> frame_info:</span><br><span class="line">                <span class="keyword">for</span> f <span class="keyword">in</span> frame_info.get(<span class="string">&#x27;frames&#x27;</span>, []):</span><br><span class="line">                    frame_num = f.get(<span class="string">&#x27;frame_number&#x27;</span>, <span class="number">0</span>)</span><br><span class="line">                    seek_time = f.get(<span class="string">&#x27;seek_time&#x27;</span>, <span class="number">0</span>)</span><br><span class="line">                    time_map[frame_num] = seek_time</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i, file_info <span class="keyword">in</span> <span class="built_in">enumerate</span>(files):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(file_info, <span class="built_in">dict</span>):</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        </span><br><span class="line">        filename = file_info.get(<span class="string">&#x27;filename&#x27;</span>, <span class="string">f&#x27;frame_<span class="subst">&#123;i+<span class="number">1</span>:03d&#125;</span>.jpg&#x27;</span>)</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            frame_num = <span class="built_in">int</span>(filename.split(<span class="string">&#x27;_&#x27;</span>)[-<span class="number">1</span>].replace(<span class="string">&#x27;.jpg&#x27;</span>, <span class="string">&#x27;&#x27;</span>))</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            frame_num = i + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        seek_time = time_map.get(frame_num, i * <span class="number">2.0</span>)</span><br><span class="line">        start_s = <span class="built_in">round</span>(seek_time, <span class="number">2</span>)</span><br><span class="line">        end_s = <span class="built_in">round</span>(seek_time + <span class="number">2.0</span>, <span class="number">2</span>)</span><br><span class="line">        image_url = file_info.get(<span class="string">&#x27;url&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        shots.append(&#123;</span><br><span class="line">            <span class="string">&#x27;shot_no&#x27;</span>: i + <span class="number">1</span>,</span><br><span class="line">            <span class="string">&#x27;start&#x27;</span>: start_s,</span><br><span class="line">            <span class="string">&#x27;end&#x27;</span>: end_s,</span><br><span class="line">            <span class="string">&#x27;duration&#x27;</span>: <span class="number">2.0</span>,</span><br><span class="line">            <span class="string">&#x27;frame_number&#x27;</span>: frame_num,</span><br><span class="line">            <span class="string">&#x27;filename&#x27;</span>: filename,</span><br><span class="line">            <span class="string">&#x27;keyframe_url&#x27;</span>: image_url,</span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">        frame_lines_text.append(</span><br><span class="line">            <span class="string">f&quot;分镜 <span class="subst">&#123;i+<span class="number">1</span>:02d&#125;</span> | 时间: <span class="subst">&#123;start_s&#125;</span>s - <span class="subst">&#123;end_s&#125;</span>s | <span class="subst">&#123;filename&#125;</span>&quot;</span></span><br><span class="line">        )</span><br><span class="line">        frame_lines_md.append(</span><br><span class="line">            <span class="string">f&quot;### 分镜 <span class="subst">&#123;i+<span class="number">1</span>:02d&#125;</span>（<span class="subst">&#123;start_s&#125;</span>s - <span class="subst">&#123;end_s&#125;</span>s）\n&quot;</span></span><br><span class="line">            <span class="string">f&quot;![<span class="subst">&#123;filename&#125;</span>](<span class="subst">&#123;image_url&#125;</span>)&quot;</span></span><br><span class="line">        )</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&#x27;shots_json&#x27;</span>: json.dumps(shots, ensure_ascii=<span class="literal">False</span>, indent=<span class="number">2</span>),</span><br><span class="line">        <span class="string">&#x27;frame_urls&#x27;</span>: <span class="string">&#x27;\n&#x27;</span>.join(frame_lines_text),</span><br><span class="line">        <span class="string">&#x27;frames_md&#x27;</span>: <span class="string">&#x27;\n\n&#x27;</span>.join(frame_lines_md),</span><br><span class="line">        <span class="string">&#x27;shot_count&#x27;</span>: <span class="built_in">len</span>(shots),</span><br><span class="line">        <span class="string">&#x27;total_frames&#x27;</span>: <span class="built_in">len</span>(files) <span class="keyword">if</span> files <span class="keyword">else</span> <span class="number">0</span>,</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> json<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">files: <span class="hljs-built_in">list</span>, json_data: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">dict</span>:<br>    shots = []<br>    frame_lines_text = []<br>    frame_lines_md = []<br>    <br>    json_list = []<br>    <span class="hljs-keyword">try</span>:<br>        json_list = json.loads(json_data) <span class="hljs-keyword">if</span> json_data <span class="hljs-keyword">else</span> []<br>    <span class="hljs-keyword">except</span>:<br>        <span class="hljs-keyword">pass</span><br>    <br>    time_map = &#123;&#125;<br>    <span class="hljs-keyword">if</span> json_list <span class="hljs-keyword">and</span> <span class="hljs-built_in">isinstance</span>(json_list, <span class="hljs-built_in">list</span>):<br>        <span class="hljs-keyword">for</span> frame_info <span class="hljs-keyword">in</span> json_list:<br>            <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(frame_info, <span class="hljs-built_in">dict</span>) <span class="hljs-keyword">and</span> <span class="hljs-string">&#x27;frames&#x27;</span> <span class="hljs-keyword">in</span> frame_info:<br>                <span class="hljs-keyword">for</span> f <span class="hljs-keyword">in</span> frame_info.get(<span class="hljs-string">&#x27;frames&#x27;</span>, []):<br>                    frame_num = f.get(<span class="hljs-string">&#x27;frame_number&#x27;</span>, <span class="hljs-number">0</span>)<br>                    seek_time = f.get(<span class="hljs-string">&#x27;seek_time&#x27;</span>, <span class="hljs-number">0</span>)<br>                    time_map[frame_num] = seek_time<br>    <br>    <span class="hljs-keyword">for</span> i, file_info <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(files):<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">isinstance</span>(file_info, <span class="hljs-built_in">dict</span>):<br>            <span class="hljs-keyword">continue</span><br>        <br>        filename = file_info.get(<span class="hljs-string">&#x27;filename&#x27;</span>, <span class="hljs-string">f&#x27;frame_<span class="hljs-subst">&#123;i+<span class="hljs-number">1</span>:03d&#125;</span>.jpg&#x27;</span>)<br>        <span class="hljs-keyword">try</span>:<br>            frame_num = <span class="hljs-built_in">int</span>(filename.split(<span class="hljs-string">&#x27;_&#x27;</span>)[-<span class="hljs-number">1</span>].replace(<span class="hljs-string">&#x27;.jpg&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>))<br>        <span class="hljs-keyword">except</span>:<br>            frame_num = i + <span class="hljs-number">1</span><br>        <br>        seek_time = time_map.get(frame_num, i * <span class="hljs-number">2.0</span>)<br>        start_s = <span class="hljs-built_in">round</span>(seek_time, <span class="hljs-number">2</span>)<br>        end_s = <span class="hljs-built_in">round</span>(seek_time + <span class="hljs-number">2.0</span>, <span class="hljs-number">2</span>)<br>        image_url = file_info.get(<span class="hljs-string">&#x27;url&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>)<br>        <br>        shots.append(&#123;<br>            <span class="hljs-string">&#x27;shot_no&#x27;</span>: i + <span class="hljs-number">1</span>,<br>            <span class="hljs-string">&#x27;start&#x27;</span>: start_s,<br>            <span class="hljs-string">&#x27;end&#x27;</span>: end_s,<br>            <span class="hljs-string">&#x27;duration&#x27;</span>: <span class="hljs-number">2.0</span>,<br>            <span class="hljs-string">&#x27;frame_number&#x27;</span>: frame_num,<br>            <span class="hljs-string">&#x27;filename&#x27;</span>: filename,<br>            <span class="hljs-string">&#x27;keyframe_url&#x27;</span>: image_url,<br>        &#125;)<br>        <br>        frame_lines_text.append(<br>            <span class="hljs-string">f&quot;分镜 <span class="hljs-subst">&#123;i+<span class="hljs-number">1</span>:02d&#125;</span> | 时间: <span class="hljs-subst">&#123;start_s&#125;</span>s - <span class="hljs-subst">&#123;end_s&#125;</span>s | <span class="hljs-subst">&#123;filename&#125;</span>&quot;</span><br>        )<br>        frame_lines_md.append(<br>            <span class="hljs-string">f&quot;### 分镜 <span class="hljs-subst">&#123;i+<span class="hljs-number">1</span>:02d&#125;</span>（<span class="hljs-subst">&#123;start_s&#125;</span>s - <span class="hljs-subst">&#123;end_s&#125;</span>s）\n&quot;</span><br>            <span class="hljs-string">f&quot;![<span class="hljs-subst">&#123;filename&#125;</span>](<span class="hljs-subst">&#123;image_url&#125;</span>)&quot;</span><br>        )<br>    <br>    <span class="hljs-keyword">return</span> &#123;<br>        <span class="hljs-string">&#x27;shots_json&#x27;</span>: json.dumps(shots, ensure_ascii=<span class="hljs-literal">False</span>, indent=<span class="hljs-number">2</span>),<br>        <span class="hljs-string">&#x27;frame_urls&#x27;</span>: <span class="hljs-string">&#x27;\n&#x27;</span>.join(frame_lines_text),<br>        <span class="hljs-string">&#x27;frames_md&#x27;</span>: <span class="hljs-string">&#x27;\n\n&#x27;</span>.join(frame_lines_md),<br>        <span class="hljs-string">&#x27;shot_count&#x27;</span>: <span class="hljs-built_in">len</span>(shots),<br>        <span class="hljs-string">&#x27;total_frames&#x27;</span>: <span class="hljs-built_in">len</span>(files) <span class="hljs-keyword">if</span> files <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>,<br>    &#125;<br></code></pre></td></tr></table></figure>
 
 <p><strong>输出变量声明</strong>：</p>
 <table>
@@ -285,10 +560,10 @@
 <h3 id="节点-4：生成分镜脚本（LLM）"><a href="#节点-4：生成分镜脚本（LLM）" class="headerlink" title="节点 4：生成分镜脚本（LLM）"></a>节点 4：生成分镜脚本（LLM）</h3><p><strong>节点类型</strong>：LLM</p>
 <p><strong>模型</strong>：通义千问（<code>qwen3.6-plus-2026-04-02</code>），temperature 0.3，开启视觉模式（vision: high）</p>
 <p><strong>System Prompt</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">你是&quot;视频反推分镜提示词 Agent&quot;，擅长把视频拆解为可复拍、可复用的广告/短视频分镜脚本。</span><br><span class="line"></span><br><span class="line">重要规则：</span><br><span class="line">1. 必须输出中文 Markdown。</span><br><span class="line">2. 每个分镜必须包含以下字段（缺一不可）：</span><br><span class="line">   分镜编号与标题（含精确时间）、分镜图片、画面主体、动作、环境、运镜、风格控制</span><br><span class="line">3. &quot;分镜图片&quot;字段：直接使用 &lt;分镜图片Markdown&gt; 中对应编号的完整图片标签，</span><br><span class="line">   格式为 ![分镜XX关键帧](https://...) ，原样复制，不要截断或修改 URL。</span><br><span class="line">4. 时间范围严格使用 JSON 中的 start/end，不可自行更改。</span><br><span class="line">5. 每个字段必须有具体描述，严禁只写&quot;无&quot;或&quot;暂无&quot;。</span><br><span class="line">6. 结尾附&quot;整体创作建议&quot;段落。</span><br></pre></td></tr></table></figure>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">你是<span class="hljs-string">&quot;视频反推分镜提示词 Agent&quot;</span>，擅长把视频拆解为可复拍、可复用的广告/短视频分镜脚本。<br><br>重要规则：<br><span class="hljs-number">1.</span> 必须输出中文 Markdown。<br><span class="hljs-number">2.</span> 每个分镜必须包含以下字段（缺一不可）：<br>   分镜编号与标题（含精确时间）、分镜图片、画面主体、动作、环境、运镜、风格控制<br><span class="hljs-number">3.</span> <span class="hljs-string">&quot;分镜图片&quot;</span>字段：直接使用 &lt;分镜图片Markdown&gt; 中对应编号的完整图片标签，<br>   格式为 ![分镜XX关键帧](<span class="hljs-keyword">https</span>://...) ，原样复制，不要截断或修改 <span class="hljs-built_in">URL</span>。<br><span class="hljs-number">4.</span> 时间范围严格使用 JSON 中的 <span class="hljs-built_in">start</span>/<span class="hljs-keyword">end</span>，不可自行更改。<br><span class="hljs-number">5.</span> 每个字段必须有具体描述，严禁只写<span class="hljs-string">&quot;无&quot;</span>或<span class="hljs-string">&quot;暂无&quot;</span>。<br><span class="hljs-number">6.</span> 结尾附<span class="hljs-string">&quot;整体创作建议&quot;</span>段落。<br></code></pre></td></tr></table></figure>
 
 <p><strong>User Prompt</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">请根据以下信息生成完整分镜脚本。</span><br><span class="line"></span><br><span class="line">&lt;产品或内容背景&gt;</span><br><span class="line">&#123;&#123;#start.product_context#&#125;&#125;</span><br><span class="line">&lt;/产品或内容背景&gt;</span><br><span class="line"></span><br><span class="line">&lt;用户风格偏好&gt;</span><br><span class="line">&#123;&#123;#start.style_hint#&#125;&#125;</span><br><span class="line">&lt;/用户风格偏好&gt;</span><br><span class="line"></span><br><span class="line">&lt;分镜数量&gt;</span><br><span class="line">共 &#123;&#123;#parse_result.shot_count#&#125;&#125; 个分镜</span><br><span class="line">&lt;/分镜数量&gt;</span><br><span class="line"></span><br><span class="line">&lt;ffmpeg分镜JSON（含时间轴）&gt;</span><br><span class="line">&#123;&#123;#parse_result.shots_json#&#125;&#125;</span><br><span class="line">&lt;/ffmpeg分镜JSON&gt;</span><br><span class="line"></span><br><span class="line">&lt;分镜时间轴清单&gt;</span><br><span class="line">&#123;&#123;#parse_result.frame_urls#&#125;&#125;</span><br><span class="line">&lt;/分镜时间轴清单&gt;</span><br><span class="line"></span><br><span class="line">&lt;分镜图片Markdown（每个分镜对应一张，原样复制到输出中）&gt;</span><br><span class="line">&#123;&#123;#parse_result.frames_md#&#125;&#125;</span><br><span class="line">&lt;/分镜图片Markdown&gt;</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">请严格按照以下格式输出：</span><br><span class="line"></span><br><span class="line"># 视频反推分镜脚本</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">## 分镜 01：场景标题 (0.0s - 2.0s)</span><br><span class="line"></span><br><span class="line">**分镜图片：**</span><br><span class="line">![分镜01关键帧](原样复制对应的完整URL)</span><br><span class="line"></span><br><span class="line">**画面主体：** 描述画面中心元素。</span><br><span class="line"></span><br><span class="line">**动作：** 描述人物/物体运动或变化。</span><br><span class="line"></span><br><span class="line">**环境：** 描述背景、光线、氛围。</span><br><span class="line"></span><br><span class="line">**运镜：** 如&quot;固定镜头&quot;、&quot;缓慢推进&quot;、&quot;Pan right&quot;等。</span><br><span class="line"></span><br><span class="line">**风格控制：** 3-5个关键词，如&quot;简洁、明亮、产品特写&quot;。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">（依次输出全部分镜，格式相同）</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">## 整体创作建议</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">请根据以下信息生成完整分镜脚本。</span><br><br><span class="hljs-string">&lt;产品或内容背景&gt;</span><br>&#123;&#123;<span class="hljs-comment">#start.product_context#&#125;&#125;</span><br><span class="hljs-string">&lt;/产品或内容背景&gt;</span><br><br><span class="hljs-string">&lt;用户风格偏好&gt;</span><br>&#123;&#123;<span class="hljs-comment">#start.style_hint#&#125;&#125;</span><br><span class="hljs-string">&lt;/用户风格偏好&gt;</span><br><br><span class="hljs-string">&lt;分镜数量&gt;</span><br><span class="hljs-string">共</span> &#123;&#123;<span class="hljs-comment">#parse_result.shot_count#&#125;&#125; 个分镜</span><br><span class="hljs-string">&lt;/分镜数量&gt;</span><br><br><span class="hljs-string">&lt;ffmpeg分镜JSON（含时间轴）&gt;</span><br>&#123;&#123;<span class="hljs-comment">#parse_result.shots_json#&#125;&#125;</span><br><span class="hljs-string">&lt;/ffmpeg分镜JSON&gt;</span><br><br><span class="hljs-string">&lt;分镜时间轴清单&gt;</span><br>&#123;&#123;<span class="hljs-comment">#parse_result.frame_urls#&#125;&#125;</span><br><span class="hljs-string">&lt;/分镜时间轴清单&gt;</span><br><br><span class="hljs-string">&lt;分镜图片Markdown（每个分镜对应一张，原样复制到输出中）&gt;</span><br>&#123;&#123;<span class="hljs-comment">#parse_result.frames_md#&#125;&#125;</span><br><span class="hljs-string">&lt;/分镜图片Markdown&gt;</span><br><br><span class="hljs-meta">---</span><br><span class="hljs-string">请严格按照以下格式输出：</span><br><br><span class="hljs-comment"># 视频反推分镜脚本</span><br><br><span class="hljs-meta">---</span><br><span class="hljs-meta"></span><br><span class="hljs-comment">## 分镜 01：场景标题 (0.0s - 2.0s)</span><br><br><span class="hljs-string">**分镜图片：**</span><br><span class="hljs-type">![</span><span class="hljs-string">分镜01关键帧</span>]<span class="hljs-string">(原样复制对应的完整URL)</span><br><br><span class="hljs-string">**画面主体：**</span> <span class="hljs-string">描述画面中心元素。</span><br><br><span class="hljs-string">**动作：**</span> <span class="hljs-string">描述人物/物体运动或变化。</span><br><br><span class="hljs-string">**环境：**</span> <span class="hljs-string">描述背景、光线、氛围。</span><br><br><span class="hljs-string">**运镜：**</span> <span class="hljs-string">如&quot;固定镜头&quot;、&quot;缓慢推进&quot;、&quot;Pan</span> <span class="hljs-string">right&quot;等。</span><br><br><span class="hljs-string">**风格控制：**</span> <span class="hljs-number">3</span><span class="hljs-number">-5</span><span class="hljs-string">个关键词，如&quot;简洁、明亮、产品特写&quot;。</span><br><br><span class="hljs-meta">---</span><br><span class="hljs-meta"></span><br><span class="hljs-string">（依次输出全部分镜，格式相同）</span><br><br><span class="hljs-meta">---</span><br><span class="hljs-meta"></span><br><span class="hljs-comment">## 整体创作建议</span><br></code></pre></td></tr></table></figure>
 
 <p><strong>输出</strong>：<code>text</code>（分镜脚本全文）</p>
 <hr>
@@ -296,13 +571,13 @@
 <p><strong>标题</strong>：HTTP 请求 3-获取 access-token</p>
 <p><strong>Method</strong>：<code>POST</code></p>
 <p><strong>URL</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://open.feishu.cn/open-apis/auth/v3/app_access_token/internal</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">https:<span class="hljs-regexp">//</span>open.feishu.cn<span class="hljs-regexp">/open-apis/</span>auth<span class="hljs-regexp">/v3/</span>app_access_token/internal<br></code></pre></td></tr></table></figure>
 
 <p><strong>Headers</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Content-Type: application/json; charset=utf-8</span><br></pre></td></tr></table></figure>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nix"><span class="hljs-params">Content-Type:</span> application<span class="hljs-symbol">/json</span>; <span class="hljs-attr">charset</span><span class="hljs-operator">=</span>utf-<span class="hljs-number">8</span><br></code></pre></td></tr></table></figure>
 
 <p><strong>Body（JSON）</strong>：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;app_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;你的App ID&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;app_secret&quot;</span><span class="punctuation">:</span> <span class="string">&quot;你的App Secret&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;app_id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;你的App ID&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;app_secret&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;你的App Secret&quot;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
 
 <blockquote>
 <p>⚠️ 将 <code>app_id</code> 和 <code>app_secret</code> 替换为飞书开放平台中你的应用凭证。建议将这两个值存入 Dify 的<strong>环境变量</strong>中，通过变量引用而不是硬编码。</p>
@@ -325,7 +600,7 @@
 </tr>
 </tbody></table>
 <p><strong>代码</strong>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">body: <span class="built_in">str</span></span>) -&gt; <span class="built_in">dict</span>:</span><br><span class="line">    data = json.loads(body)</span><br><span class="line">    token = data[<span class="string">&quot;tenant_access_token&quot;</span>]</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;access_token&quot;</span>: <span class="string">f&quot;Bearer <span class="subst">&#123;token&#125;</span>&quot;</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> json<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">body: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">dict</span>:<br>    data = json.loads(body)<br>    token = data[<span class="hljs-string">&quot;tenant_access_token&quot;</span>]<br>    <span class="hljs-keyword">return</span> &#123;<br>        <span class="hljs-string">&quot;access_token&quot;</span>: <span class="hljs-string">f&quot;Bearer <span class="hljs-subst">&#123;token&#125;</span>&quot;</span><br>    &#125;<br></code></pre></td></tr></table></figure>
 
 <blockquote>
 <p>注意：这里直接在代码里拼接 <code>Bearer </code> 前缀，后续 HTTP 节点 Header 中直接引用此变量，无需再手动拼接。</p>
@@ -348,7 +623,7 @@
 <p><strong>标题</strong>：HTTP 请求-创建表格</p>
 <p><strong>Method</strong>：<code>POST</code></p>
 <p><strong>URL</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://open.feishu.cn/open-apis/sheets/v3/spreadsheets</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">https:<span class="hljs-regexp">//</span>open.feishu.cn<span class="hljs-regexp">/open-apis/</span>sheets<span class="hljs-regexp">/v3/</span>spreadsheets<br></code></pre></td></tr></table></figure>
 
 <p><strong>Headers</strong>：</p>
 <table>
@@ -368,7 +643,7 @@
 </tr>
 </tbody></table>
 <p><strong>Body（JSON）</strong>：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;视频反推分镜脚本&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;title&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;视频反推分镜脚本&quot;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
 
 <p><strong>输出</strong>：<code>body</code>（包含新建表格的 <code>spreadsheet_token</code>）</p>
 <hr>
@@ -393,7 +668,7 @@
 </tr>
 </tbody></table>
 <p><strong>代码</strong>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">body: <span class="built_in">str</span>, access_token: <span class="built_in">str</span></span>) -&gt; <span class="built_in">dict</span>:</span><br><span class="line">    api_data = json.loads(body)</span><br><span class="line">    spreadsheet_token = api_data[<span class="string">&quot;data&quot;</span>][<span class="string">&quot;spreadsheet&quot;</span>][<span class="string">&quot;spreadsheet_token&quot;</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 调用 sheets/query 接口获取 sheet_id</span></span><br><span class="line">    url = <span class="string">f&quot;https://open.feishu.cn/open-apis/sheets/v3/spreadsheets/<span class="subst">&#123;spreadsheet_token&#125;</span>/sheets/query&quot;</span></span><br><span class="line">    resp = requests.get(url, headers=&#123;<span class="string">&quot;Authorization&quot;</span>: access_token&#125;)</span><br><span class="line">    meta = json.loads(resp.text)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> meta.get(<span class="string">&quot;code&quot;</span>) != <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception(<span class="string">f&quot;获取sheet_id失败: <span class="subst">&#123;meta&#125;</span>&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    sheet_id = meta[<span class="string">&quot;data&quot;</span>][<span class="string">&quot;sheets&quot;</span>][<span class="number">0</span>][<span class="string">&quot;sheet_id&quot;</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;spreadsheet_token&quot;</span>: spreadsheet_token,</span><br><span class="line">        <span class="string">&quot;sheet_id&quot;</span>: sheet_id,</span><br><span class="line">        <span class="string">&quot;debug&quot;</span>: sheet_id</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> json<br><span class="hljs-keyword">import</span> requests<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">body: <span class="hljs-built_in">str</span>, access_token: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">dict</span>:<br>    api_data = json.loads(body)<br>    spreadsheet_token = api_data[<span class="hljs-string">&quot;data&quot;</span>][<span class="hljs-string">&quot;spreadsheet&quot;</span>][<span class="hljs-string">&quot;spreadsheet_token&quot;</span>]<br>    <br>    <span class="hljs-comment"># 调用 sheets/query 接口获取 sheet_id</span><br>    url = <span class="hljs-string">f&quot;https://open.feishu.cn/open-apis/sheets/v3/spreadsheets/<span class="hljs-subst">&#123;spreadsheet_token&#125;</span>/sheets/query&quot;</span><br>    resp = requests.get(url, headers=&#123;<span class="hljs-string">&quot;Authorization&quot;</span>: access_token&#125;)<br>    meta = json.loads(resp.text)<br>    <br>    <span class="hljs-keyword">if</span> meta.get(<span class="hljs-string">&quot;code&quot;</span>) != <span class="hljs-number">0</span>:<br>        <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">f&quot;获取sheet_id失败: <span class="hljs-subst">&#123;meta&#125;</span>&quot;</span>)<br>    <br>    sheet_id = meta[<span class="hljs-string">&quot;data&quot;</span>][<span class="hljs-string">&quot;sheets&quot;</span>][<span class="hljs-number">0</span>][<span class="hljs-string">&quot;sheet_id&quot;</span>]<br>    <br>    <span class="hljs-keyword">return</span> &#123;<br>        <span class="hljs-string">&quot;spreadsheet_token&quot;</span>: spreadsheet_token,<br>        <span class="hljs-string">&quot;sheet_id&quot;</span>: sheet_id,<br>        <span class="hljs-string">&quot;debug&quot;</span>: sheet_id<br>    &#125;<br></code></pre></td></tr></table></figure>
 
 <p><strong>输出变量声明</strong>：</p>
 <table>
@@ -442,7 +717,7 @@
 </tr>
 </tbody></table>
 <p><strong>代码</strong>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json, re</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">llm_text: <span class="built_in">str</span>, sheet_id: <span class="built_in">str</span>, spreadsheet_token: <span class="built_in">str</span></span>) -&gt; <span class="built_in">dict</span>:</span><br><span class="line">    rows = [[<span class="string">&quot;分镜编号&quot;</span>, <span class="string">&quot;时间范围&quot;</span>, <span class="string">&quot;图片URL&quot;</span>, <span class="string">&quot;画面主体&quot;</span>, <span class="string">&quot;动作&quot;</span>, <span class="string">&quot;环境&quot;</span>, <span class="string">&quot;运镜&quot;</span>, <span class="string">&quot;风格控制&quot;</span>]]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 按分镜分割</span></span><br><span class="line">    shots_raw = re.split(<span class="string">r&quot;(?=## 分镜\s*\d+)&quot;</span>, llm_text)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> block <span class="keyword">in</span> shots_raw:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> block.strip().startswith(<span class="string">&quot;## 分镜&quot;</span>):</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 提取编号和时间范围</span></span><br><span class="line">        m = re.search(<span class="string">r&quot;## 分镜\s*(\d+)[：:](.*?)\((.+?)\)&quot;</span>, block)</span><br><span class="line">        num = <span class="string">f&quot;分镜<span class="subst">&#123;m.group(<span class="number">1</span>)&#125;</span>&quot;</span> <span class="keyword">if</span> m <span class="keyword">else</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        time_range = m.group(<span class="number">3</span>) <span class="keyword">if</span> m <span class="keyword">else</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 提取图片 URL（只保留 https:// 链接，丢弃 base64）</span></span><br><span class="line">        img_m = re.search(<span class="string">r&quot;!\[.*?\]\((https://[^\)]+)\)&quot;</span>, block)</span><br><span class="line">        img_url = img_m.group(<span class="number">1</span>) <span class="keyword">if</span> img_m <span class="keyword">else</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 提取各文字字段</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">get_field</span>(<span class="params">field</span>):</span><br><span class="line">            fm = re.search(<span class="string">rf&quot;\*\*<span class="subst">&#123;field&#125;</span>[：:]\*\*\s*(.+)&quot;</span>, block)</span><br><span class="line">            <span class="keyword">return</span> fm.group(<span class="number">1</span>).strip() <span class="keyword">if</span> fm <span class="keyword">else</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        </span><br><span class="line">        rows.append([</span><br><span class="line">            num, time_range, img_url,</span><br><span class="line">            get_field(<span class="string">&quot;画面主体&quot;</span>),</span><br><span class="line">            get_field(<span class="string">&quot;动作&quot;</span>),</span><br><span class="line">            get_field(<span class="string">&quot;环境&quot;</span>),</span><br><span class="line">            get_field(<span class="string">&quot;运镜&quot;</span>),</span><br><span class="line">            get_field(<span class="string">&quot;风格控制&quot;</span>),</span><br><span class="line">        ])</span><br><span class="line">    </span><br><span class="line">    end_row = <span class="built_in">len</span>(rows)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 注意：飞书 v2 API 使用驼峰命名 valueRanges（不是 value_ranges）</span></span><br><span class="line">    body = json.dumps(&#123;</span><br><span class="line">        <span class="string">&quot;valueRanges&quot;</span>: [&#123;</span><br><span class="line">            <span class="string">&quot;range&quot;</span>: <span class="string">f&quot;<span class="subst">&#123;sheet_id&#125;</span>!A1:H<span class="subst">&#123;end_row&#125;</span>&quot;</span>,</span><br><span class="line">            <span class="string">&quot;values&quot;</span>: rows</span><br><span class="line">        &#125;]</span><br><span class="line">    &#125;, ensure_ascii=<span class="literal">False</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;body&quot;</span>: body,</span><br><span class="line">        <span class="string">&quot;debug&quot;</span>: <span class="string">f&quot;共<span class="subst">&#123;end_row-<span class="number">1</span>&#125;</span>个分镜&quot;</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> json, re<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">llm_text: <span class="hljs-built_in">str</span>, sheet_id: <span class="hljs-built_in">str</span>, spreadsheet_token: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">dict</span>:<br>    rows = [[<span class="hljs-string">&quot;分镜编号&quot;</span>, <span class="hljs-string">&quot;时间范围&quot;</span>, <span class="hljs-string">&quot;图片URL&quot;</span>, <span class="hljs-string">&quot;画面主体&quot;</span>, <span class="hljs-string">&quot;动作&quot;</span>, <span class="hljs-string">&quot;环境&quot;</span>, <span class="hljs-string">&quot;运镜&quot;</span>, <span class="hljs-string">&quot;风格控制&quot;</span>]]<br>    <br>    <span class="hljs-comment"># 按分镜分割</span><br>    shots_raw = re.split(<span class="hljs-string">r&quot;(?=## 分镜\s*\d+)&quot;</span>, llm_text)<br>    <br>    <span class="hljs-keyword">for</span> block <span class="hljs-keyword">in</span> shots_raw:<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> block.strip().startswith(<span class="hljs-string">&quot;## 分镜&quot;</span>):<br>            <span class="hljs-keyword">continue</span><br>        <br>        <span class="hljs-comment"># 提取编号和时间范围</span><br>        m = re.search(<span class="hljs-string">r&quot;## 分镜\s*(\d+)[：:](.*?)\((.+?)\)&quot;</span>, block)<br>        num = <span class="hljs-string">f&quot;分镜<span class="hljs-subst">&#123;m.group(<span class="hljs-number">1</span>)&#125;</span>&quot;</span> <span class="hljs-keyword">if</span> m <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;&quot;</span><br>        time_range = m.group(<span class="hljs-number">3</span>) <span class="hljs-keyword">if</span> m <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;&quot;</span><br>        <br>        <span class="hljs-comment"># 提取图片 URL（只保留 https:// 链接，丢弃 base64）</span><br>        img_m = re.search(<span class="hljs-string">r&quot;!\[.*?\]\((https://[^\)]+)\)&quot;</span>, block)<br>        img_url = img_m.group(<span class="hljs-number">1</span>) <span class="hljs-keyword">if</span> img_m <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;&quot;</span><br>        <br>        <span class="hljs-comment"># 提取各文字字段</span><br>        <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_field</span>(<span class="hljs-params">field</span>):<br>            fm = re.search(<span class="hljs-string">rf&quot;\*\*<span class="hljs-subst">&#123;field&#125;</span>[：:]\*\*\s*(.+)&quot;</span>, block)<br>            <span class="hljs-keyword">return</span> fm.group(<span class="hljs-number">1</span>).strip() <span class="hljs-keyword">if</span> fm <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;&quot;</span><br>        <br>        rows.append([<br>            num, time_range, img_url,<br>            get_field(<span class="hljs-string">&quot;画面主体&quot;</span>),<br>            get_field(<span class="hljs-string">&quot;动作&quot;</span>),<br>            get_field(<span class="hljs-string">&quot;环境&quot;</span>),<br>            get_field(<span class="hljs-string">&quot;运镜&quot;</span>),<br>            get_field(<span class="hljs-string">&quot;风格控制&quot;</span>),<br>        ])<br>    <br>    end_row = <span class="hljs-built_in">len</span>(rows)<br>    <br>    <span class="hljs-comment"># 注意：飞书 v2 API 使用驼峰命名 valueRanges（不是 value_ranges）</span><br>    body = json.dumps(&#123;<br>        <span class="hljs-string">&quot;valueRanges&quot;</span>: [&#123;<br>            <span class="hljs-string">&quot;range&quot;</span>: <span class="hljs-string">f&quot;<span class="hljs-subst">&#123;sheet_id&#125;</span>!A1:H<span class="hljs-subst">&#123;end_row&#125;</span>&quot;</span>,<br>            <span class="hljs-string">&quot;values&quot;</span>: rows<br>        &#125;]<br>    &#125;, ensure_ascii=<span class="hljs-literal">False</span>)<br>    <br>    <span class="hljs-keyword">return</span> &#123;<br>        <span class="hljs-string">&quot;body&quot;</span>: body,<br>        <span class="hljs-string">&quot;debug&quot;</span>: <span class="hljs-string">f&quot;共<span class="hljs-subst">&#123;end_row-<span class="hljs-number">1</span>&#125;</span>个分镜&quot;</span><br>    &#125;<br></code></pre></td></tr></table></figure>
 
 <p><strong>输出变量声明</strong>：</p>
 <table>
@@ -467,7 +742,7 @@
 <p><strong>Method</strong>：<code>POST</code></p>
 <p><strong>URL</strong>：</p>
 <p>在 URL 输入框中，依次输入以下内容（<code>spreadsheet_token</code> 部分通过变量选择器插入）：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://open.feishu.cn/open-apis/sheets/v2/spreadsheets/&#123;spreadsheet_token&#125;/values_batch_update</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">https:<span class="hljs-regexp">//</span>open.feishu.cn<span class="hljs-regexp">/open-apis/</span>sheets<span class="hljs-regexp">/v2/</span>spreadsheets<span class="hljs-regexp">/&#123;spreadsheet_token&#125;/</span>values_batch_update<br></code></pre></td></tr></table></figure>
 
 <p>其中 <code>&#123;spreadsheet_token&#125;</code> 引用变量：<code>代码执行-取sheetid.spreadsheet_token</code></p>
 <p><strong>Headers</strong>：</p>
@@ -522,7 +797,7 @@
 </tbody></table>
 <hr>
 <h2 id="4-节点连线顺序"><a href="#4-节点连线顺序" class="headerlink" title="4. 节点连线顺序"></a>4. 节点连线顺序</h2><p>按以下顺序连接节点（从左到右）：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">开始</span><br><span class="line">  → 提取视频关键帧</span><br><span class="line">  → 解析并内嵌图片</span><br><span class="line">  → 生成分镜脚本</span><br><span class="line">  → HTTP请求3-获取access-token</span><br><span class="line">  → 代码执行-提取body</span><br><span class="line">  → HTTP请求-创建表格</span><br><span class="line">  → 代码执行-取sheetid</span><br><span class="line">  → 代码执行-拼接body</span><br><span class="line">  → HTTP请求2-写入内容</span><br><span class="line">  → 结束</span><br></pre></td></tr></table></figure>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs ada">开始<br>  → 提取视频关键帧<br>  → 解析并内嵌图片<br>  → 生成分镜脚本<br>  → HTTP请求<span class="hljs-number">3</span>-获取<span class="hljs-keyword">access</span>-token<br>  → 代码执行-提取<span class="hljs-keyword">body</span><br>  → HTTP请求-创建表格<br>  → 代码执行-取sheetid<br>  → 代码执行-拼接<span class="hljs-keyword">body</span><br>  → HTTP请求<span class="hljs-number">2</span>-写入内容<br>  → 结束<br></code></pre></td></tr></table></figure>
 
 <hr>
 <h2 id="5-常见报错与解决方法"><a href="#5-常见报错与解决方法" class="headerlink" title="5. 常见报错与解决方法"></a>5. 常见报错与解决方法</h2><h3 id="Missing-access-token-for-authorization"><a href="#Missing-access-token-for-authorization" class="headerlink" title="Missing access token for authorization"></a><code>Missing access token for authorization</code></h3><p><strong>原因</strong>：Authorization Header 中的 token 未正确传入。</p>
@@ -602,150 +877,420 @@
 </tr>
 </tbody></table>
 <p>每次运行会新建一张表格，不会覆盖历史记录。表格链接格式为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://你的飞书域名.feishu.cn/sheets/&#123;spreadsheet_token&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">https:<span class="hljs-regexp">//</span>你的飞书域名.feishu.cn<span class="hljs-regexp">/sheets/</span>&#123;spreadsheet_token&#125;<br></code></pre></td></tr></table></figure>
 
 <p>可在工作流结束节点的输出中或飞书云盘中找到。</p>
 
-        </div>
-        
-        <div class="tags">
+                
+              </div>
             
-            <a href="/tags/dify/">dify</a>
-            
-            <a href="/tags/%E9%A3%9E%E4%B9%A6%E8%A1%A8%E6%A0%BC/">飞书表格</a>
-            
-        </div>
-        
-        
-        <div class="post-nav">
-            
-            <a class="pre" href="/2026/06/16/Claude-Code-CC-Switch-%E6%8E%A5%E5%85%A5%E5%9B%BD%E4%BA%A7%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/">
-                <i class="icon-previous">Claude Code + CC Switch 接入国产大模型完整教程</i>
-            </a>
-            
-            
-            <a class="next" href="/2026/03/26/msjs/">
-                <i class="icon-next">msjs</i>
-            </a>
-            
-        </div>
-        
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/dify/" class="print-no-link">#dify</a>
+      
+        <a href="/tags/%E9%A3%9E%E4%B9%A6%E8%A1%A8%E6%A0%BC/" class="print-no-link">#飞书表格</a>
+      
     </div>
+  
 </div>
 
 
-                </div>
-                <div class="col-md-4 hidden-xs">
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书）</div>
+      <div>http://example.com/2026/06/07/视频反推分镜提示词-Agent-—-完整搭建教程/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Lazy Cat</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年6月7日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
                     
-<div class="sidebar">
-    <div class="well">
-        <h2>标签云</h2>
-        <a href="/tags/dify/" style="font-size: 15px;">dify</a> <a href="/tags/css/" style="font-size: 15px;">css</a> <a href="/tags/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" style="font-size: 15px;">构造函数</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1/" style="font-size: 15px;">原型对象</a> <a href="/tags/ffmpeg/" style="font-size: 15px;">ffmpeg</a> <a href="/tags/%E9%A3%9E%E4%B9%A6/" style="font-size: 15px;">飞书</a> <a href="/tags/%E9%A3%9E%E4%B9%A6%E8%A1%A8%E6%A0%BC/" style="font-size: 15px;">飞书表格</a>
-    </div>
-</div>
-
-<div class="sidebar">
-    <div class="well">
-        <h2>归档</h2>
-        <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/06/">2026年06月</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">2026年03月</a><span class="archive-list-count">6</span></li></ul>
-    </div>
-</div>
-
-<div class="sidebar ">
-    <div class="well">
-        <h2>最新文章</h2>
-        <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/06/16/%E4%B8%80%E6%AD%A5%E6%AD%A5%E6%95%99%E4%BD%A0%E6%9E%84%E5%BB%BADify%E8%A7%86%E9%A2%91%E5%88%86%E9%95%9CAgent/">一步步教你构建Dify视频分镜Agent</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/16/Claude-Code-CC-Switch-%E6%8E%A5%E5%85%A5%E5%9B%BD%E4%BA%A7%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/">Claude Code + CC Switch 接入国产大模型完整教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/07/%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8%E5%88%86%E9%95%9C%E6%8F%90%E7%A4%BA%E8%AF%8D-Agent-%E2%80%94-%E5%AE%8C%E6%95%B4%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/">从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书）</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/26/msjs/">msjs</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/26/mscss/">mscss</a></li></ul>
-    </div>
-</div>
-
-<div class="sidebar">
-    <div class="well">
-        <h2>友情链接</h2>
-        <ul>
-            
-            <li><a class="links-list-link" href="http://www.howardliu.com/" title="沉潜飞动" target='_blank'>沉潜飞动</a></li>
-            
-        </ul>
-    </div>
-</div>
-
+                    
+                      <a href="/2026/06/16/Claude-Code-CC-Switch-%E6%8E%A5%E5%85%A5%E5%9B%BD%E4%BA%A7%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/" title="Claude Code + CC Switch 接入国产大模型完整教程">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Claude Code + CC Switch 接入国产大模型完整教程</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/03/26/msjs/" title="msjs">
+                        <span class="hidden-mobile">msjs</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
                 </div>
+              
             </div>
-        </div>
-    </div>
-    <div class="side-button-wrap">
-        <a id="to-top" class="side-button icon-up-arrow" href="#top"></a>
-        <a id="to-home" class="side-button icon-home" href="/."></a>
-        <a id="to-comment-button" class="side-button icon-msg" href="#comment"></a>
-        <a id="to-bottom-button" class="side-button icon-down-arrow" href="#bottom"></a>
-    </div>
-    <a id="bottom" name="bottom"></a>
-    <footer id="footer" class="footer-distributed" style="background-color: #222222;">
-    <div class="container">
-        <div class="footer">
-            <p>Lazy Cat &copy; 2026</p>
-            <ul class="social-media">
-                
-                
-                <li>
-                    <a title="hexo-theme-clean-dark" href="https://github.com/howardliu-cn/hexo-theme-clean-dark"
-                       target="_blank">
-                        <i class="fa fa-film fa-2x"></i>
-                    </a>
-                </li>
-                
-            </ul>
-        </div>
-    </div>
-</footer>
 
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
 </div>
 
-<script src="//cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
 
 
-<script src="//cdn.staticfile.org/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  </aside>
 
 
-<script src="//cdn.staticfile.org/highlight.js/9.1.0/highlight.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad();</script>
-
-<script src="/js/header.js"></script>
+    </div>
+  </div>
+</div>
 
 
-<script src="/js/toc.js"></script>
 
-<!--[if lt IE 9]>
 
-<script src="//cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
 
-![endif]-->
-<!--fancybox-->
+  
 
-<script src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
-<script src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-<link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
 <script>
-    $(document).ready(function () {
-        $("img").each(function (index, item) {
-            var p = $(item).parents()[0];
-            if($(p).is('a')) {
-                $(p).fancybox();
-                return;
-            }
-            $(p).append(function() {return "<a id='fancybox_id_"+index+"' href='" + $(item).attr("src") + "'></a>";});
-            item.remove();
-            var fancyboxItem = $("#fancybox_id_" + index);
-            fancyboxItem.append($(item));
-            fancyboxItem.fancybox();
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
         });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
     });
+  });
 </script>
 
-<!--baidu auto-push-->
 
-<!--google analytics-->
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
 
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

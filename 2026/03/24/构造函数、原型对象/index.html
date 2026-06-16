@@ -1,14 +1,25 @@
-<!DOCTYPE html>
-<html lang='zh-CN'>
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-<meta name="renderer" content="webkit">
-<meta http-equiv="Cache-Control" content="no-siteapp"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>构造函数、原型对象||Lazy Cat&#39;s Blog|ai全栈笔记 &amp; 技术分享</title>
-<meta name="description" content="好的，我来把这两个文件（HTML 和 myjquery.js）的所有知识点进行系统整理：  完整知识点整理一、构造函数与原型对象1. 构造函数的基本使用123456function CreateStudent(name, age) &amp;#123;  this.name &#x3D; name;  this.age &#x3D; age;&amp;#125;var studentA &#x3D; new CreateStudent(&amp;#x">
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Lazy Cat">
+  <meta name="keywords" content="前端,JavaScript,CSS,HTML">
+  
+    <meta name="description" content="好的，我来把这两个文件（HTML 和 myjquery.js）的所有知识点进行系统整理：  完整知识点整理一、构造函数与原型对象1. 构造函数的基本使用123456function CreateStudent(name, age) &amp;#123;  this.name &#x3D; name;  this.age &#x3D; age;&amp;#125;var studentA &#x3D; new CreateStudent(&amp;#x">
 <meta property="og:type" content="article">
 <meta property="og:title" content="构造函数、原型对象">
 <meta property="og:url" content="http://example.com/2026/03/24/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1/index.html">
@@ -20,88 +31,360 @@
 <meta property="article:author" content="Lazy Cat">
 <meta property="article:tag" content="构造函数">
 <meta property="article:tag" content="原型对象">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>构造函数、原型对象 - Lazy Cat&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
-<meta name="description" content="好的，我来把这两个文件（HTML 和 myjquery.js）的所有知识点进行系统整理：
 
-完整知识点整理一、构造函数与原型对象1. 构造函数的基本使用123456function CreateStudent(name, age) &amp;amp;#123;  this.name = name;  this.ag">
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-<meta name="author" content="Lazy Cat,undefined">
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
 
-
-<link rel="shortcut icon" href="/favicon.png" type="image/x-icon"/>
-<link rel="icon" href="/favicon.png">
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
 
 
-<link rel="stylesheet" href="//cdn.staticfile.org/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
 
 
-<link rel="stylesheet" href="/css/theme.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
 
 
-<link rel="stylesheet" href="/css/syntax.css">
+<link  rel="stylesheet" href="/css/main.css" />
 
 
-<link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
 
 
-<link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/9.1.0/styles/arta.min.css">
 
-<!--baidu analytics-->
 
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
 <meta name="generator" content="Hexo 6.3.0"></head>
+
+
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            
-            <a class="navbar-brand" href="/.">Lazy Cat&#39;s Blog</a>
-        </div>
-        <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                
-                <li><a href="/." class="current"><i class="icon-home"> 首页</i></a></li>
-                
-                <li><a href="/archives/"><i class="icon-archive"> 归档</i></a></li>
-                
-                <li><a href="/atom.xml"><i class="icon-rss"> 订阅</i></a></li>
-                
-                <li><a href="/about/"><i class="icon-about"> 关于</i></a></li>
-                
-            </ul>
-        </div>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Lazy Cat&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
     </div>
+  </div>
 </nav>
-<div class="wrapper">
-    <div class="content">
-        <div class="container container-center">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="article">
-    <div class="well">
-        <h1><a href="/2026/03/24/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1/">构造函数、原型对象</a></h1>
-        <div class="post-meta">
-            <div class="post-time">
-                <i class="fa fa-calendar"></i><time> 2026-03-24</time>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
             </div>
-            <div class="post-visitors-count">
-                <i class="fa fa-ge"></i>
-                <span id="/2026/03/24/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1/" class="leancloud_visitors" data-flag-title="构造函数、原型对象">
-                    <span class="post-meta-item-text">阅读量 </span>
-                    <i class="leancloud-visitors-count">0</i>
-                </span>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
             </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="构造函数、原型对象"></span>
+          
         </div>
-        <div class="post-content article-entry">
-            <p>好的，我来把这两个文件（HTML 和 myjquery.js）的所有知识点进行系统整理：</p>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-03-24 21:02" pubdate>
+          2026年3月24日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          29 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">构造函数、原型对象</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>好的，我来把这两个文件（HTML 和 myjquery.js）的所有知识点进行系统整理：</p>
 <hr>
-<h2 id="完整知识点整理"><a href="#完整知识点整理" class="headerlink" title="完整知识点整理"></a>完整知识点整理</h2><h3 id="一、构造函数与原型对象"><a href="#一、构造函数与原型对象" class="headerlink" title="一、构造函数与原型对象"></a>一、构造函数与原型对象</h3><h4 id="1-构造函数的基本使用"><a href="#1-构造函数的基本使用" class="headerlink" title="1. 构造函数的基本使用"></a>1. 构造函数的基本使用</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">CreateStudent</span>(<span class="params">name, age</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">age</span> = age;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> studentA = <span class="keyword">new</span> <span class="title class_">CreateStudent</span>(<span class="string">&#x27;yan&#x27;</span>, <span class="string">&#x27;18&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="完整知识点整理"><a href="#完整知识点整理" class="headerlink" title="完整知识点整理"></a>完整知识点整理</h2><h3 id="一、构造函数与原型对象"><a href="#一、构造函数与原型对象" class="headerlink" title="一、构造函数与原型对象"></a>一、构造函数与原型对象</h3><h4 id="1-构造函数的基本使用"><a href="#1-构造函数的基本使用" class="headerlink" title="1. 构造函数的基本使用"></a>1. 构造函数的基本使用</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">CreateStudent</span>(<span class="hljs-params">name, age</span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = name;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">age</span> = age;<br>&#125;<br><br><span class="hljs-keyword">var</span> studentA = <span class="hljs-keyword">new</span> <span class="hljs-title class_">CreateStudent</span>(<span class="hljs-string">&#x27;yan&#x27;</span>, <span class="hljs-string">&#x27;18&#x27;</span>);<br></code></pre></td></tr></table></figure>
 
 <h4 id="2-new-关键字执行过程（4步）"><a href="#2-new-关键字执行过程（4步）" class="headerlink" title="2. new 关键字执行过程（4步）"></a>2. new 关键字执行过程（4步）</h4><table>
 <thead>
@@ -127,10 +410,10 @@
 <td>返回这个新对象（如果没有显式 return 其他对象）</td>
 </tr>
 </tbody></table>
-<h4 id="3-原型链三要素"><a href="#3-原型链三要素" class="headerlink" title="3. 原型链三要素"></a>3. 原型链三要素</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">CreateStudent</span>.<span class="property"><span class="keyword">prototype</span></span>           <span class="comment">// 构造函数的原型对象</span></span><br><span class="line">studentA.<span class="property">__proto__</span>                <span class="comment">// 实例对象的隐式原型，指向构造函数的原型对象</span></span><br><span class="line"><span class="title class_">CreateStudent</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">constructor</span>  <span class="comment">// 指向构造函数本身</span></span><br></pre></td></tr></table></figure>
+<h4 id="3-原型链三要素"><a href="#3-原型链三要素" class="headerlink" title="3. 原型链三要素"></a>3. 原型链三要素</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title class_">CreateStudent</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>           <span class="hljs-comment">// 构造函数的原型对象</span><br>studentA.<span class="hljs-property">__proto__</span>                <span class="hljs-comment">// 实例对象的隐式原型，指向构造函数的原型对象</span><br><span class="hljs-title class_">CreateStudent</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">constructor</span>  <span class="hljs-comment">// 指向构造函数本身</span><br></code></pre></td></tr></table></figure>
 
 <p><strong>关系图：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">构造函数 CreateStudent</span><br><span class="line">    ↓ (prototype属性)</span><br><span class="line">原型对象 CreateStudent.prototype ← 实例对象 studentA 的 __proto__</span><br><span class="line">    ↑ (constructor属性)</span><br><span class="line">    └── 指向 CreateStudent</span><br></pre></td></tr></table></figure>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs delphi">构造函数 CreateStudent<br>    ↓ (prototype属性)<br>原型对象 CreateStudent.prototype ← 实例对象 studentA 的 __proto__<br>    ↑ (<span class="hljs-function"><span class="hljs-keyword">constructor</span>属性)</span><br><span class="hljs-function">    └── 指向 <span class="hljs-title">CreateStudent</span></span><br></code></pre></td></tr></table></figure>
 
 <hr>
 <h3 id="二、改变-this-指向的三种方法"><a href="#二、改变-this-指向的三种方法" class="headerlink" title="二、改变 this 指向的三种方法"></a>二、改变 this 指向的三种方法</h3><h4 id="1-call、apply、bind-对比"><a href="#1-call、apply、bind-对比" class="headerlink" title="1. call、apply、bind 对比"></a>1. call、apply、bind 对比</h4><table>
@@ -166,18 +449,18 @@
 </tr>
 </tbody></table>
 <h4 id="2-实际应用示例"><a href="#2-实际应用示例" class="headerlink" title="2. 实际应用示例"></a>2. 实际应用示例</h4><p><strong>求数组最大值：</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">656</span>, <span class="number">7</span>];</span><br><span class="line"><span class="keyword">var</span> max = <span class="title class_">Math</span>.<span class="property">max</span>.<span class="title function_">apply</span>(<span class="title class_">Math</span>, arr);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(max); <span class="comment">// 656</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">656</span>, <span class="hljs-number">7</span>];<br><span class="hljs-keyword">var</span> max = <span class="hljs-title class_">Math</span>.<span class="hljs-property">max</span>.<span class="hljs-title function_">apply</span>(<span class="hljs-title class_">Math</span>, arr);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(max); <span class="hljs-comment">// 656</span><br></code></pre></td></tr></table></figure>
 
 <p><strong>bind 返回值：</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> result = person.<span class="property">say</span>.<span class="title function_">bind</span>(person1)();</span><br><span class="line"><span class="comment">// 返回 person.say 函数执行后的返回值</span></span><br><span class="line"><span class="comment">// 如果没有显式 return，则返回 undefined</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> result = person.<span class="hljs-property">say</span>.<span class="hljs-title function_">bind</span>(person1)();<br><span class="hljs-comment">// 返回 person.say 函数执行后的返回值</span><br><span class="hljs-comment">// 如果没有显式 return，则返回 undefined</span><br></code></pre></td></tr></table></figure>
 
 <hr>
-<h3 id="三、jQuery-插件开发模式"><a href="#三、jQuery-插件开发模式" class="headerlink" title="三、jQuery 插件开发模式"></a>三、jQuery 插件开发模式</h3><h4 id="1-完整插件代码"><a href="#1-完整插件代码" class="headerlink" title="1. 完整插件代码"></a>1. 完整插件代码</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 IIFE 创建独立作用域</span></span><br><span class="line">(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 1. 构造函数 - 存储 DOM 元素</span></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">jQuery</span>(<span class="params">selector</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">selector</span> = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(selector);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 2. 原型对象 - 存放公共方法</span></span><br><span class="line">  jQuery.<span class="property"><span class="keyword">prototype</span></span> = &#123;</span><br><span class="line">    <span class="attr">click</span>: <span class="keyword">function</span> (<span class="params">fun</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">selector</span>.<span class="property">onclick</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="title function_">fun</span>();</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 3. 暴露工厂函数到全局</span></span><br><span class="line">  <span class="variable language_">window</span>.<span class="property">myjQuery</span> = <span class="keyword">function</span> (<span class="params">selector</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title function_">jQuery</span>(selector);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<h3 id="三、jQuery-插件开发模式"><a href="#三、jQuery-插件开发模式" class="headerlink" title="三、jQuery 插件开发模式"></a>三、jQuery 插件开发模式</h3><h4 id="1-完整插件代码"><a href="#1-完整插件代码" class="headerlink" title="1. 完整插件代码"></a>1. 完整插件代码</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 使用 IIFE 创建独立作用域</span><br>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-comment">// 1. 构造函数 - 存储 DOM 元素</span><br>  <span class="hljs-keyword">function</span> <span class="hljs-title function_">jQuery</span>(<span class="hljs-params">selector</span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">selector</span> = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(selector);<br>  &#125;<br><br>  <span class="hljs-comment">// 2. 原型对象 - 存放公共方法</span><br>  jQuery.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = &#123;<br>    <span class="hljs-attr">click</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">fun</span>) &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">selector</span>.<span class="hljs-property">onclick</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-title function_">fun</span>();<br>      &#125;;<br>    &#125;<br>  &#125;;<br><br>  <span class="hljs-comment">// 3. 暴露工厂函数到全局</span><br>  <span class="hljs-variable language_">window</span>.<span class="hljs-property">myjQuery</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">selector</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title function_">jQuery</span>(selector);<br>  &#125;;<br>&#125;)();<br></code></pre></td></tr></table></figure>
 
-<h4 id="2-使用方式"><a href="#2-使用方式" class="headerlink" title="2. 使用方式"></a>2. 使用方式</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">myjQuery</span>(<span class="string">&#x27;.btn&#x27;</span>).<span class="title function_">click</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;点击了按钮&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="2-使用方式"><a href="#2-使用方式" class="headerlink" title="2. 使用方式"></a>2. 使用方式</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title function_">myjQuery</span>(<span class="hljs-string">&#x27;.btn&#x27;</span>).<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;点击了按钮&#x27;</span>);<br>&#125;);<br></code></pre></td></tr></table></figure>
 
 <hr>
-<h3 id="四、IIFE（立即执行函数表达式）详解"><a href="#四、IIFE（立即执行函数表达式）详解" class="headerlink" title="四、IIFE（立即执行函数表达式）详解"></a>四、IIFE（立即执行函数表达式）详解</h3><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 代码块</span></span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<h3 id="四、IIFE（立即执行函数表达式）详解"><a href="#四、IIFE（立即执行函数表达式）详解" class="headerlink" title="四、IIFE（立即执行函数表达式）详解"></a>四、IIFE（立即执行函数表达式）详解</h3><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript">(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-comment">// 代码块</span><br>&#125;)();<br></code></pre></td></tr></table></figure>
 
 <h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><table>
 <thead>
@@ -209,7 +492,7 @@
 <li>只暴露必要的 API（<code>window.myjQuery</code>）</li>
 </ul>
 <hr>
-<h3 id="五、插件开发的核心设计模式"><a href="#五、插件开发的核心设计模式" class="headerlink" title="五、插件开发的核心设计模式"></a>五、插件开发的核心设计模式</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────┐</span><br><span class="line">│           IIFE 隔离作用域                 │</span><br><span class="line">│  ┌─────────────────────────────────────┐│</span><br><span class="line">│  │  构造函数（存储 DOM 元素）            ││</span><br><span class="line">│  │  function jQuery(selector) &#123;        ││</span><br><span class="line">│  │    this.selector = 获取DOM元素       ││</span><br><span class="line">│  │  &#125;                                  ││</span><br><span class="line">│  └─────────────────────────────────────┘│</span><br><span class="line">│                    ↓                     │</span><br><span class="line">│  ┌─────────────────────────────────────┐│</span><br><span class="line">│  │  原型对象（存放公共方法）             ││</span><br><span class="line">│  │  jQuery.prototype = &#123;               ││</span><br><span class="line">│  │    click: function() &#123;...&#125;,         ││</span><br><span class="line">│  │    find: function() &#123;...&#125;           ││</span><br><span class="line">│  │  &#125;                                  ││</span><br><span class="line">│  └─────────────────────────────────────┘│</span><br><span class="line">│                    ↓                     │</span><br><span class="line">│  ┌─────────────────────────────────────┐│</span><br><span class="line">│  │  暴露到全局（唯一入口）               ││</span><br><span class="line">│  │  window.myjQuery = function() &#123;     ││</span><br><span class="line">│  │    return new jQuery(...)           ││</span><br><span class="line">│  │  &#125;                                  ││</span><br><span class="line">│  └─────────────────────────────────────┘│</span><br><span class="line">└─────────────────────────────────────────┘</span><br><span class="line">              ↓</span><br><span class="line">         外部调用使用</span><br></pre></td></tr></table></figure>
+<h3 id="五、插件开发的核心设计模式"><a href="#五、插件开发的核心设计模式" class="headerlink" title="五、插件开发的核心设计模式"></a>五、插件开发的核心设计模式</h3><figure class="highlight nim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs nim">┌─────────────────────────────────────────┐<br>│           <span class="hljs-type">IIFE</span> 隔离作用域                 │<br>│  ┌─────────────────────────────────────┐│<br>│  │  构造函数（存储 <span class="hljs-type">DOM</span> 元素）            ││<br>│  │  function jQuery(selector) &#123;        ││<br>│  │    this.selector = 获取<span class="hljs-type">DOM</span>元素       ││<br>│  │  &#125;                                  ││<br>│  └─────────────────────────────────────┘│<br>│                    ↓                     │<br>│  ┌─────────────────────────────────────┐│<br>│  │  原型对象（存放公共方法）             ││<br>│  │  jQuery.prototype = &#123;               ││<br>│  │    click: function() <span class="hljs-meta">&#123;...&#125;</span>,         ││<br>│  │    find: function() <span class="hljs-meta">&#123;...&#125;</span>           ││<br>│  │  &#125;                                  ││<br>│  └─────────────────────────────────────┘│<br>│                    ↓                     │<br>│  ┌─────────────────────────────────────┐│<br>│  │  暴露到全局（唯一入口）               ││<br>│  │  window.myjQuery = function() &#123;     ││<br>│  │    <span class="hljs-keyword">return</span> new jQuery(...)           ││<br>│  │  &#125;                                  ││<br>│  └─────────────────────────────────────┘│<br>└─────────────────────────────────────────┘<br>              ↓<br>         外部调用使用<br></code></pre></td></tr></table></figure>
 
 <hr>
 <h3 id="六、知识点总结表"><a href="#六、知识点总结表" class="headerlink" title="六、知识点总结表"></a>六、知识点总结表</h3><table>
@@ -252,7 +535,7 @@
 </tr>
 </tbody></table>
 <hr>
-<h3 id="七、改进建议（支持链式调用和多元素）"><a href="#七、改进建议（支持链式调用和多元素）" class="headerlink" title="七、改进建议（支持链式调用和多元素）"></a>七、改进建议（支持链式调用和多元素）</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 构造函数 - 支持多个元素</span></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">jQuery</span>(<span class="params">selector</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">elements</span> = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(selector);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 原型对象</span></span><br><span class="line">  jQuery.<span class="property"><span class="keyword">prototype</span></span> = &#123;</span><br><span class="line">    <span class="attr">constructor</span>: jQuery,  <span class="comment">// 手动指定构造函数</span></span><br><span class="line">    </span><br><span class="line">    <span class="attr">click</span>: <span class="keyword">function</span> (<span class="params">fun</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">elements</span>.<span class="title function_">forEach</span>(<span class="function"><span class="params">element</span> =&gt;</span> &#123;</span><br><span class="line">        element.<span class="property">onclick</span> = fun;</span><br><span class="line">      &#125;);</span><br><span class="line">      <span class="keyword">return</span> <span class="variable language_">this</span>;  <span class="comment">// 支持链式调用</span></span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    <span class="attr">css</span>: <span class="keyword">function</span> (<span class="params">prop, value</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">elements</span>.<span class="title function_">forEach</span>(<span class="function"><span class="params">element</span> =&gt;</span> &#123;</span><br><span class="line">        element.<span class="property">style</span>[prop] = value;</span><br><span class="line">      &#125;);</span><br><span class="line">      <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">window</span>.<span class="property">myjQuery</span> = <span class="keyword">function</span> (<span class="params">selector</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title function_">jQuery</span>(selector);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 链式调用示例</span></span><br><span class="line"><span class="title function_">myjQuery</span>(<span class="string">&#x27;.btn&#x27;</span>)</span><br><span class="line">  .<span class="title function_">click</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;点击了&#x27;</span>);</span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">css</span>(<span class="string">&#x27;color&#x27;</span>, <span class="string">&#x27;red&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="七、改进建议（支持链式调用和多元素）"><a href="#七、改进建议（支持链式调用和多元素）" class="headerlink" title="七、改进建议（支持链式调用和多元素）"></a>七、改进建议（支持链式调用和多元素）</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs javascript">(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-comment">// 构造函数 - 支持多个元素</span><br>  <span class="hljs-keyword">function</span> <span class="hljs-title function_">jQuery</span>(<span class="hljs-params">selector</span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">elements</span> = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(selector);<br>  &#125;<br><br>  <span class="hljs-comment">// 原型对象</span><br>  jQuery.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = &#123;<br>    <span class="hljs-attr">constructor</span>: jQuery,  <span class="hljs-comment">// 手动指定构造函数</span><br>    <br>    <span class="hljs-attr">click</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">fun</span>) &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">elements</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">element</span> =&gt;</span> &#123;<br>        element.<span class="hljs-property">onclick</span> = fun;<br>      &#125;);<br>      <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;  <span class="hljs-comment">// 支持链式调用</span><br>    &#125;,<br>    <br>    <span class="hljs-attr">css</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">prop, value</span>) &#123;<br>      <span class="hljs-variable language_">this</span>.<span class="hljs-property">elements</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">element</span> =&gt;</span> &#123;<br>        element.<span class="hljs-property">style</span>[prop] = value;<br>      &#125;);<br>      <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;<br>    &#125;<br>  &#125;;<br><br>  <span class="hljs-variable language_">window</span>.<span class="hljs-property">myjQuery</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">selector</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title function_">jQuery</span>(selector);<br>  &#125;;<br>&#125;)();<br><br><span class="hljs-comment">// 链式调用示例</span><br><span class="hljs-title function_">myjQuery</span>(<span class="hljs-string">&#x27;.btn&#x27;</span>)<br>  .<span class="hljs-title function_">click</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;点击了&#x27;</span>);<br>  &#125;)<br>  .<span class="hljs-title function_">css</span>(<span class="hljs-string">&#x27;color&#x27;</span>, <span class="hljs-string">&#x27;red&#x27;</span>);<br></code></pre></td></tr></table></figure>
 
 <hr>
 <h3 id="八、核心要点回顾"><a href="#八、核心要点回顾" class="headerlink" title="八、核心要点回顾"></a>八、核心要点回顾</h3><ol>
@@ -265,146 +548,416 @@
 </ol>
 <p>这套模式是 jQuery 和众多 JavaScript 库的经典实现方式！</p>
 
-        </div>
-        
-        <div class="tags">
+                
+              </div>
             
-            <a href="/tags/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/">构造函数</a>
-            
-            <a href="/tags/%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1/">原型对象</a>
-            
-        </div>
-        
-        
-        <div class="post-nav">
-            
-            <a class="pre" href="/2026/03/26/mscss/">
-                <i class="icon-previous">mscss</i>
-            </a>
-            
-            
-            <a class="next" href="/2026/03/23/%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6%EF%BC%8C%E5%87%BD%E6%95%B0%E8%BF%9B%E9%98%B6%EF%BC%8C%E9%97%AD%E5%8C%85/">
-                <i class="icon-next">事件机制，函数进阶，闭包</i>
-            </a>
-            
-        </div>
-        
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" class="print-no-link">#构造函数</a>
+      
+        <a href="/tags/%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1/" class="print-no-link">#原型对象</a>
+      
     </div>
+  
 </div>
 
 
-                </div>
-                <div class="col-md-4 hidden-xs">
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>构造函数、原型对象</div>
+      <div>http://example.com/2026/03/24/构造函数、原型对象/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Lazy Cat</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年3月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
                     
-<div class="sidebar">
-    <div class="well">
-        <h2>标签云</h2>
-        <a href="/tags/dify/" style="font-size: 15px;">dify</a> <a href="/tags/css/" style="font-size: 15px;">css</a> <a href="/tags/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" style="font-size: 15px;">构造函数</a> <a href="/tags/%E5%8E%9F%E5%9E%8B%E5%AF%B9%E8%B1%A1/" style="font-size: 15px;">原型对象</a> <a href="/tags/ffmpeg/" style="font-size: 15px;">ffmpeg</a> <a href="/tags/%E9%A3%9E%E4%B9%A6/" style="font-size: 15px;">飞书</a> <a href="/tags/%E9%A3%9E%E4%B9%A6%E8%A1%A8%E6%A0%BC/" style="font-size: 15px;">飞书表格</a>
-    </div>
-</div>
-
-<div class="sidebar">
-    <div class="well">
-        <h2>归档</h2>
-        <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/06/">2026年06月</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">2026年03月</a><span class="archive-list-count">6</span></li></ul>
-    </div>
-</div>
-
-<div class="sidebar ">
-    <div class="well">
-        <h2>最新文章</h2>
-        <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/06/16/%E4%B8%80%E6%AD%A5%E6%AD%A5%E6%95%99%E4%BD%A0%E6%9E%84%E5%BB%BADify%E8%A7%86%E9%A2%91%E5%88%86%E9%95%9CAgent/">一步步教你构建Dify视频分镜Agent</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/16/Claude-Code-CC-Switch-%E6%8E%A5%E5%85%A5%E5%9B%BD%E4%BA%A7%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/">Claude Code + CC Switch 接入国产大模型完整教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/07/%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8%E5%88%86%E9%95%9C%E6%8F%90%E7%A4%BA%E8%AF%8D-Agent-%E2%80%94-%E5%AE%8C%E6%95%B4%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/">从视频到脚本：手把手搭建 AI 分镜提示词 Agent（Dify + 飞书）</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/26/msjs/">msjs</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/26/mscss/">mscss</a></li></ul>
-    </div>
-</div>
-
-<div class="sidebar">
-    <div class="well">
-        <h2>友情链接</h2>
-        <ul>
-            
-            <li><a class="links-list-link" href="http://www.howardliu.com/" title="沉潜飞动" target='_blank'>沉潜飞动</a></li>
-            
-        </ul>
-    </div>
-</div>
-
+                    
+                      <a href="/2026/03/26/mscss/" title="mscss">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">mscss</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/03/23/%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6%EF%BC%8C%E5%87%BD%E6%95%B0%E8%BF%9B%E9%98%B6%EF%BC%8C%E9%97%AD%E5%8C%85/" title="事件机制，函数进阶，闭包">
+                        <span class="hidden-mobile">事件机制，函数进阶，闭包</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
                 </div>
+              
             </div>
-        </div>
-    </div>
-    <div class="side-button-wrap">
-        <a id="to-top" class="side-button icon-up-arrow" href="#top"></a>
-        <a id="to-home" class="side-button icon-home" href="/."></a>
-        <a id="to-comment-button" class="side-button icon-msg" href="#comment"></a>
-        <a id="to-bottom-button" class="side-button icon-down-arrow" href="#bottom"></a>
-    </div>
-    <a id="bottom" name="bottom"></a>
-    <footer id="footer" class="footer-distributed" style="background-color: #222222;">
-    <div class="container">
-        <div class="footer">
-            <p>Lazy Cat &copy; 2026</p>
-            <ul class="social-media">
-                
-                
-                <li>
-                    <a title="hexo-theme-clean-dark" href="https://github.com/howardliu-cn/hexo-theme-clean-dark"
-                       target="_blank">
-                        <i class="fa fa-film fa-2x"></i>
-                    </a>
-                </li>
-                
-            </ul>
-        </div>
-    </div>
-</footer>
 
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
 </div>
 
-<script src="//cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
 
 
-<script src="//cdn.staticfile.org/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  </aside>
 
 
-<script src="//cdn.staticfile.org/highlight.js/9.1.0/highlight.min.js"></script>
-
-<script>hljs.initHighlightingOnLoad();</script>
-
-<script src="/js/header.js"></script>
+    </div>
+  </div>
+</div>
 
 
-<script src="/js/toc.js"></script>
 
-<!--[if lt IE 9]>
 
-<script src="//cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
 
-![endif]-->
-<!--fancybox-->
+  
 
-<script src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
-<script src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-<link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
 <script>
-    $(document).ready(function () {
-        $("img").each(function (index, item) {
-            var p = $(item).parents()[0];
-            if($(p).is('a')) {
-                $(p).fancybox();
-                return;
-            }
-            $(p).append(function() {return "<a id='fancybox_id_"+index+"' href='" + $(item).attr("src") + "'></a>";});
-            item.remove();
-            var fancyboxItem = $("#fancybox_id_" + index);
-            fancyboxItem.append($(item));
-            fancyboxItem.fancybox();
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
         });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
     });
+  });
 </script>
 
-<!--baidu auto-push-->
 
-<!--google analytics-->
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
 
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>
