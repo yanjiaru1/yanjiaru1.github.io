@@ -1,0 +1,1284 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Lazy Cat">
+  <meta name="keywords" content="前端,JavaScript,CSS,HTML">
+  
+    <meta name="description" content="本教程将带你从零开始，搭建一个基于 RAG（检索增强生成）的保险产品智能问答系统。系统使用阿里云百炼大模型 + LangGraph Agent，支持 7 种平安保险产品的知识问答、报告生成和邮件通知。   📑 目录 项目简介 技术架构总览 环境准备 获取项目代码 安装依赖 配置 API Key 构建文档索引 启动服务 使用 Web 界面提问 使用 API 接口 核心模块详解 自定义与扩展 常见">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从零开始，搭建基于RAG的平安保险智能客服问答系统">
+<meta property="og:url" content="http://example.com/2026/06/18/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%EF%BC%8C%E6%90%AD%E5%BB%BA%E5%9F%BA%E4%BA%8ERAG%E7%9A%84%E5%B9%B3%E5%AE%89%E4%BF%9D%E9%99%A9%E6%99%BA%E8%83%BD%E5%AE%A2%E6%9C%8D%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="严佳茹的博客">
+<meta property="og:description" content="本教程将带你从零开始，搭建一个基于 RAG（检索增强生成）的保险产品智能问答系统。系统使用阿里云百炼大模型 + LangGraph Agent，支持 7 种平安保险产品的知识问答、报告生成和邮件通知。   📑 目录 项目简介 技术架构总览 环境准备 获取项目代码 安装依赖 配置 API Key 构建文档索引 启动服务 使用 Web 界面提问 使用 API 接口 核心模块详解 自定义与扩展 常见">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-18T12:52:10.000Z">
+<meta property="article:modified_time" content="2026-06-18T12:53:20.041Z">
+<meta property="article:author" content="Lazy Cat">
+<meta property="article:tag" content="前端,JavaScript,CSS,HTML">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>从零开始，搭建基于RAG的平安保险智能客服问答系统 - 严佳茹的博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>严佳茹的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="从零开始，搭建基于RAG的平安保险智能客服问答系统"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-06-18 20:52" pubdate>
+          2026年6月18日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          81 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">从零开始，搭建基于RAG的平安保险智能客服问答系统</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>本教程将带你从零开始，搭建一个基于 RAG（检索增强生成）的保险产品智能问答系统。<br>系统使用阿里云百炼大模型 + LangGraph Agent，支持 7 种平安保险产品的知识问答、报告生成和邮件通知。</p>
+</blockquote>
+<hr>
+<h2 id="📑-目录"><a href="#📑-目录" class="headerlink" title="📑 目录"></a>📑 目录</h2><ol>
+<li><a href="#1-%E9%A1%B9%E7%9B%AE%E7%AE%80%E4%BB%8B">项目简介</a></li>
+<li><a href="#2-%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E6%80%BB%E8%A7%88">技术架构总览</a></li>
+<li><a href="#3-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87">环境准备</a></li>
+<li><a href="#4-%E8%8E%B7%E5%8F%96%E9%A1%B9%E7%9B%AE%E4%BB%A3%E7%A0%81">获取项目代码</a></li>
+<li><a href="#5-%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96">安装依赖</a></li>
+<li><a href="#6-%E9%85%8D%E7%BD%AE-api-key">配置 API Key</a></li>
+<li><a href="#7-%E6%9E%84%E5%BB%BA%E6%96%87%E6%A1%A3%E7%B4%A2%E5%BC%95">构建文档索引</a></li>
+<li><a href="#8-%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1">启动服务</a></li>
+<li><a href="#9-%E4%BD%BF%E7%94%A8-web-%E7%95%8C%E9%9D%A2%E6%8F%90%E9%97%AE">使用 Web 界面提问</a></li>
+<li><a href="#10-%E4%BD%BF%E7%94%A8-api-%E6%8E%A5%E5%8F%A3">使用 API 接口</a></li>
+<li><a href="#11-%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97%E8%AF%A6%E8%A7%A3">核心模块详解</a></li>
+<li><a href="#12-%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%8E%E6%89%A9%E5%B1%95">自定义与扩展</a></li>
+<li><a href="#13-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5">常见问题排查</a></li>
+<li><a href="#14-%E5%AE%89%E5%85%A8%E5%BB%BA%E8%AE%AE">安全建议</a></li>
+</ol>
+<hr>
+<h2 id="1-项目简介"><a href="#1-项目简介" class="headerlink" title="1. 项目简介"></a>1. 项目简介</h2><p>本项目是一个 <strong>保险产品智能问答 Agent</strong>，核心能力包括：</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>🔍 知识检索</td>
+<td>从 7 种平安保险产品文档中精准检索相关内容</td>
+</tr>
+<tr>
+<td>💬 智能问答</td>
+<td>基于 ReAct（推理+行动）模式的多轮对话</td>
+</tr>
+<tr>
+<td>📊 报告生成</td>
+<td>自动生成结构化的保险产品分析报告</td>
+</tr>
+<tr>
+<td>💾 报告保存</td>
+<td>将报告保存为本地文件</td>
+</tr>
+<tr>
+<td>📧 邮件通知</td>
+<td>模拟邮件发送（预留 SMTP 集成接口）</td>
+</tr>
+</tbody></table>
+<p><strong>支持的保险产品：</strong></p>
+<ol>
+<li>平安商业综合责任保险（亚马逊）</li>
+<li>雇主责任险</li>
+<li>平安企业团体综合意外险</li>
+<li>雇主安心保</li>
+<li>施工保</li>
+<li>财产一切险</li>
+<li>平安装修保</li>
+</ol>
+<hr>
+<h2 id="2-技术架构总览"><a href="#2-技术架构总览" class="headerlink" title="2. 技术架构总览"></a>2. 技术架构总览</h2><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs scss">┌─────────────┐     HTTP      ┌──────────────────┐<br>│  浏览器 UI   │ ◄──────────► │  Express Server   │<br>│ (index.html) │              │  (server.mjs)     │<br>└─────────────┘              └────────┬─────────┘<br>                                      │<br>                              ┌───────▼────────┐<br>                              │  ReAct Agent    │<br>                              │  (agent.mjs)    │<br>                              └───────┬────────┘<br>                                      │<br>                 ┌──────────┬─────────┼──────────┬──────────┐<br>                 ▼          ▼         ▼          ▼          ▼<br>           ┌─────────┐ ┌────────┐ ┌──────┐ ┌──────┐ ┌──────────┐<br>           │ 知识检索  │ │报告生成 │ │保存   │ │邮件   │ │  LLM     │<br>           │ retriever│ │ tools  │ │tools │ │tools │ │ qwen3<span class="hljs-selector-class">.6</span>  │<br>           └────┬────┘ └────────┘ └──────┘ └──────┘ └──────────┘<br>                │<br>         ┌──────▼──────┐<br>         │ 向量检索引擎  │<br>         │ (retriever)  │<br>         └──────┬──────┘<br>                │<br>    ┌───────────▼───────────┐<br>    │  chunks<span class="hljs-selector-class">.json</span>           │<br>    │  vectors<span class="hljs-selector-class">.json</span>          │<br>    │  (<span class="hljs-number">54</span> 个文档片段, <span class="hljs-number">1536</span>维) │<br>    └───────────┬───────────┘<br>                │<br>         ┌──────▼──────┐<br>         │  文档索引器   │<br>         │  (indexer)   │<br>         └──────┬──────┘<br>                │<br>         ┌──────▼──────┐<br>         │ docs<span class="hljs-comment">/*.txt   │</span><br><span class="hljs-comment">         │ (7种保险产品)  │</span><br><span class="hljs-comment">         └─────────────┘</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>数据流向：</strong></p>
+<ol>
+<li><code>docs/*.txt</code> → <strong>索引器</strong> → 分块 → 向量化 → 存储到 <code>data/</code></li>
+<li>用户提问 → <strong>Embedding</strong> → 余弦相似度检索 → 取 Top 5 相关片段</li>
+<li>相关片段 + 用户问题 → <strong>LLM（通义千问）</strong> → 生成回答</li>
+<li>复杂任务时 Agent 自动调用工具链：检索 → 生成报告 → 保存 → 发送邮件</li>
+</ol>
+<hr>
+<h2 id="3-环境准备"><a href="#3-环境准备" class="headerlink" title="3. 环境准备"></a>3. 环境准备</h2><h3 id="3-1-安装-Node-js"><a href="#3-1-安装-Node-js" class="headerlink" title="3.1 安装 Node.js"></a>3.1 安装 Node.js</h3><p>本项目要求 <strong>Node.js &gt;&#x3D; 20</strong>。</p>
+<p><strong>方式一：官网下载</strong></p>
+<p>访问 <a target="_blank" rel="noopener" href="https://nodejs.org/">https://nodejs.org/</a> 下载 LTS 版本（推荐 v20 或更高），按提示安装。</p>
+<p><strong>方式二：使用 nvm（推荐）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Windows（使用 nvm-windows）</span><br><span class="hljs-comment"># 下载安装 https://github.com/coreybutler/nvm-windows/releases</span><br>nvm install 20<br>nvm use 20<br><br><span class="hljs-comment"># macOS / Linux</span><br>curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash<br>nvm install 20<br>nvm use 20<br></code></pre></td></tr></table></figure>
+
+<p><strong>验证安装：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">node --version   <span class="hljs-comment"># 应输出 v20.x.x 或更高</span><br>npm --version    <span class="hljs-comment"># 应输出 10.x.x 或更高</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-获取阿里云百炼-API-Key"><a href="#3-2-获取阿里云百炼-API-Key" class="headerlink" title="3.2 获取阿里云百炼 API Key"></a>3.2 获取阿里云百炼 API Key</h3><p>本项目使用阿里云百炼（DashScope）平台的大模型服务，需要一个 API Key。</p>
+<p><strong>步骤：</strong></p>
+<ol>
+<li>访问 <a target="_blank" rel="noopener" href="https://bailian.console.aliyun.com/">阿里云百炼控制台</a></li>
+<li>注册&#x2F;登录阿里云账号</li>
+<li>开通百炼服务（首次使用需要开通）</li>
+<li>进入 <strong>API-KEY 管理</strong> 页面</li>
+<li>点击 <strong>创建新的 API-KEY</strong></li>
+<li>复制生成的 Key（格式类似 <code>sk-xxxxxxxxxxxxxxxx</code>）</li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>注意</strong>：API Key 请妥善保管，不要泄露到公开仓库中。<br>使用通义千问模型可能产生费用，请关注阿里云的计费说明和免费额度。</p>
+</blockquote>
+<hr>
+<h2 id="4-获取项目代码"><a href="#4-获取项目代码" class="headerlink" title="4. 获取项目代码"></a>4. 获取项目代码</h2><h3 id="方式一：克隆仓库"><a href="#方式一：克隆仓库" class="headerlink" title="方式一：克隆仓库"></a>方式一：克隆仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://gitee.com/jia-ru-the-elegant/zhinengwenda.git<br><span class="hljs-built_in">cd</span> zhinengwenda<br></code></pre></td></tr></table></figure>
+
+<h3 id="方式二：下载压缩包"><a href="#方式二：下载压缩包" class="headerlink" title="方式二：下载压缩包"></a>方式二：下载压缩包</h3><p>从 Gitee 仓库页面下载 ZIP 解压后，进入项目根目录。</p>
+<p><strong>项目目录结构：</strong></p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs nix">zhinengwenda<span class="hljs-symbol">/</span><br>├── docs<span class="hljs-symbol">/</span>                          <span class="hljs-comment"># 📁 知识库文档（7种保险产品 .txt 文件）</span><br>├── node-qa-agent<span class="hljs-symbol">/</span>                 <span class="hljs-comment"># 📁 主应用目录</span><br>│   ├── .env                       <span class="hljs-comment"># ⚙️ 环境变量配置</span><br>│   ├── package.json               <span class="hljs-comment"># 📦 依赖声明</span><br>│   ├── public<span class="hljs-symbol">/</span><br>│   │   └── index.html             <span class="hljs-comment"># 🖥️ Web 聊天界面</span><br>│   ├── src<span class="hljs-symbol">/</span><br>│   │   ├── config.mjs             <span class="hljs-comment"># 全局配置</span><br>│   │   ├── indexer.mjs            <span class="hljs-comment"># 文档索引器</span><br>│   │   ├── retriever.mjs          <span class="hljs-comment"># 向量检索引擎</span><br>│   │   ├── tools.mjs              <span class="hljs-comment"># Agent 工具定义</span><br>│   │   ├── agent.mjs              <span class="hljs-comment"># ReAct Agent 核心</span><br>│   │   └── server.mjs             <span class="hljs-comment"># Express HTTP 服务</span><br>│   └── data<span class="hljs-symbol">/</span>                      <span class="hljs-comment"># 自动生成的索引数据</span><br>│       ├── chunks.json            <span class="hljs-comment"># 文档分块数据</span><br>│       └── vectors.json           <span class="hljs-comment"># 向量数据</span><br>└── README.md<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-安装依赖"><a href="#5-安装依赖" class="headerlink" title="5. 安装依赖"></a>5. 安装依赖</h2><p>进入应用目录并安装所有依赖包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> node-qa-agent<br>npm install<br></code></pre></td></tr></table></figure>
+
+<p><strong>安装的依赖说明：</strong></p>
+<table>
+<thead>
+<tr>
+<th>包名</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@langchain/core</code></td>
+<td>LangChain 核心库（工具定义、消息类型）</td>
+</tr>
+<tr>
+<td><code>@langchain/langgraph</code></td>
+<td>LangGraph Agent 框架</td>
+</tr>
+<tr>
+<td><code>@langchain/openai</code></td>
+<td>OpenAI 兼容接口（对接 DashScope）</td>
+</tr>
+<tr>
+<td><code>@langchain/textsplitters</code></td>
+<td>文本分块工具</td>
+</tr>
+<tr>
+<td><code>dotenv</code></td>
+<td>环境变量加载</td>
+</tr>
+<tr>
+<td><code>express</code></td>
+<td>Web 服务器框架</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>安装完成后 <code>node_modules/</code> 目录约 200MB 左右，属正常现象。</p>
+</blockquote>
+<hr>
+<h2 id="6-配置-API-Key"><a href="#6-配置-API-Key" class="headerlink" title="6. 配置 API Key"></a>6. 配置 API Key</h2><p>编辑 <code>node-qa-agent/.env</code> 文件，填入你的 API Key：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs env"># ========================================<br># 平安保险智能问答 Agent 环境配置<br># ========================================<br><br># 阿里云百炼 API Key（必填）<br>DASHSCOPE_API_KEY=sk-你的API密钥<br><br># 聊天模型（可选，默认使用通义千问 3.6 预览版）<br>MODEL_NAME=qwen3.6-max-preview<br><br># Embedding 模型（可选，默认使用 text-embedding-v2）<br>EMBEDDING_MODEL=text-embedding-v2<br></code></pre></td></tr></table></figure>
+
+<p><strong>验证配置：</strong></p>
+<p>配置完成后，可以运行健康检查接口验证：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 启动服务后执行（见第 8 步）</span><br>curl http://localhost:3000/api/health<br></code></pre></td></tr></table></figure>
+
+<p>预期返回：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ok&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;model&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;qwen3.6-max-preview&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;docsDir&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/path/to/docs&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;dataDir&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/path/to/data&quot;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="7-构建文档索引"><a href="#7-构建文档索引" class="headerlink" title="7. 构建文档索引"></a>7. 构建文档索引</h2><p>在首次使用前，需要将知识库文档转化为向量索引。这一步会：</p>
+<ol>
+<li>读取 <code>docs/</code> 目录下所有 <code>.txt</code> 文件</li>
+<li>将文档按 500 字符为单位进行分块（相邻块有 100 字符重叠）</li>
+<li>调用 DashScope <code>text-embedding-v2</code> 模型将每个分块转为 1536 维向量</li>
+<li>保存到 <code>data/chunks.json</code> 和 <code>data/vectors.json</code></li>
+</ol>
+<p><strong>执行索引：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm run index<br></code></pre></td></tr></table></figure>
+
+<p><strong>预期输出：</strong></p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs prolog">[索引] 文档目录: /path/to/docs<br>[索引] 加载了 <span class="hljs-number">14</span> 个文档<br>[索引] 分块完成，共 <span class="hljs-number">54</span> 个文本片段<br>[索引] 正在生成向量嵌入（text-embedding-v2）...<br>[索引] [<span class="hljs-number">1</span>/<span class="hljs-number">3</span>] 处理 <span class="hljs-number">20</span> 个片段...<br>[索引] [<span class="hljs-number">2</span>/<span class="hljs-number">3</span>] 处理 <span class="hljs-number">20</span> 个片段...<br>[索引] [<span class="hljs-number">3</span>/<span class="hljs-number">3</span>] 处理 <span class="hljs-number">14</span> 个片段...<br>[索引] 向量嵌入生成完成<br>[索引] 数据已保存到 /path/to/data<br>[索引] 索引构建完成！<br>  - 文档数: <span class="hljs-number">14</span><br>  - 分块数: <span class="hljs-number">54</span><br>  - 向量维度: <span class="hljs-number">1536</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>💡 <strong>提示</strong>：每次修改 <code>docs/</code> 中的文档后，都需要重新运行 <code>npm run index</code> 更新索引。<br>也可以在 Web 界面中点击 <strong>“重建索引”</strong> 按钮完成此操作。</p>
+</blockquote>
+<hr>
+<h2 id="8-启动服务"><a href="#8-启动服务" class="headerlink" title="8. 启动服务"></a>8. 启动服务</h2><h3 id="生产模式"><a href="#生产模式" class="headerlink" title="生产模式"></a>生产模式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm start<br></code></pre></td></tr></table></figure>
+
+<h3 id="开发模式（文件变更自动重启）"><a href="#开发模式（文件变更自动重启）" class="headerlink" title="开发模式（文件变更自动重启）"></a>开发模式（文件变更自动重启）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm run dev<br></code></pre></td></tr></table></figure>
+
+<p><strong>预期输出：</strong></p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">============================================<br>  平安保险智能问答 Agent<br>  服务已启动: http://localhost:3000<br>============================================<br></code></pre></td></tr></table></figure>
+
+<p>服务默认运行在 <strong>3000 端口</strong>。如需修改端口，可在 <code>.env</code> 中添加：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs env">port=8080<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="9-使用-Web-界面提问"><a href="#9-使用-Web-界面提问" class="headerlink" title="9. 使用 Web 界面提问"></a>9. 使用 Web 界面提问</h2><p>打开浏览器访问：<strong><a target="_blank" rel="noopener" href="http://localhost:3000/">http://localhost:3000</a></strong></p>
+<p>你将看到一个完整的聊天界面：</p>
+<h3 id="界面布局"><a href="#界面布局" class="headerlink" title="界面布局"></a>界面布局</h3><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs inform7">┌─────────────────────────────────────────────────────┐<br>│  🛡️ 平安保险智能问答    <span class="hljs-comment">[🟢 已连接]</span>                    │<br>├────────────┬────────────────────────────────────────┤<br>│  操作区     │                                        │<br>│            │          对话区域                        │<br>│ <span class="hljs-comment">[重建索引]</span>  │                                        │<br>│ <span class="hljs-comment">[清空会话]</span>  │    AI: 您好！我是平安保险智能问答          │<br>│            │        助手，请问有什么可以帮您？          │<br>│ ─────────  │                                        │<br>│ 快速提问   │                                        │<br>│            │                                        │<br>│ <span class="hljs-comment">[雇主险区别]</span>│                                        │<br>│ <span class="hljs-comment">[施工保障]</span>  │                                        │<br>│ <span class="hljs-comment">[产品分析]</span>  │                                        │<br>│            │                                        │<br>│            │  ┌──────────────────────────────────┐  │<br>│            │  │ 请输入您的问题...         <span class="hljs-comment">[发送]</span>   │  │<br>│            │  └──────────────────────────────────┘  │<br>└────────────┴────────────────────────────────────────┘<br></code></pre></td></tr></table></figure>
+
+<h3 id="快速上手"><a href="#快速上手" class="headerlink" title="快速上手"></a>快速上手</h3><ol>
+<li><p><strong>基本问答</strong>：在输入框输入问题，按 <code>Enter</code> 或点击发送</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">雇主责任险和雇主安心保有什么区别？<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使用快捷问题</strong>：点击左侧边栏的预设问题，快速开始对话</p>
+</li>
+<li><p><strong>生成分析报告</strong>：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">请为我生成一份平安装修保的综合分析报告<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>保存报告</strong>：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">请将报告保存到本地文件<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>多轮对话</strong>：系统会记住上下文，你可以追问</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs">这个保险的保费是多少？<br>那理赔流程是怎样的？<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="示例对话"><a href="#示例对话" class="headerlink" title="示例对话"></a>示例对话</h3><p><strong>你：</strong> 施工保主要保障什么内容？</p>
+<p><strong>AI：</strong> 根据知识库中的信息，平安施工保主要保障以下内容：</p>
+<ul>
+<li>建筑施工人员的意外伤害</li>
+<li>施工期间的第三者责任</li>
+<li>……（根据文档具体内容回答）</li>
+</ul>
+<p><strong>你：</strong> 请帮我生成一份施工保的分析报告</p>
+<p><strong>AI：</strong> （自动调用 <code>generate_report</code> 工具，生成结构化报告）</p>
+<p><strong>你：</strong> 请把报告保存下来</p>
+<p><strong>AI：</strong> （自动调用 <code>save_report</code> 工具，报告保存到 <code>reports/</code> 目录）</p>
+<hr>
+<h2 id="10-使用-API-接口"><a href="#10-使用-API-接口" class="headerlink" title="10. 使用 API 接口"></a>10. 使用 API 接口</h2><p>除了 Web 界面，你也可以通过 HTTP API 直接调用。</p>
+<h3 id="10-1-健康检查"><a href="#10-1-健康检查" class="headerlink" title="10.1 健康检查"></a>10.1 健康检查</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl http://localhost:3000/api/health<br></code></pre></td></tr></table></figure>
+
+<h3 id="10-2-构建-重建索引"><a href="#10-2-构建-重建索引" class="headerlink" title="10.2 构建&#x2F;重建索引"></a>10.2 构建&#x2F;重建索引</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -X POST http://localhost:3000/api/index<br></code></pre></td></tr></table></figure>
+
+<h3 id="10-3-提问"><a href="#10-3-提问" class="headerlink" title="10.3 提问"></a>10.3 提问</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -X POST http://localhost:3000/api/ask \<br>  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \<br>  -d <span class="hljs-string">&#x27;&#123;&quot;question&quot;: &quot;雇主责任险的保障范围是什么？&quot;, &quot;sessionId&quot;: &quot;test-001&quot;&#125;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>响应示例：</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;answer&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;雇主责任险主要保障...&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;sessionId&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;test-001&quot;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="10-4-清空会话"><a href="#10-4-清空会话" class="headerlink" title="10.4 清空会话"></a>10.4 清空会话</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -X POST http://localhost:3000/api/clear \<br>  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \<br>  -d <span class="hljs-string">&#x27;&#123;&quot;sessionId&quot;: &quot;test-001&quot;&#125;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="10-5-在代码中调用"><a href="#10-5-在代码中调用" class="headerlink" title="10.5 在代码中调用"></a>10.5 在代码中调用</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// JavaScript / Node.js 调用示例</span><br><span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> <span class="hljs-title function_">fetch</span>(<span class="hljs-string">&#x27;http://localhost:3000/api/ask&#x27;</span>, &#123;<br>  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,<br>  <span class="hljs-attr">headers</span>: &#123; <span class="hljs-string">&#x27;Content-Type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span> &#125;,<br>  <span class="hljs-attr">body</span>: <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(&#123;<br>    <span class="hljs-attr">question</span>: <span class="hljs-string">&#x27;财产一切险和商业综合责任险有什么区别？&#x27;</span>,<br>    <span class="hljs-attr">sessionId</span>: <span class="hljs-string">&#x27;my-session-001&#x27;</span><br>  &#125;)<br>&#125;);<br><br><span class="hljs-keyword">const</span> data = <span class="hljs-keyword">await</span> response.<span class="hljs-title function_">json</span>();<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data.<span class="hljs-property">answer</span>);<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Python 调用示例</span><br><span class="hljs-keyword">import</span> requests<br><br>response = requests.post(<span class="hljs-string">&#x27;http://localhost:3000/api/ask&#x27;</span>, json=&#123;<br>    <span class="hljs-string">&#x27;question&#x27;</span>: <span class="hljs-string">&#x27;装修保的保障范围是什么？&#x27;</span>,<br>    <span class="hljs-string">&#x27;sessionId&#x27;</span>: <span class="hljs-string">&#x27;py-session-001&#x27;</span><br>&#125;)<br><br><span class="hljs-built_in">print</span>(response.json()[<span class="hljs-string">&#x27;answer&#x27;</span>])<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="11-核心模块详解"><a href="#11-核心模块详解" class="headerlink" title="11. 核心模块详解"></a>11. 核心模块详解</h2><h3 id="11-1-配置模块-—-src-config-mjs"><a href="#11-1-配置模块-—-src-config-mjs" class="headerlink" title="11.1 配置模块 — src/config.mjs"></a>11.1 配置模块 — <code>src/config.mjs</code></h3><p>集中管理所有配置项，通过 <code>.env</code> 文件和环境变量覆盖默认值：</p>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>DASHSCOPE_API_KEY</code></td>
+<td>（必填）</td>
+<td>阿里云百炼 API Key</td>
+</tr>
+<tr>
+<td><code>MODEL_NAME</code></td>
+<td><code>qwen3.6-max-preview</code></td>
+<td>聊天模型名称</td>
+</tr>
+<tr>
+<td><code>EMBEDDING_MODEL</code></td>
+<td><code>text-embedding-v2</code></td>
+<td>Embedding 模型名称</td>
+</tr>
+<tr>
+<td><code>baseUrl</code></td>
+<td><code>https://dashscope.aliyuncs.com/compatible-mode/v1</code></td>
+<td>API 基础地址</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td><code>3000</code></td>
+<td>服务端口</td>
+</tr>
+<tr>
+<td><code>chunkSize</code></td>
+<td><code>500</code></td>
+<td>文本分块大小（字符数）</td>
+</tr>
+<tr>
+<td><code>chunkOverlap</code></td>
+<td><code>100</code></td>
+<td>分块重叠大小（字符数）</td>
+</tr>
+<tr>
+<td><code>retrievalTopK</code></td>
+<td><code>5</code></td>
+<td>检索返回的最相关片段数</td>
+</tr>
+</tbody></table>
+<h3 id="11-2-文档索引器-—-src-indexer-mjs"><a href="#11-2-文档索引器-—-src-indexer-mjs" class="headerlink" title="11.2 文档索引器 — src/indexer.mjs"></a>11.2 文档索引器 — <code>src/indexer.mjs</code></h3><p>索引器负责将原始文档转化为可检索的向量数据，流程如下：</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs haskell"><span class="hljs-title">docs</span>/*.txt → 加载文档 → 文本分块 → 批量向量化 → 保存到 <span class="hljs-class"><span class="hljs-keyword">data</span>/</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>关键设计：</strong></p>
+<ul>
+<li>使用 <code>RecursiveCharacterTextSplitter</code> 进行智能分块，保持语义完整性</li>
+<li>每 20 个片段一批调用 Embedding API，避免请求过大</li>
+<li>向量维度：1536（<code>text-embedding-v2</code> 模型输出）</li>
+</ul>
+<h3 id="11-3-向量检索引擎-—-src-retriever-mjs"><a href="#11-3-向量检索引擎-—-src-retriever-mjs" class="headerlink" title="11.3 向量检索引擎 — src/retriever.mjs"></a>11.3 向量检索引擎 — <code>src/retriever.mjs</code></h3><p>使用纯 JavaScript 实现的余弦相似度检索：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 余弦相似度计算公式</span><br><span class="hljs-title function_">cosineSimilarity</span>(a, b) = (a · b) / (|a| × |b|)<br></code></pre></td></tr></table></figure>
+
+<p><strong>工作流程：</strong></p>
+<ol>
+<li>将用户问题转为 1536 维向量</li>
+<li>与所有 54 个文档向量计算余弦相似度</li>
+<li>按相似度排序，返回 Top 5 最相关片段</li>
+</ol>
+<blockquote>
+<p>💡 当前使用线性扫描（遍历全部向量），对于 54 个片段在毫秒内完成。<br>如果文档量增长到数千条以上，建议引入向量数据库（如 Milvus、Pinecone）。</p>
+</blockquote>
+<h3 id="11-4-Agent-工具-—-src-tools-mjs"><a href="#11-4-Agent-工具-—-src-tools-mjs" class="headerlink" title="11.4 Agent 工具 — src/tools.mjs"></a>11.4 Agent 工具 — <code>src/tools.mjs</code></h3><p>系统为 Agent 定义了 4 个工具，Agent 根据用户意图自动选择调用：</p>
+<table>
+<thead>
+<tr>
+<th>工具名</th>
+<th>功能</th>
+<th>使用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>search_knowledge_base</code></td>
+<td>检索知识库</td>
+<td>用户询问保险产品信息时</td>
+</tr>
+<tr>
+<td><code>generate_report</code></td>
+<td>生成分析报告</td>
+<td>用户需要综合分析报告时</td>
+</tr>
+<tr>
+<td><code>save_report</code></td>
+<td>保存报告到文件</td>
+<td>用户要求保存报告时</td>
+</tr>
+<tr>
+<td><code>send_email</code></td>
+<td>发送邮件（模拟）</td>
+<td>用户要求邮件通知时</td>
+</tr>
+</tbody></table>
+<h3 id="11-5-ReAct-Agent-—-src-agent-mjs"><a href="#11-5-ReAct-Agent-—-src-agent-mjs" class="headerlink" title="11.5 ReAct Agent — src/agent.mjs"></a>11.5 ReAct Agent — <code>src/agent.mjs</code></h3><p>Agent 使用 LangGraph 的 <code>createReactAgent</code> 实现 ReAct 模式：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">用户提问 → <span class="hljs-selector-attr">[推理]</span> 需要什么信息？→ <span class="hljs-selector-attr">[行动]</span> 调用工具 → <span class="hljs-selector-attr">[观察]</span> 获取结果 → <span class="hljs-selector-attr">[推理]</span> ... → 最终回答<br></code></pre></td></tr></table></figure>
+
+<p><strong>Agent 调用链示例：</strong></p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs sqf">用户: <span class="hljs-string">&quot;帮我分析雇主责任险并生成报告，保存到文件&quot;</span><br><br><span class="hljs-built_in">Agent</span> 思考: 需要先检索雇主责任险信息<br>  → 调用 search_knowledge_base(<span class="hljs-string">&quot;雇主责任险&quot;</span>)<br>  → 获取相关文档片段<br><br><span class="hljs-built_in">Agent</span> 思考: 检索到了信息，现在生成报告<br>  → 调用 generate_report(<span class="hljs-string">&quot;雇主责任险分析报告&quot;</span>, 检索结果)<br>  → 获取结构化报告内容<br><br><span class="hljs-built_in">Agent</span> 思考: 报告已生成，现在保存<br>  → 调用 save_report(<span class="hljs-string">&quot;雇主责任险分析报告&quot;</span>, 报告内容)<br>  → 获取保存路径<br><br><span class="hljs-built_in">Agent</span> 最终回复: <span class="hljs-string">&quot;已完成！报告已保存到 reports/xxx.md&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="11-6-HTTP-服务器-—-src-server-mjs"><a href="#11-6-HTTP-服务器-—-src-server-mjs" class="headerlink" title="11.6 HTTP 服务器 — src/server.mjs"></a>11.6 HTTP 服务器 — <code>src/server.mjs</code></h3><p>基于 Express.js 构建的 Web 服务器：</p>
+<ul>
+<li><strong>静态文件服务</strong>：提供 <code>public/index.html</code> 前端页面</li>
+<li><strong>会话管理</strong>：使用内存 Map 存储会话历史，每个会话最多保留 40 条消息（20 轮对话）</li>
+<li><strong>API 路由</strong>：提供健康检查、索引构建、问答、会话清除 4 个接口</li>
+</ul>
+<blockquote>
+<p>⚠️ 当前会话存储在内存中，服务重启后会话将丢失。<br>生产环境建议接入 Redis 进行会话持久化。</p>
+</blockquote>
+<hr>
+<h2 id="12-自定义与扩展"><a href="#12-自定义与扩展" class="headerlink" title="12. 自定义与扩展"></a>12. 自定义与扩展</h2><h3 id="12-1-添加新的保险产品文档"><a href="#12-1-添加新的保险产品文档" class="headerlink" title="12.1 添加新的保险产品文档"></a>12.1 添加新的保险产品文档</h3><ol>
+<li><p>将新的保险产品文档（<code>.txt</code> 格式）放入 <code>docs/</code> 目录</p>
+</li>
+<li><p>重新构建索引：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm run index<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>重启服务即可开始问答新产品的信息</p>
+</li>
+</ol>
+<h3 id="12-2-修改分块参数"><a href="#12-2-修改分块参数" class="headerlink" title="12.2 修改分块参数"></a>12.2 修改分块参数</h3><p>编辑 <code>src/config.mjs</code> 或在 <code>.env</code> 中设置环境变量：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs env">chunkSize=800<br>chunkOverlap=200<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>增大 <code>chunkSize</code> 可以保留更多上下文，但会减少检索精度。<br>增大 <code>chunkOverlap</code> 可以减少信息在分块边界丢失的风险。</p>
+</blockquote>
+<h3 id="12-3-修改检索数量"><a href="#12-3-修改检索数量" class="headerlink" title="12.3 修改检索数量"></a>12.3 修改检索数量</h3><p>在 <code>.env</code> 中调整：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs env">retrievalTopK=8<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>增加 TopK 可以提供更多上下文给 LLM，但会增加 token 消耗。</p>
+</blockquote>
+<h3 id="12-4-切换-LLM-模型"><a href="#12-4-切换-LLM-模型" class="headerlink" title="12.4 切换 LLM 模型"></a>12.4 切换 LLM 模型</h3><p>修改 <code>.env</code> 中的模型名称：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs env">MODEL_NAME=qwen-plus<br></code></pre></td></tr></table></figure>
+
+<p>可选模型（参考<a target="_blank" rel="noopener" href="https://help.aliyun.com/zh/model-studio/getting-started/models">阿里云百炼文档</a>）：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>qwen3.6-max-preview</code></td>
+<td>通义千问 3.6 预览版（默认）</td>
+</tr>
+<tr>
+<td><code>qwen-plus</code></td>
+<td>通义千问 Plus（性价比高）</td>
+</tr>
+<tr>
+<td><code>qwen-turbo</code></td>
+<td>通义千问 Turbo（速度快）</td>
+</tr>
+<tr>
+<td><code>qwen-max</code></td>
+<td>通义千问 Max（能力最强）</td>
+</tr>
+</tbody></table>
+<h3 id="12-5-自定义-Agent-提示词"><a href="#12-5-自定义-Agent-提示词" class="headerlink" title="12.5 自定义 Agent 提示词"></a>12.5 自定义 Agent 提示词</h3><p>编辑 <code>src/agent.mjs</code> 中的 <code>systemPrompt</code> 变量，可以修改 Agent 的行为和回复风格。</p>
+<h3 id="12-6-集成真实邮件发送"><a href="#12-6-集成真实邮件发送" class="headerlink" title="12.6 集成真实邮件发送"></a>12.6 集成真实邮件发送</h3><p>编辑 <code>src/tools.mjs</code> 中的 <code>send_email</code> 工具，将模拟实现替换为真实的 SMTP 发送：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 示例：使用 nodemailer</span><br><span class="hljs-keyword">import</span> nodemailer <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;nodemailer&#x27;</span>;<br><br><span class="hljs-keyword">const</span> transporter = nodemailer.<span class="hljs-title function_">createTransport</span>(&#123;<br>  <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;smtp.example.com&#x27;</span>,<br>  <span class="hljs-attr">port</span>: <span class="hljs-number">465</span>,<br>  <span class="hljs-attr">auth</span>: &#123; <span class="hljs-attr">user</span>: <span class="hljs-string">&#x27;your@email.com&#x27;</span>, <span class="hljs-attr">pass</span>: <span class="hljs-string">&#x27;your-password&#x27;</span> &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="13-常见问题排查"><a href="#13-常见问题排查" class="headerlink" title="13. 常见问题排查"></a>13. 常见问题排查</h2><h3 id="❌-Error-DASHSCOPE-API-KEY-is-required"><a href="#❌-Error-DASHSCOPE-API-KEY-is-required" class="headerlink" title="❌ Error: DASHSCOPE_API_KEY is required"></a>❌ <code>Error: DASHSCOPE_API_KEY is required</code></h3><p><strong>原因</strong>：未配置 API Key 或 <code>.env</code> 文件路径错误。</p>
+<p><strong>解决</strong>：</p>
+<ul>
+<li>确认 <code>node-qa-agent/.env</code> 文件存在</li>
+<li>确认文件中包含 <code>DASHSCOPE_API_KEY=sk-xxxxxx</code></li>
+<li>确认 Key 值没有多余的空格或引号</li>
+</ul>
+<hr>
+<h3 id="❌-索引构建失败-或-Embedding-API-调用失败"><a href="#❌-索引构建失败-或-Embedding-API-调用失败" class="headerlink" title="❌ 索引构建失败 或 Embedding API 调用失败"></a>❌ <code>索引构建失败</code> 或 <code>Embedding API 调用失败</code></h3><p><strong>原因</strong>：API Key 无效、余额不足或网络问题。</p>
+<p><strong>解决</strong>：</p>
+<ol>
+<li>登录<a target="_blank" rel="noopener" href="https://bailian.console.aliyun.com/">百炼控制台</a>确认 API Key 有效</li>
+<li>检查账户余额是否充足</li>
+<li>确认网络能访问 <code>dashscope.aliyuncs.com</code></li>
+<li>如果在中国大陆以外地区，可能需要配置代理</li>
+</ol>
+<hr>
+<h3 id="❌-找不到模块-或-import-错误"><a href="#❌-找不到模块-或-import-错误" class="headerlink" title="❌ 找不到模块 或 import 错误"></a>❌ <code>找不到模块</code> 或 <code>import 错误</code></h3><p><strong>原因</strong>：依赖未正确安装。</p>
+<p><strong>解决</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> node-qa-agent<br><span class="hljs-built_in">rm</span> -rf node_modules package-lock.json<br>npm install<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="❌-AI-回答质量不佳-回答与文档不符"><a href="#❌-AI-回答质量不佳-回答与文档不符" class="headerlink" title="❌ AI 回答质量不佳 &#x2F; 回答与文档不符"></a>❌ AI 回答质量不佳 &#x2F; 回答与文档不符</h3><p><strong>可能原因</strong>：</p>
+<ol>
+<li>索引未更新（修改了文档但未重建索引）</li>
+<li>文档格式问题（编码、乱码）</li>
+<li>分块参数不合理</li>
+</ol>
+<p><strong>解决</strong>：</p>
+<ol>
+<li>重新执行 <code>npm run index</code></li>
+<li>确认文档为 UTF-8 编码的纯文本格式</li>
+<li>尝试调整 <code>chunkSize</code> 和 <code>chunkOverlap</code></li>
+</ol>
+<hr>
+<h3 id="❌-端口-3000-已被占用"><a href="#❌-端口-3000-已被占用" class="headerlink" title="❌ 端口 3000 已被占用"></a>❌ 端口 3000 已被占用</h3><p><strong>解决</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 方式一：修改端口</span><br><span class="hljs-comment"># 在 .env 中添加：port=8080</span><br><br><span class="hljs-comment"># 方式二：查找并关闭占用端口的进程</span><br><span class="hljs-comment"># Windows</span><br>netstat -ano | findstr :3000<br>taskkill /PID &lt;进程ID&gt; /F<br><br><span class="hljs-comment"># macOS / Linux</span><br>lsof -i :3000<br><span class="hljs-built_in">kill</span> -9 &lt;进程ID&gt;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="❌-ECONNREFUSED-连接被拒绝"><a href="#❌-ECONNREFUSED-连接被拒绝" class="headerlink" title="❌ ECONNREFUSED 连接被拒绝"></a>❌ <code>ECONNREFUSED</code> 连接被拒绝</h3><p><strong>原因</strong>：服务未启动或地址不正确。</p>
+<p><strong>解决</strong>：</p>
+<ol>
+<li>确认服务正在运行（终端中应有”服务已启动”的提示）</li>
+<li>确认访问地址为 <code>http://localhost:3000</code></li>
+<li>检查防火墙是否阻止了 3000 端口</li>
+</ol>
+<hr>
+<h2 id="14-安全建议"><a href="#14-安全建议" class="headerlink" title="14. 安全建议"></a>14. 安全建议</h2><h3 id="⚠️-保护-API-Key"><a href="#⚠️-保护-API-Key" class="headerlink" title="⚠️ 保护 API Key"></a>⚠️ 保护 API Key</h3><ul>
+<li><strong>永远不要</strong>将 <code>.env</code> 文件提交到 Git 仓库</li>
+<li>建议添加 <code>.gitignore</code> 文件：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs gitignore"># 环境变量<br>.env<br><br># 依赖<br>node_modules/<br><br># 索引数据（可从文档重新生成）<br>data/<br><br># 生成的报告<br>reports/<br></code></pre></td></tr></table></figure>
+
+<h3 id="⚠️-生产环境注意事项"><a href="#⚠️-生产环境注意事项" class="headerlink" title="⚠️ 生产环境注意事项"></a>⚠️ 生产环境注意事项</h3><ul>
+<li>使用 Redis 替代内存存储会话</li>
+<li>添加请求频率限制（rate limiting）</li>
+<li>使用 HTTPS</li>
+<li>添加用户认证机制</li>
+<li>将日志输出到文件而非控制台</li>
+</ul>
+<hr>
+<h2 id="📝-NPM-命令速查"><a href="#📝-NPM-命令速查" class="headerlink" title="📝 NPM 命令速查"></a>📝 NPM 命令速查</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>npm install</code></td>
+<td>安装依赖</td>
+</tr>
+<tr>
+<td><code>npm run index</code></td>
+<td>构建文档索引</td>
+</tr>
+<tr>
+<td><code>npm start</code></td>
+<td>启动服务（生产模式）</td>
+</tr>
+<tr>
+<td><code>npm run dev</code></td>
+<td>启动服务（开发模式，自动重启）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="📚-相关资源"><a href="#📚-相关资源" class="headerlink" title="📚 相关资源"></a>📚 相关资源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://bailian.console.aliyun.com/">阿里云百炼控制台</a></li>
+<li><a target="_blank" rel="noopener" href="https://help.aliyun.com/zh/model-studio/">通义千问模型文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://js.langchain.com/">LangChain.js 文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://langchain-ai.github.io/langgraphjs/">LangGraph.js 文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://expressjs.com/">Express.js 文档</a></li>
+</ul>
+<hr>
+<blockquote>
+<p>📖 如需更详细的源码级说明，请参阅 <code>node-qa-agent/PROJECT_GUIDE.md</code>。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>从零开始，搭建基于RAG的平安保险智能客服问答系统</div>
+      <div>http://example.com/2026/06/18/从零开始，搭建基于RAG的平安保险智能客服问答系统/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Lazy Cat</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年6月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/06/18/%E8%A7%86%E9%A2%91%E5%8F%8D%E6%8E%A8%E5%88%86%E9%95%9CAgent%E6%95%99%E7%A8%8B%EF%BC%88docker%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2%E7%89%88%EF%BC%89/" title="视频反推分镜Agent教程（docker本地部署版）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">视频反推分镜Agent教程（docker本地部署版）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/06/16/%E4%B8%80%E6%AD%A5%E6%AD%A5%E6%95%99%E4%BD%A0%E6%9E%84%E5%BB%BADify%E8%A7%86%E9%A2%91%E5%88%86%E9%95%9CAgent/" title="一步步教你构建Dify视频分镜Agent">
+                        <span class="hidden-mobile">一步步教你构建Dify视频分镜Agent</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
